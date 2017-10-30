@@ -1,9 +1,6 @@
 #ifndef PIDINV_H
 #define PIDINV_H
 
-//(design this to be used atomically)
-
-
 struct pidprops {
 	double Kp;
 	double Ki;
@@ -11,11 +8,11 @@ struct pidprops {
 	double sp;
 	double pe;
 	double igral;
-	double dtive;
 };
-extern struct pidprops prop_default;
 
 typedef struct pidprops PID;
+
+extern PID prop_default;
 
 double pidder(PID *props, double input, double dt);
 
