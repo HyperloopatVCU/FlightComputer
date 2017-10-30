@@ -1,32 +1,32 @@
-#include"pidinv.h"
-#include<stdio.h>
-#include<stdlib.h>
+#include"pidinv.h"	//  PID library
+#include<stdio.h>	//  printf
+#include<stdlib.h>	//  atof
 
 double testfunc(double x) {
-	return 0.468*x;
+	return 0.468*x;			// testing function.
 }
 
 int main(int argc, char* argv[]) {
 	if (argc < 6)
 		return -1;
 	
-	PID props = prop_default;
-	props.Kp = atof(argv[1]);
-	props.Ki = atof(argv[2]);
+	PID props = prop_default;	//  Initialize PID properties to zero.
+	props.Kp = atof(argv[1]);	//  Receive command line args for PID constants, setpoint, and num of iterations.
+	props.Ki = atof(argv[2]);	//  !! no input protection !!
 	props.Kd = atof(argv[3]);
 	props.sp = atof(argv[4]);
 	
 	int samples = atoi(argv[5]);
 	
-	double x = 0.0, dt = 0.1;
-
+	double x = 0.0, dt = 0.1;	//  Initial positions.
+	//  Print data to stdout in SC (UNIX spreadsheet program) format
 	printf("format A 11 6 0\nformat B 11 6 0\nlabel A0 = \"time\"\nlabel B0 = \"samples\"\n");
 
 	for(int i=1; i<=samples; i++) {
-		x += pidder(&props, testfunc(x), dt);
-		printf("let A%d = %f\nlet B%d = %f\n", i, dt * ((double)i), i, testfunc(x));
+		x += pidder(&props, testfunc(x), dt);	//  Iterable PID, manipulated variable is a constant sum.
+		printf("let A%d = %f\nlet B%d = %f\n", i, dt * ((double)i), i, testfunc(x)); //  SC formatted data output
 	}
 
-	printf("goto A0 B0\n");
+	printf("goto A0 B0\n");		//  Terminate output.
 	return 0;
 }
