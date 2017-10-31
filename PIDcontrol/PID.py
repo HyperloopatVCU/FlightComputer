@@ -37,7 +37,7 @@ class PID(object):
         return self.actual
 
     def __next__(self):
-        while True:
+        for i in range(self.limit):
 
             out = self.run()
 
@@ -49,7 +49,8 @@ class PID(object):
         return self
 
 
-    def __call__(self):
+    def __call__(self, limit=10):
+        self.limit = limit
         return next(self)
 
 
