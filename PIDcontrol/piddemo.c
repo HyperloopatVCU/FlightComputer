@@ -2,7 +2,7 @@
 #include<stdio.h>	//  printf
 #include<stdlib.h>	//  atof
 
-double testfunc(double x) {
+float testfunc(float x) {
 	return 0.468*x;			// testing function.
 }
 
@@ -18,13 +18,13 @@ int main(int argc, char* argv[]) {
 	
 	int samples = atoi(argv[5]);
 	
-	double x = 0.0, dt = 0.1;	//  Initial positions.
-	//  Print data to stdout in SC (UNIX spreadsheet program) format
+	float x = 0.0, dt = 0.1;	//  Initial positions.
+					//  Print data to stdout in SC (UNIX spreadsheet program) format
 	printf("format A 11 6 0\nformat B 11 6 0\nlabel A0 = \"time\"\nlabel B0 = \"samples\"\n");
 
 	for(int i=1; i<=samples; i++) {
 		x += pidder(&props, testfunc(x), dt);	//  Iterable PID, manipulated variable is a constant sum.
-		printf("let A%d = %f\nlet B%d = %f\n", i, dt * ((double)i), i, testfunc(x)); //  SC formatted data output
+		printf("let A%d = %f\nlet B%d = %f\n", i, dt * ((float)i), i, testfunc(x)); //  SC formatted data output
 	}
 
 	printf("goto A0 B0\n");		//  Terminate output.
