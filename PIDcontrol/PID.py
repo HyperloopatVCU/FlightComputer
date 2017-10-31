@@ -1,6 +1,7 @@
 
 import sys
 import time
+import math
 
 def testfunc(x):
     return x * 0.468
@@ -37,19 +38,29 @@ class PID(object):
         return self.actual
 
     def __next__(self):
-        for i in range(self.limit):
 
-            out = self.run()
+        if not self.limit:
+            while True:
+                out = self.run()
 
-            time.sleep(0.5)  # makes things less overwhelming
+                time.sleep(0.5)  # makes things less overwhelming
 
-            yield out
+                yield out
+
+        else:
+            for i in range(self.limit):
+
+                out = self.run()
+
+                time.sleep(0.5)  # makes things less overwhelming
+
+                yield out
 
     def __iter__(self):
         return self
 
 
-    def __call__(self, limit=10):
+    def __call__(self, limit=None):
         self.limit = limit
         return next(self)
 
@@ -58,5 +69,5 @@ if __name__ == '__main__':
 
     pid = PID(float(sys.argv[1]), float(sys.argv[2]), float(sys.argv[3]), func=testfunc)
 
-    for x in pid():
+    for x in pid(10):
         print(testfunc(x))
