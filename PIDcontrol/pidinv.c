@@ -1,6 +1,6 @@
 #include"pidinv.h"
 
-struct pidprops prop_default = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};	//  Define initial positions of default properties.
+struct pidprops prop_default = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};	//  Define initial positions of default properties.
 
 float pidder(PID *props, float input, float dt) {
 	float de = props->sp - input;			//  Specify 'error'.
