@@ -1,12 +1,13 @@
 
 import sys
+import time
 
 def testfunc(x):
     return x * 0.468
 
 class PID(object):
 
-    def __init__(self, kp=0, kd=0, ki=0, goal=1):
+    def __init__(self, kp=0, kd=0, ki=0, goal=1, func=None, dt=0.1):
         self.kp = kp
         self.kd = kd
         self.ki = ki
@@ -14,28 +15,47 @@ class PID(object):
         self.previous_error = 0
         self.integral = 0
 
-    def run(self, actual, dt):
-        de = self.goal - actual
+        self.func = func
+        self.actual = 0
+        self.dt = dt
 
-        self.integral = de * dt
+    def run(self):
+        de = self.goal - self.func(self.actual)
+
+        self.integral = de * self.dt
 
         P = (self.kp * de)
         I = (self.ki * self.integral)
-        D = (self.kd * (de - self.previous_error)/dt)
+        D = (self.kd * (de - self.previous_error)/self.dt)
 
         output = P + I + D
 
         self.previous_error = de
 
-        return output
+        self.actual += output
+
+        return self.actual
+
+    def __next__(self):
+        while True:
+
+            out = self.run()
+
+            time.sleep(0.5)  # makes things less overwhelming
+
+            yield out
+
+    def __iter__(self):
+        return self
+
+
+    def __call__(self):
+        return next(self)
 
 
 if __name__ == '__main__':
 
-    x, dt = 0, 0.1
+    pid = PID(float(sys.argv[1]), float(sys.argv[2]), float(sys.argv[3]), func=testfunc)
 
-    pid = PID(float(sys.argv[1]), float(sys.argv[2]), float(sys.argv[3]))
-
-    for i in range(5):
-        x += pid.run(testfunc(x), dt)
-        print("%d %.2f %f" % (i, dt*i, testfunc(x)))
+    for x in pid():
+        print(testfunc(x))
