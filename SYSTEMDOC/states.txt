@@ -14,7 +14,8 @@ controls from the physical pod.
 
 	These states are transmitted by the pod in the data packet. Most of
 them are not required to be transmitted, but exist as a debugging tool for
-ground control.
+ground control. These states are reported by the Master Control Program, which
+keeps track of when these states are active. States aren't explicitly 
 
 
 
