@@ -3,13 +3,11 @@ toc.md Table of Contents	Nov. 07, 2017
 **Table of Contents**
 ===============================================================================
 
-Tables
--------------------------------------------------------------------------------
 Contents           | Links
 -------------------|--------------------   
-Table_of_Contents | [README.md](SYSTEMDOC/README.md)      
-Operational_States| [OPST-toc.md](SYSTEMDOC/OPST-toc.md)    
-Index             | [index.md](SYSTEMDOC/index.md)
+Table_of_Contents  | [README.md](SYSTEMDOC/README.md)      
+Operational_States | [OPST-toc.md](SYSTEMDOC/OPST-toc.md)    
+Index              | [index.md](SYSTEMDOC/index.md)
 
 Documentation
 -------------------------------------------------------------------------------
