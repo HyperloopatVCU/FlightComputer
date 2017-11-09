@@ -1,4 +1,4 @@
-#include"pidinv.h"
+#include "pidinv.h"
 
 struct pidprops prop_default = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};	//  Define initial positions of default properties.
 

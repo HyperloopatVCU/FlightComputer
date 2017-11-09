@@ -1,7 +1,6 @@
 
 import sys
 import time
-import math
 
 def testfunc(x):
     return x * 0.468
