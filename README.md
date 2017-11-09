@@ -13,9 +13,9 @@ Index             | [index.md](SYSTEMDOC/index.md)
 
 Documentation
 -------------------------------------------------------------------------------
-1. Pod_Systems ................................................... [systems.md](SYSTEMDOC/systems.md)  
+1. [Pod_Systems](SYSTEMDOC/systems.md)  
 * List of systems ....... Description of systems available on the pod   
 * Processing model ............................... Model of execution   
-2. System_Commands .............................................. [commands.md](SYSTEMDOC/commands.md)   
+2. [System_Commands](SYSTEMDOC/commands.md)   
 * Command format .......................... Format of system commands   
 * Command model ........................... Model of command handling   
