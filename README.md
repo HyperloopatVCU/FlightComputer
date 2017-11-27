@@ -7,7 +7,7 @@ Contents           | Links
 -------------------|--------------------   
 Table_of_Contents  | [README.md](README.md)      
 Operational_States | [OPST-toc.md](SYSTEMDOC/OPST-toc.md)    
-Index              | [index.md](SYSTEMDOC/index.md)
+States              | [index.md](SYSTEMDOC/states.md)
 
 Documentation
 -------------------------------------------------------------------------------
