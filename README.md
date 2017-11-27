@@ -1,4 +1,7 @@
-toc.md Table of Contents	Nov. 07, 2017  
+
+For questions contact John Naylor at naylorjo@vcu.edu
+
+toc.md Table of Contents	Nov. 27, 2017
 
 **Table of Contents**
 ===============================================================================
