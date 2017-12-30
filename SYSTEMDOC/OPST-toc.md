@@ -1,22 +1,23 @@
 *OPST-toc.txt*		Overview of Operational States		Nov. 07, 2017
+  public display(){
 
 *Operational_States*	sorted by function
 ===============================================================================
 
-System states		( |systems.txt| - |list_of_systems| )
+System states		( |systems.md| - |list_of_systems| )
 -------------------------------------------------------------------------------
   |COLD|	|  Cold status, only |MCP| is active.
   |WARM|	|  Warm status, all systems active and ready for operation.
   |HOT!|	|  System has launched.
 
-Queue states		( |commands.txt| - |command_queue| )
+Queue states		( |commands.md| - |command_queue| )
 -------------------------------------------------------------------------------
   |EMTY|	|  The queue is empty and can receive commands.
   |PROC|	|  The commands in the queue are being processed. New
 		 \	commands will be added, but must wait to be processed.
   |FULL|	|  No more commands can be received at this moment.
 
-Commands    pre		( |commands.txt| - |command_format| )
+Commands    pre		( |commands.md| - |command_format| )
 -------------------------------------------------------------------------------
   |WMUP|     |COLD| |  Setup a pre-launch operational state.
   |CLDN|     |WARM| |  Cancel |WMUP| and shutdown systems.
@@ -32,7 +33,7 @@ Commands    pre		( |commands.txt| - |command_format| )
   |STAT|	|  Send the current pod status to Ground Control asap. May be
 		 \	set up to run on a timer system.
 
-Process states		( |systems.txt| - |processing_model| )
+Process states		( |systems.md| - |processing_model| )
 -------------------------------------------------------------------------------
   |TCHK|	|  Communications Check; make sure systems are wired properly.
   |ICON|	|  Initial Check; waits for |WARM| before collecting initial
