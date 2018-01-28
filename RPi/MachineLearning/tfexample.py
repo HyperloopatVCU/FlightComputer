@@ -63,4 +63,5 @@ def train_nn(x):
             print('Accuracy', accuracy.eval({x:mnist.test.images, 
                                              y:mnist.test.labels}))
 
-train_nn(x)
+if __name__ == '__main__':
+    train_nn(x)
