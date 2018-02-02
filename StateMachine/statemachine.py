@@ -1,4 +1,6 @@
 
+from time import sleep
+
 class MainSM(object):
 
     def __init__(self):
@@ -16,7 +18,11 @@ class MainSM(object):
         '''
         TODO: Logic to determine state!
         '''
-
         pass
+
+    def run(self, frame_rate=10):
+        while True:
+            self.update()
+            sleep(1/frame_rate)
 
 

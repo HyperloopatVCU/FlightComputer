@@ -3,23 +3,24 @@ from socket import *
 from threading import Thread
 
 def conn_handler(client):
+    '''
+    TODO: Send data through grader and to state machine
+    '''
+
     client.close()
+    return
 
-if __name__ == "__main__":
-    HOST = 'localhost'
-    PORT = 8000
-    server = socket(AF_INET, SOCK_STREAM)
-    server.bind((HOST, PORT))
+def start(host='localhost', port=8000):
+    server = socket(AF_INET, SOCK_STREAM) 
+    server.bind((host, port))
 
-    server.listen(100)
-    print("[+] Listening on port {}".format(PORT))
+    server.listen(4)
+    print("[+] Listneing on port {}".format(port))
 
     while True:
-        client, addr = sock.accept()
-        print("[+] Connection made from {}".format(addr))
+        client, addr = server.accept()
+        print("[+] Connection made with {}".format(addr))
 
-        t = Thread(conn_handler, args=(client,))
+        t = Thread(target=conn_handler, args=(client,))
         t.start()
 
-
-    
