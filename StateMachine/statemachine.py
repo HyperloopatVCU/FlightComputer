@@ -5,6 +5,8 @@ class MainSM(object):
 
     def __init__(self):
 
+        print("[+] Initializing State Machine")
+
         self.states = {
                     "cold" : "cold",
                     "warm" : "warm",

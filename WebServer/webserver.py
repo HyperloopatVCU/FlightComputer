@@ -15,7 +15,7 @@ def start(host='localhost', port=8000):
     server.bind((host, port))
 
     server.listen(4)
-    print("[+] Listneing on port {}".format(port))
+    print("[+] Listening on port {}".format(port))
 
     while True:
         client, addr = server.accept()
