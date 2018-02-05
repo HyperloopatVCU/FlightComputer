@@ -2,9 +2,14 @@
 from socket import *
 from threading import Thread
 
+
+
 def conn_handler(client):
+
     '''
-    TODO: Send data through grader and to state machine
+    TODO: 
+        Send data to state machine and data grader
+        Determine commands to send
     '''
 
     client.close()
@@ -23,4 +28,6 @@ def start(host='localhost', port=8000):
 
         t = Thread(target=conn_handler, args=(client,))
         t.start()
+
+
 
