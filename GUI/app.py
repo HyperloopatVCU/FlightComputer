@@ -8,7 +8,6 @@ from PyQt5 import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
 from matplotlib.backends.backend_qy5agg import FigureCanvasQTAgg as
 FigureCanvasFigureCanvas
 from matplotlib.figure as Figure
@@ -65,6 +64,22 @@ class Pyqt(QWidget):
         self.btn4.move(400, 160)
         self.btn4.clicked.connect(self.health)
 
+        self.btn5 = QPushButton("Electronics Test", self)
+        self.btn5.move(550, 160)
+        self.btn5.clicked.connect(self.electest)
+
+        self.btn6 = QPushButton("Plot: Nav", self)
+        self.btn6.move(700, 160)
+        self.btn6.clicked.connect(self.nav)
+
+        self.btn7 = QPushButton("Plot: Data", self)
+        self.btn7.move(800, 160)
+        self.btn7.clicked.connect(self.data)
+
+        self.btn8 = QPushButton("Presets", self)
+        self.btn8.move(900, 160)
+        self.btn8.clicked.connect(self.presets)
+
         self.timer = QBasicTimer()
         self.step = 0
 
@@ -98,6 +113,7 @@ class Pyqt(QWidget):
 
     def presets(self):
         return
+
 
 #This Object is for the button's function
     def exit(self):
