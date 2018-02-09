@@ -4,23 +4,23 @@ from threading import Thread
 from StateMachine.statemachine import MainSM
 from WebServer.webserver import start
 
+
 def main():
-    '''
+    """
 
     1.) Start Web Server
     2.) Initialize State Machine
 
-    '''
+    """
 
     host = 'localhost'
     port = 8000
 
-
-    SM = MainSM()
+    sm = MainSM()
 
     try:
-        # Serperate threads let the server and sm be concurrent
-        sm_thread = Thread(target=SM.run, args=(0.1,))
+        # Separate threads let the server and sm be concurrent
+        sm_thread = Thread(target=sm.run, args=(0.1,))
         tcp_thread = Thread(target=start, args=(host, port))
 
         # Kills threads when the main thread finishes
@@ -36,12 +36,13 @@ def main():
     except KeyboardInterrupt:
         return
 
+
 if __name__ == "__main__":
-    '''
+    """
     TODO: 
         Command line arguments to explicitly state whether the pod is being
-        tested, started, debugged etc. etc.
-    '''
+        tested, launched, debugged etc. etc.
+    """
 
     time_naught = time()
     main()

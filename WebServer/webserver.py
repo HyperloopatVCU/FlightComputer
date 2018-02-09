@@ -3,17 +3,16 @@ from socket import *
 from threading import Thread
 
 
-
 def conn_handler(client):
-
-    '''
-    TODO: 
+    """
+    TODO:
         Send data to state machine and data grader
         Determine commands to send
-    '''
+    """
 
     client.close()
     return
+
 
 def start(host='localhost', port=8000):
     server = socket(AF_INET, SOCK_STREAM) 
