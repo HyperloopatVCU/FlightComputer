@@ -1,14 +1,17 @@
 
 import sys
-
+import os
 import matplotlib
-from PyQt5.QtCore import QBasicTimer
-
 matplotlib.use('Qt5agg')
 
-from PyQt5.QtWidgets import QMainWindow, QProgressBar, QPushButton, QApplication, QWidget
-# from matplotlib.backends.backend_qy5agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.figure as Figure
+from PyQt5 import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+
+from matplotlib.backends.backend_qy5agg import FigureCanvasQTAgg as
+FigureCanvasFigureCanvas
+from matplotlib.figure as Figure
 
 
 class AccelerationCanvas(Figure):
@@ -23,12 +26,10 @@ class VelocityCanvas(Figure):
         pass
 
 
-class ApplicationWindow(QMainWindow):
+class ApplicationWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
-        super()
         pass
-
 
 class Pyqt(QWidget):
 
@@ -37,11 +38,12 @@ class Pyqt(QWidget):
 
         self.setGeometry(0, 0, 1920, 1080)
 
-        # Declares progressBar
+        #Declares progressBar
         self.progressBar = QProgressBar(self)
         self.progressBar.setGeometry(30, 40, 1600, 70)
 
-        # Declares button
+
+        #Declares button
         self.btnStart = QPushButton("Start", self)
         self.btnStart.move(40, 80)
         self.btnStart.clicked.connect(self.startProgress)
@@ -49,6 +51,7 @@ class Pyqt(QWidget):
         self.btn1 = QPushButton("Cam F", self)
         self.btn1.move(80,160)
         self.btn1.clicked.connect(self.exit)
+
 
         self.btn2 = QPushButton("Cam B", self)
         self.btn2.move(170, 160)
@@ -96,7 +99,7 @@ class Pyqt(QWidget):
     def presets(self):
         return
 
-    # This Object is for the button's function
+#This Object is for the button's function
     def exit(self):
         return
 
@@ -107,9 +110,9 @@ class Pyqt(QWidget):
         p.setColor(self.backgroundRole(), Qt.gray)
         self.setPalette(p)
 
-    # Note this is a dummy function and will be completely removed
-    # Tells the button to increase the bar's "value" until it reaches 100
-    def two(self):
+    #Note this is a dummy function and will be completly removed
+    #Tells the button to increase the bar's "value" until it reaches 100
+    def startProgress(self):
         if self.timer.isActive():
             self.timer.stop()
             self.btn.setText('Start')
@@ -117,17 +120,17 @@ class Pyqt(QWidget):
             self.timer.start(100, self)
             self.btnStart.setText('Stop')
 
-    # This "Timer" just fills the bar.
-    # It's just a dummy until John imports his code
+    #This "Timer" just fills the bar.
+    #It's just a dummy until John imports his code
     def timerEvent(self, event):
         if self.step >= 100:
-            self.timer.stop()
-            self.btnStart.setText('Finished')
-            return
+         self.timer.stop()
+         self.btnStart.setText('Finished')
+         return
         self.step = self.step +1
         self.progressBar.setValue(self.step)
 
-
+#Displays Window
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     ex = Pyqt()
