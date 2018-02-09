@@ -80,7 +80,6 @@ class Pyqt(QWidget):
         self.btn8.move(900, 160)
         self.btn8.clicked.connect(self.presets)
 
-        self.setWindowIcon(QIcon("resources/tskbr.png") )
 
         label = QLabel(self)
         pixmap = QPixmap('resources/logo.jpg')
