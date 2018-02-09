@@ -4,8 +4,11 @@ import matplotlib
 
 matplotlib.use('Qt5agg')
 
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QProgressBar, QApplication, QWidget
-from PyQt5.QtCore import QBasicTimer
+from PyQt5 import QtGui
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QProgressBar, QApplication, QWidget, QLabel, QGraphicsScene
+from PyQt5.QtCore import QBasicTimer, Qt
+from PyQt5.QtGui import QColor, QImage, QPixmap, QIcon
+
 
 # from matplotlib.backends.backend_qy5agg import FigureCanvasQTAgg as FigureCanvasFigureCanvas
 import matplotlib.figure as Figure
@@ -30,32 +33,59 @@ class Pyqt(QWidget):
     def __init__(self):
         super().__init__()
 
+        #Sets the Size of the window (x, y, h, w)
         self.setGeometry(0, 0, 1920, 1080)
+
+        #Sets Window Title
+        self.setWindowTitle('Pod Monitoring System')
 
         # Declares progressBar
         self.progressBar = QProgressBar(self)
-        self.progressBar.setGeometry(30, 40, 1600, 70)
+        self.progressBar.setGeometry(300, 40, 1300, 70)
 
         # Declares button
         self.btnStart = QPushButton("Start", self)
-        self.btnStart.move(40, 80)
+        self.btnStart.move(400, 80)
         self.btnStart.clicked.connect(self.startProgress)
 
         self.btn1 = QPushButton("Cam F", self)
-        self.btn1.move(80, 160)
+        self.btn1.move(100, 160)
         self.btn1.clicked.connect(self.exit)
 
         self.btn2 = QPushButton("Cam B", self)
-        self.btn2.move(170, 160)
+        self.btn2.move(250, 160)
         self.btn2.clicked.connect(self.exit)
 
         self.btn3 = QPushButton("Sensor Status", self)
-        self.btn3.move(260, 160)
+        self.btn3.move(320, 160)
         self.btn3.clicked.connect(self.status)
 
         self.btn4 = QPushButton("Pod Health Test", self)
         self.btn4.move(400, 160)
         self.btn4.clicked.connect(self.health)
+
+        self.btn5 = QPushButton("Electronics Test", self)
+        self.btn5.move(550, 160)
+        self.btn5.clicked.connect(self.electest)
+
+        self.btn6 = QPushButton("Plot: Nav", self)
+        self.btn6.move(700, 160)
+        self.btn6.clicked.connect(self.nav)
+
+        self.btn7 = QPushButton("Plot: Data", self)
+        self.btn7.move(800, 160)
+        self.btn7.clicked.connect(self.data)
+
+        self.btn8 = QPushButton("Presets", self)
+        self.btn8.move(900, 160)
+        self.btn8.clicked.connect(self.presets)
+
+        self.setWindowIcon(QIcon("resources/tskbr.png") )
+
+        label = QLabel(self)
+        pixmap = QPixmap('resources/logo.jpg')
+        label.setPixmap(pixmap)
+        label.setGeometry(20, 20, 245, 92)
 
         self.timer = QBasicTimer()
         self.step = 0
@@ -102,7 +132,7 @@ class Pyqt(QWidget):
     def startProgress(self):
         if self.timer.isActive():
             self.timer.stop()
-            self.btn.setText('Start')
+            self.btnStart.setText('Start')
         else:
             self.timer.start(100, self)
             self.btnStart.setText('Stop')
@@ -116,6 +146,7 @@ class Pyqt(QWidget):
             return
         self.step = self.step + 1
         self.progressBar.setValue(self.step)
+
 
 
 # Displays Window
