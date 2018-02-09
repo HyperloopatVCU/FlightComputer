@@ -1,42 +1,38 @@
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QProgressBar, QApplication, QWidget, QLabel
+from PyQt5.QtCore import QBasicTimer, Qt
+from PyQt5.QtGui import QPixmap
 import sys
-import os
 import matplotlib
 
 matplotlib.use('Qt5agg')
 
-from PyQt5 import QtGui
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QProgressBar, QApplication, QWidget, QLabel, QGraphicsScene
-from PyQt5.QtCore import QBasicTimer, Qt
-from PyQt5.QtGui import QColor, QImage, QPixmap, QIcon
-
-
 # from matplotlib.backends.backend_qy5agg import FigureCanvasQTAgg as FigureCanvasFigureCanvas
-import matplotlib.figure as Figure
+# import matplotlib.figure as Figure
 
 
-class AccelerationCanvas(Figure):
-    def __init__(self):
-        pass
+# class AccelerationCanvas(Figure):
+#     def __init__(self):
+#         pass
+#
+#
+# class VelocityCanvas(Figure):
+#     def __init__(self):
+#         pass
 
 
-class VelocityCanvas(Figure):
-    def __init__(self):
-        pass
-
-
-class ApplicationWindow(QMainWindow):
-    def __init__(self):
-        pass
+# class ApplicationWindow(QMainWindow):
+#     def __init__(self):
+#         super().__init__()
 
 
 class Pyqt(QWidget):
     def __init__(self):
         super().__init__()
 
-        #Sets the Size of the window (x, y, h, w)
+        # Sets the Size of the window (x, y, h, w)
         self.setGeometry(0, 0, 1920, 1080)
 
-        #Sets Window Title
+        # Sets Window Title
         self.setWindowTitle('Pod Monitoring System')
 
         # Declares progressBar
@@ -145,7 +141,6 @@ class Pyqt(QWidget):
             return
         self.step = self.step + 1
         self.progressBar.setValue(self.step)
-
 
 
 # Displays Window

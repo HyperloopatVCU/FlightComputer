@@ -27,6 +27,3 @@ def start(host='localhost', port=8000):
 
         t = Thread(target=conn_handler, args=(client,))
         t.start()
-
-
-

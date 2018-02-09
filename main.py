@@ -10,6 +10,7 @@ def main():
 
     1.) Start Web Server
     2.) Initialize State Machine
+    TODO: Initialize Health Monitoring System
 
     """
 
@@ -41,7 +42,7 @@ if __name__ == "__main__":
     """
     TODO: 
         Command line arguments to explicitly state whether the pod is being
-        tested, launched, debugged etc. etc.
+        tested, launched, debugged etc. etc. and new behaviors to change accordingly
     """
 
     time_naught = time()
