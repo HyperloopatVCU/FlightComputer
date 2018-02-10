@@ -4,9 +4,11 @@ from time import sleep
 
 class MainSM(object):
 
-    def __init__(self):
+    def __init__(self, comm):
 
         print("[+] Initializing State Machine")
+
+        self.comm = comm
 
         self.states = {
                     "cold": "cold",
@@ -26,5 +28,3 @@ class MainSM(object):
         while True:
             self.update()
             sleep(1/frame_rate)
-
-

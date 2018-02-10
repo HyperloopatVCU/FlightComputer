@@ -2,7 +2,7 @@
 from time import time
 from threading import Thread
 from StateMachine.statemachine import MainSM
-from WebServer.webserver import start
+from TCPServer.tcpserver import TCPComm
 
 
 def main():
@@ -17,12 +17,13 @@ def main():
     host = 'localhost'
     port = 8000
 
-    sm = MainSM()
+    comm = TCPComm(host, port)
+    sm = MainSM(comm)
 
     try:
-        # Separate threads let the server and sm be concurrent
+        # Separate threads let the server and state machine be concurrent
         sm_thread = Thread(target=sm.run, args=(0.1,))
-        tcp_thread = Thread(target=start, args=(host, port))
+        tcp_thread = Thread(target=comm.start)
 
         # Kills threads when the main thread finishes
         sm_thread.setDaemon(True)
