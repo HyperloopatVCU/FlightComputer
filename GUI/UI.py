@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QProgressBar, QApplication, QWidget, QLabel
-from PyQt5.QtCore import QBasicTimer, Qt
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QBasicTimer, Qt, QSize
+from PyQt5.QtGui import QPixmap, QIcon
 import sys
 import matplotlib
 
@@ -76,6 +76,11 @@ class Pyqt(QWidget):
         self.btn8.move(900, 160)
         self.btn8.clicked.connect(self.presets)
 
+        self.stopbtn = QPushButton(self)
+        self.stopbtn.move(1000, 500)
+        self.stopbtn.clicked.connect(self.presets)
+        self.stopbtn.setIcon(QIcon('resources/Stop.png'))
+        self.stopbtn.setIconSize(QSize(161,161))
 
         label = QLabel(self)
         pixmap = QPixmap('resources/logo.jpg')
@@ -119,7 +124,7 @@ class Pyqt(QWidget):
     def initUI(self):
         self.setAutoFillBackground(True)
         p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.gray)
+        p.setColor(self.backgroundRole(), Qt.black)
         self.setPalette(p)
 
     # Note this is a dummy function and will be completly removed
