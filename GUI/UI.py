@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QProgressBar, QApplication, QWidget, QLabel
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QProgressBar, QApplication, QLabel
 from PyQt5.QtCore import QBasicTimer, Qt, QSize
 from PyQt5.QtGui import QPixmap, QIcon
 import sys
@@ -25,9 +25,9 @@ matplotlib.use('Qt5agg')
 #         super().__init__()
 
 
-class Pyqt(QWidget):
-    def __init__(self):
-        super().__init__()
+class UIWindow(QMainWindow):
+    def __init__(self, *args):
+        super().__init__(*args)
 
         # Sets the Size of the window (x, y, h, w)
         self.setGeometry(0, 0, 1920, 1080)
@@ -151,6 +151,6 @@ class Pyqt(QWidget):
 # Displays Window
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ex = Pyqt()
+    ex = UIWindow()
     ex.show()
     sys.exit(app.exec_())
