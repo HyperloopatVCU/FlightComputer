@@ -40,9 +40,11 @@ class Pyqt(QWidget):
         self.progressBar.setGeometry(300, 40, 1300, 70)
 
         # Declares button
-        self.btnStart = QPushButton("Start", self)
-        self.btnStart.move(400, 80)
+        self.btnStart = QPushButton(self)
+        self.btnStart.move(1000, 500)
         self.btnStart.clicked.connect(self.startProgress)
+        self.btnStart.setIcon(QIcon('resources/start.png'))
+        self.btnStart.setIconSize(QSize(161,161))
 
         self.btn1 = QPushButton("Cam F", self)
         self.btn1.move(100, 160)
@@ -75,12 +77,6 @@ class Pyqt(QWidget):
         self.btn8 = QPushButton("Presets", self)
         self.btn8.move(900, 160)
         self.btn8.clicked.connect(self.presets)
-
-        self.stopbtn = QPushButton(self)
-        self.stopbtn.move(1000, 500)
-        self.stopbtn.clicked.connect(self.presets)
-        self.stopbtn.setIcon(QIcon('resources/Stop.png'))
-        self.stopbtn.setIconSize(QSize(161,161))
 
         label = QLabel(self)
         pixmap = QPixmap('resources/logo.jpg')
@@ -132,17 +128,18 @@ class Pyqt(QWidget):
     def startProgress(self):
         if self.timer.isActive():
             self.timer.stop()
-            self.btnStart.setText('Start')
+            self.btnStart.setIcon(QIcon('resources/start.png'))
+            self.btnStart.setIconSize(QSize(161,161))
         else:
             self.timer.start(100, self)
-            self.btnStart.setText('Stop')
+            self.btnStart.setIcon(QIcon('resources/Stop.png'))
+            self.btnStart.setIconSize(QSize(161,161))
 
     # This "Timer" just fills the bar.
     # It's just a dummy until John imports his code
     def timerEvent(self, event):
         if self.step >= 100:
             self.timer.stop()
-            self.btnStart.setText('Finished')
             return
         self.step = self.step + 1
         self.progressBar.setValue(self.step)
