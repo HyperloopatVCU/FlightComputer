@@ -1,12 +1,15 @@
-
+import argparse
 from time import time
 from threading import Thread
 from StateMachine.statemachine import MainSM
 from TCPServer.tcpserver import TCPComm
 
 
-def main():
+def main(behavior, host, port):
     """
+
+    TODO: Change behavior based on `behavior` argument
+            e.g. Launch, Debug, Test, etc., etc.
 
     1.) Start Web Server
     2.) Initialize State Machine
@@ -14,23 +17,21 @@ def main():
 
     """
 
-    host = 'localhost'
-    port = 8000
-
     comm = TCPComm(host, port)
+    comm.connect()
     sm = MainSM(comm)
 
     try:
         # Separate threads let the server and state machine be concurrent
-        sm_thread = Thread(target=sm.run, args=(0.1,))
         tcp_thread = Thread(target=comm.start)
+        sm_thread = Thread(target=sm.run, args=(0.1,))
 
         # Kills threads when the main thread finishes
-        sm_thread.setDaemon(True)
         tcp_thread.setDaemon(True)
+        sm_thread.setDaemon(True)
 
-        sm_thread.start()
         tcp_thread.start()
+        sm_thread.start()
 
         # Prevents the main thread from exiting immediately
         sm_thread.join()
@@ -40,14 +41,19 @@ def main():
 
 
 if __name__ == "__main__":
-    """
-    TODO: 
-        Command line arguments to explicitly state whether the pod is being
-        tested, launched, debugged etc. etc. and new behaviors to change accordingly
-    """
+
+    parser = argparse.ArgumentParser(description="Change pod behavior")
+    parser.add_argument('behavior', metavar='Behavior', type=str,
+                        help="Controller for how the system should run")
+    parser.add_argument('--host', dest='host', type=str,
+                        default='localhost', help="Host address for the server")
+    parser.add_argument('--port', dest='port', type=int,
+                        default=8000, help="Connection port for the server")
+
+    args = parser.parse_args()
 
     time_naught = time()
-    main()
+    main(args.behavior, args.host, args.port)
     time_final = time() - time_naught
 
     print("\n\n[+] Flight Sequence Finished")

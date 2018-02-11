@@ -13,6 +13,7 @@ class TCPComm(object):
         self.port = port
 
         self.client = None
+        self.client_address = ""
 
         self.server = socket(AF_INET, SOCK_STREAM)
         self.server.bind((self.host, self.port))
@@ -21,7 +22,8 @@ class TCPComm(object):
         self.server.listen(4)
         print("[+] Listening on port", self.port)
 
-        self.client = self.server.accept()
+        self.client, self.client_address = self.server.accept()
+        print("[+] Connection successful from", self.client_address)
 
     def start(self):
         while True:
