@@ -3,6 +3,7 @@ from time import time
 from threading import Thread
 from StateMachine.statemachine import MainSM
 from TCPServer.tcpserver import TCPComm
+from HardwareControl.hardwarecontroller import Brakes, MotorController
 
 
 def main(behavior, host, port):
@@ -17,14 +18,14 @@ def main(behavior, host, port):
 
     """
 
-    comm = TCPComm(host, port)
-    comm.connect()
-    sm = MainSM(comm)
+    tcp = TCPComm(host, port)
+    tcp.connect()
+    sm = MainSM(tcp, Brakes(), MotorController())
 
     try:
         # Separate threads let the server and state machine be concurrent
-        tcp_thread = Thread(target=comm.start)
-        sm_thread = Thread(target=sm.run, args=(0.1,))
+        tcp_thread = Thread(target=tcp.start)
+        sm_thread = Thread(target=sm.warm_up, args=(0.1,))
 
         # Kills threads when the main thread finishes
         tcp_thread.setDaemon(True)

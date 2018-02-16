@@ -19,7 +19,7 @@ class TCPComm(object):
         self.server.bind((self.host, self.port))
 
     def connect(self):
-        self.server.listen(4)
+        self.server.listen(10)
         print("[+] Listening on port", self.port)
 
         self.client, self.client_address = self.server.accept()
@@ -34,4 +34,9 @@ class TCPComm(object):
 
             self.packets.put(data)
 
+    def pop_data_packet(self):
+        """
+        TODO: pop a data packet and parse it appropriately
 
+        """
+        pass
