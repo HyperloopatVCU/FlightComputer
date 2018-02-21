@@ -13,7 +13,7 @@ class TCPComm(object):
         self.port = port
 
         self.client = None
-        self.client_address = ""
+        self.client_address = None
 
         self.server = socket(AF_INET, SOCK_STREAM)
         self.server.bind((self.host, self.port))

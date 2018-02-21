@@ -58,5 +58,5 @@ if __name__ == "__main__":
     time_final = time() - time_naught
 
     print("\n\n[+] Flight Sequence Finished")
-    print("[+] Time Elapsed {:0.2} seconds\n\n".format(time_final))
+    print("[+] Time Elapsed {} seconds\n\n".format(time_final))
 

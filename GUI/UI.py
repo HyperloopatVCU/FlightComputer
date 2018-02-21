@@ -40,7 +40,7 @@ class UIWindow(QMainWindow):
         self.progressBar.setGeometry(300, 40, 1300, 70)
 
     def setcentral(self, widgetclass):
-
+        pass
 
 class UIWidget(QWidget):
     def widget(self, *args):

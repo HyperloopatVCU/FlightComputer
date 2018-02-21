@@ -7,17 +7,19 @@ except RuntimeError:
 
 class Brakes(object):
     """
-    TODO: Use RPi GPIO pins to control brakes
+    Use RPi GPIO pins to control brakes
     """
 
     def __init__(self):
-        pass
+        self.pin = 12  # Using pin 12
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(12, GPIO.OUT)
 
-    def engage_brakes(self):
-        pass
+    def engage(self):
+        GPIO.output(self.pin, 1)
 
-    def disengage_brakes(self):
-        pass
+    def disengage(self):
+        GPIO.output(self.pin, 0)
 
 
 class MotorController(object):
