@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QProgressBar, QApplication, QLabel
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QProgressBar, QApplication, QLabel, QWidget
 from PyQt5.QtCore import QBasicTimer, Qt, QSize
 from PyQt5.QtGui import QPixmap, QIcon
 import sys
@@ -38,6 +38,13 @@ class UIWindow(QMainWindow):
         # Declares progressBar
         self.progressBar = QProgressBar(self)
         self.progressBar.setGeometry(300, 40, 1300, 70)
+
+    def setcentral(self, widgetclass):
+
+
+class UIWidget(QWidget):
+    def widget(self, *args):
+        super().__init__(*args)
 
         # Declares button
         self.btnStart = QPushButton(self)
