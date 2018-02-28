@@ -41,6 +41,35 @@ class UIWindow(QMainWindow):
 
         self.initUI()
 
+
+    def camA(self):
+        return
+
+    def camB(self):
+        return
+
+    def status(self):
+        return
+
+    def health(self):
+        return
+
+    def electest(self):
+        return
+
+    def nav(self):
+        return
+
+    def data(self):
+        return
+
+    def presets(self):
+        return
+
+    # This Object is for the button's function
+    def exit(self):
+        return
+
     # Set window background color
     def initUI(self):
         # Sets Background
@@ -51,7 +80,7 @@ class UIWindow(QMainWindow):
 
         # Declares button
         self.btnStart = QPushButton(self)
-        self.btnStart.setFixedSize(100, 100)
+        self.btnStart.setFixedSize(300, 300)
         self.btnStart.move(1000, 500)
         self.btnStart.clicked.connect(self.startProgress)
         self.btnStart.setIcon(QIcon('resources/start.png'))
@@ -98,34 +127,6 @@ class UIWindow(QMainWindow):
         self.step = 0
 
         self.show()
-
-        def camA(self):
-            return
-
-        def camB(self):
-            return
-
-        def status(self):
-            return
-
-        def health(self):
-            return
-
-        def electest(self):
-            return
-
-        def nav(self):
-            return
-
-        def data(self):
-            return
-
-        def presets(self):
-            return
-
-        # This Object is for the button's function
-        def exit(self):
-            return
 
     # Note this is a dummy function and will be completly removed
     # Tells the button to increase the bar's "value" until it reaches 100
