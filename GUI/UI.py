@@ -39,19 +39,23 @@ class UIWindow(QMainWindow):
         self.progressBar = QProgressBar(self)
         self.progressBar.setGeometry(300, 40, 1300, 70)
 
-    def setcentral(self, widgetclass):
-        pass
+        self.initUI()
 
-class UIWidget(QWidget):
-    def widget(self, *args):
-        super().__init__(*args)
+    # Set window background color
+    def initUI(self):
+        # Sets Background
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.black)
+        self.setPalette(p)
 
         # Declares button
         self.btnStart = QPushButton(self)
+        self.btnStart.setFixedSize(100, 100)
         self.btnStart.move(1000, 500)
         self.btnStart.clicked.connect(self.startProgress)
         self.btnStart.setIcon(QIcon('resources/start.png'))
-        self.btnStart.setIconSize(QSize(161,161))
+        self.btnStart.setIconSize(QSize(400, 400))
 
         self.btn1 = QPushButton("Cam F", self)
         self.btn1.move(100, 160)
@@ -93,42 +97,35 @@ class UIWidget(QWidget):
         self.timer = QBasicTimer()
         self.step = 0
 
-        self.initUI()
+        self.show()
 
-    def camA(self):
-        return
+        def camA(self):
+            return
 
-    def camB(self):
-        return
+        def camB(self):
+            return
 
-    def status(self):
-        return
+        def status(self):
+            return
 
-    def health(self):
-        return
+        def health(self):
+            return
 
-    def electest(self):
-        return
+        def electest(self):
+            return
 
-    def nav(self):
-        return
+        def nav(self):
+            return
 
-    def data(self):
-        return
+        def data(self):
+            return
 
-    def presets(self):
-        return
+        def presets(self):
+            return
 
-    # This Object is for the button's function
-    def exit(self):
-        return
-
-    # Set window background color
-    def initUI(self):
-        self.setAutoFillBackground(True)
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.black)
-        self.setPalette(p)
+        # This Object is for the button's function
+        def exit(self):
+            return
 
     # Note this is a dummy function and will be completly removed
     # Tells the button to increase the bar's "value" until it reaches 100
@@ -136,11 +133,11 @@ class UIWidget(QWidget):
         if self.timer.isActive():
             self.timer.stop()
             self.btnStart.setIcon(QIcon('resources/start.png'))
-            self.btnStart.setIconSize(QSize(161,161))
+            self.btnStart.setIconSize(QSize(400, 400))
         else:
             self.timer.start(100, self)
             self.btnStart.setIcon(QIcon('resources/Stop.png'))
-            self.btnStart.setIconSize(QSize(161,161))
+            self.btnStart.setIconSize(QSize(400, 400))
 
     # This "Timer" just fills the bar.
     # It's just a dummy until John imports his code
@@ -150,6 +147,7 @@ class UIWidget(QWidget):
             return
         self.step = self.step + 1
         self.progressBar.setValue(self.step)
+
 
 
 # Displays Window
