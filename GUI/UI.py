@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QProgressBar, QApplication, QLabel, QWidget
 from PyQt5.QtCore import QBasicTimer, Qt, QSize
-from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtGui import QPixmap, QIcon, QColor
 import sys
 import matplotlib
 
@@ -75,7 +75,9 @@ class UIWindow(QMainWindow):
         # Sets Background
         self.setAutoFillBackground(True)
         p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.black)
+
+        # Sets Backgroud Color (RGB)
+        p.setColor(self.backgroundRole(), QColor(0, 0, 0, 200))
         self.setPalette(p)
 
         # Declares button
@@ -84,6 +86,7 @@ class UIWindow(QMainWindow):
         self.btnStart.move(1000, 500)
         self.btnStart.clicked.connect(self.startProgress)
         self.btnStart.setIcon(QIcon('resources/start.png'))
+        self.btnStart.setStyleSheet("background-color:rgb(0,0,0,0)")
         self.btnStart.setIconSize(QSize(400, 400))
 
         self.btn1 = QPushButton("Cam F", self)
@@ -99,11 +102,11 @@ class UIWindow(QMainWindow):
         self.btn3.clicked.connect(self.status)
 
         self.btn4 = QPushButton("Pod Health Test", self)
-        self.btn4.move(400, 160)
+        self.btn4.move(450, 160)
         self.btn4.clicked.connect(self.health)
 
         self.btn5 = QPushButton("Electronics Test", self)
-        self.btn5.move(550, 160)
+        self.btn5.move(600, 160)
         self.btn5.clicked.connect(self.electest)
 
         self.btn6 = QPushButton("Plot: Nav", self)
