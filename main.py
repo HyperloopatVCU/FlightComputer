@@ -10,7 +10,7 @@ def main(behavior, host, port):
     """
 
     TODO: Change behavior based on `behavior` argument
-            e.g. Launch, Debug, Test, etc., etc.
+            e.g. Launch, Debug, Test, Run GUI, etc., etc.
 
     1.) Start Web Server
     2.) Initialize State Machine

@@ -15,16 +15,17 @@ class MainSM(object):
         }
 
         self.states = {
-            "cold": "cold",
-            "warm": "warm",
-            "hot!": "hot!"
+            "cold": 0x01,
+            "warm": 0x02,
+            "hot!": 0x03,
+            "cool": 0x04
         }
 
         self.state = self.states["cold"]
 
     def warm_up(self):
         """
-        TODO: Disengage brakes, zero sensors
+            Disengage Breaks, Arduino should zero sensors
         """
         self.state = self.states["warm"]
         self.hardware["brakes"].disengage()
@@ -49,8 +50,6 @@ class MainSM(object):
     def shutdown(self):
         """
         TODO: Engage brakes
-        When velocity = 0, broadcast software system shutdown
+        When state = 'cold' broadcast state change
         """
-
-        pass
-
+        self.state = self.states["cool"]

@@ -24,7 +24,7 @@ class Brakes(object):
 
 class MotorController(object):
     """
-    TODO: Use RS485 (Or whatever the protocol is) to manipulate the motor
+    TODO: Use CAN protocol to manipulate the motor
     """
 
     def __init__(self):
