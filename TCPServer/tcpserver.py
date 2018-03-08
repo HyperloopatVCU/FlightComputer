@@ -38,7 +38,7 @@ class TCPComm(object):
         """
         TODO: Broadcast msg (Which should be some hex number) to all microcontrollers
         """
-        pass
+        print("[*] Broadcast:", msg)
 
     def pop_data_packet(self):
         """

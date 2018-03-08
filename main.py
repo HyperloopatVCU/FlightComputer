@@ -6,6 +6,7 @@ from TCPServer.tcpserver import TCPComm
 from HardwareControl.hardwarecontroller import Brakes, MotorController
 
 
+# TODO: Add proper logging rather than printing to stdout
 def main(behavior, host, port):
     """
 

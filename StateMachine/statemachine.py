@@ -15,17 +15,18 @@ class MainSM(object):
         }
 
         self.states = {
-            "cold": 0x01,
-            "warm": 0x02,
-            "hot!": 0x03,
-            "cool": 0x04
+            "cold": 0x01,  # Pod is off, This is the safe state
+            "warm": 0x02,  # Preparing pod for flight
+            "hot!": 0x03,  # Pod is in flight
+            "cool": 0x04,  # Bring hot pod to a stop
+            "stop": 0x05   # Emergency stop
         }
 
         self.state = self.states["cold"]
 
     def warm_up(self):
         """
-            Disengage Breaks, Arduino should zero sensors
+            Disengage Breaks, microcontrollers should zero sensors
         """
         self.state = self.states["warm"]
         self.hardware["brakes"].disengage()
@@ -50,6 +51,10 @@ class MainSM(object):
     def shutdown(self):
         """
         TODO: Engage brakes
-        When state = 'cold' broadcast state change
+        [!!!] Be 100% sure the pod isn't accelerating before brakes engage
         """
         self.state = self.states["cool"]
+
+        # After velocity = 0
+
+        self.state = self.states["cold"]

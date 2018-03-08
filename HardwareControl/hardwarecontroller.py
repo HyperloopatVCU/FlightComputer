@@ -16,6 +16,9 @@ class Brakes(object):
         GPIO.setup(12, GPIO.OUT)
 
     def engage(self):
+        """
+        TODO: Be sure the pod isn't accelerating
+        """
         GPIO.output(self.pin, 1)
 
     def disengage(self):
