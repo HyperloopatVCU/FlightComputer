@@ -1,3 +1,4 @@
+import logging
 
 try:
     import RPi.GPIO as GPIO
@@ -11,6 +12,7 @@ class Brakes(object):
     """
 
     def __init__(self):
+        self.logger = logging.getLogger('Brakes')
         self.pin = 12  # Using pin 12
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(12, GPIO.OUT)
@@ -31,7 +33,7 @@ class MotorController(object):
     """
 
     def __init__(self):
-        pass
+        self.logger = logging.getLogger('Motor')
 
     def accelerate(self):
         pass

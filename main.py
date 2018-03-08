@@ -1,4 +1,6 @@
 import argparse
+import logging
+from logging import config
 from time import time
 from threading import Thread
 from StateMachine.statemachine import MainSM
@@ -6,7 +8,8 @@ from TCPServer.tcpserver import TCPComm
 from HardwareControl.hardwarecontroller import Brakes, MotorController
 
 
-# TODO: Add proper logging rather than printing to stdout
+# TODO: Added a config file for the configuration of the network for the microcontrollers
+# TODO: Add logging to every package and possibly change from .conf file to .json
 def main(behavior, host, port):
     """
 
@@ -15,6 +18,7 @@ def main(behavior, host, port):
 
     1.) Start Web Server
     2.) Initialize State Machine
+
     TODO: Initialize Health Monitoring System
 
     """
@@ -25,8 +29,8 @@ def main(behavior, host, port):
 
     try:
         # Separate threads let the server and state machine be concurrent
-        tcp_thread = Thread(target=tcp.start)
-        sm_thread = Thread(target=sm.warm_up, args=(0.1,))
+        tcp_thread = Thread(target=tcp.start, name='TCPThread')
+        sm_thread = Thread(target=sm.warm_up, args=(0.1,), name='StateMachineThread')
 
         # Kills threads when the main thread finishes
         tcp_thread.setDaemon(True)
@@ -54,10 +58,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    logging.config.fileConfig('log.conf')
+    logger = logging.getLogger('root')
+
     time_naught = time()
     main(args.behavior, args.host, args.port)
     time_final = time() - time_naught
 
-    print("\n\n[+] Flight Sequence Finished")
-    print("[+] Time Elapsed {} seconds\n\n".format(time_final))
+    logger.info("\n\n[+] Flight Sequence Finished")
+    logger.info("[+] Time Elapsed {} seconds\n\n".format(time_final))
 

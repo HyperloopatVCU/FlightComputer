@@ -1,3 +1,4 @@
+import logging
 from queue import Queue
 from socket import *
 
@@ -6,9 +7,11 @@ class TCPComm(object):
 
     def __init__(self, host='localhost', port=8000):
 
-        print("[+] Initializing Communication")
+        self.logger = logging.getLogger('TCP')
 
-        self.packets = Queue()
+        self.logger.info("[+] Initializing Communication")
+
+        self.packets = Queue(-1)
         self.host = host
         self.port = port
 
@@ -20,10 +23,10 @@ class TCPComm(object):
 
     def connect(self):
         self.server.listen(10)
-        print("[+] Listening on port", self.port)
+        self.logger.info("[+] Listening on port", self.port)  # [!!!] This is a syntax error
 
         self.client, self.client_address = self.server.accept()
-        print("[+] Connection successful from", self.client_address)
+        self.logger.info("[+] Connection successful from", self.client_address)  # [!!!] This is a syntax error
 
     def start(self):
         while True:
@@ -38,7 +41,7 @@ class TCPComm(object):
         """
         TODO: Broadcast msg (Which should be some hex number) to all microcontrollers
         """
-        print("[*] Broadcast:", msg)
+        self.logger.info("[*] Broadcast: %s", msg)  # [!!!] This is a syntax error
 
     def pop_data_packet(self):
         """

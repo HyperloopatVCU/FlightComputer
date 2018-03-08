@@ -1,4 +1,4 @@
-
+import logging
 from time import sleep
 
 
@@ -6,7 +6,9 @@ class MainSM(object):
 
     def __init__(self, tcp, *hardware):
 
-        print("[+] Initializing State Machine")
+        self.logger = logging.getLogger('SM')
+
+        self.logger.info("[+] Initializing State Machine")
 
         self.tcp = tcp
         self.hardware = {
@@ -32,7 +34,7 @@ class MainSM(object):
         self.hardware["brakes"].disengage()
 
     def launch(self, frame_rate=10):
-        print("[+] Launching Pod")
+        self.logger.info("[+] Launching Pod")
         while True:
             self.update()
             sleep(1/frame_rate)
@@ -55,6 +57,6 @@ class MainSM(object):
         """
         self.state = self.states["cool"]
 
-        # After velocity = 0
+        # After velocity = 0 and systems shutdown
 
         self.state = self.states["cold"]
