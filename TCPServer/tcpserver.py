@@ -23,10 +23,10 @@ class TCPComm(object):
 
     def connect(self):
         self.server.listen(10)
-        self.logger.info("[+] Listening on port", self.port)  # [!!!] This is a syntax error
+        self.logger.info("[+] Listening on port", self.port)  # TODO: [!!!] This is a syntax error
 
         self.client, self.client_address = self.server.accept()
-        self.logger.info("[+] Connection successful from", self.client_address)  # [!!!] This is a syntax error
+        self.logger.info("[+] Connection successful from", self.client_address)  # TODO: [!!!] This is a syntax error
 
     def start(self):
         while True:
@@ -41,7 +41,7 @@ class TCPComm(object):
         """
         TODO: Broadcast msg (Which should be some hex number) to all microcontrollers
         """
-        self.logger.info("[*] Broadcast: %s", msg)  # [!!!] This is a syntax error
+        self.logger.info("[*] Broadcast: %s", msg)  # TODO: [!!!] This is a syntax error
 
     def pop_data_packet(self):
         """

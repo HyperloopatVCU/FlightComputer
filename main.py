@@ -28,7 +28,7 @@ def main(behavior, host, port):
     sm = MainSM(tcp, Brakes(), MotorController())
 
     try:
-        # Separate threads let the server and state machine be concurrent
+        # Separate threads let everything be concurrent
         tcp_thread = Thread(target=tcp.start, name='TCPThread')
         sm_thread = Thread(target=sm.warm_up, args=(0.1,), name='StateMachineThread')
 
