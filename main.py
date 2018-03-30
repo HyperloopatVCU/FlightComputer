@@ -5,6 +5,7 @@ from time import time
 from threading import Thread
 from StateMachine.statemachine import MainSM
 from TCPServer.tcpserver import TCPComm
+from HealthMonitor.healthmonitor import HealthMonitor
 from HardwareControl.hardwarecontroller import Brakes, MotorController
 
 
@@ -18,30 +19,34 @@ def main(behavior, host, port):
 
     1.) Start Web Server
     2.) Initialize State Machine
-
-    TODO: Initialize Health Monitoring System
+    3.) Initialize Health Monitor
 
     """
 
     tcp = TCPComm(host, port)
     tcp.connect()
     sm = MainSM(tcp, Brakes(), MotorController())
+    health = HealthMonitor(tcp, sm)
 
     try:
         # Separate threads let everything be concurrent
         tcp_thread = Thread(target=tcp.start, name='TCPThread')
         sm_thread = Thread(target=sm.warm_up, args=(0.1,), name='StateMachineThread')
+        health_thread = Thread(target=health.run, name='HealthThread')
 
         # Kills threads when the main thread finishes
         tcp_thread.setDaemon(True)
         sm_thread.setDaemon(True)
+        health_thread.setDaemon(True)
 
         tcp_thread.start()
         sm_thread.start()
+        health_thread.start()
 
         # Prevents the main thread from exiting immediately
         sm_thread.join()
         tcp_thread.join()
+        health_thread.join()
     except KeyboardInterrupt:
         return
 

@@ -1,12 +1,20 @@
-from StateMachine.statemachine import MainSM
-from TCPServer.tcpserver import TCPComm
-from HardwareControl.hardwarecontroller import Brakes, MotorController
+
+from time import sleep
 
 
 class HealthMonitor(object):
+    """
+    TODO: Make sure to check everything in the spaceX safety checklist
+    """
 
-    def __init__(self):
+    def __init__(self, comm, state_machine):
+        self.comm = comm
+        self.state_machine = state_machine
+
+    def update(self):
         pass
 
-    def run(self):
-        pass
+    def run(self, frame_rate=100):
+        while True:
+            self.update()
+            sleep(1/frame_rate)
