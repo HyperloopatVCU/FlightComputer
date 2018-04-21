@@ -24,21 +24,21 @@ def main(behavior, host, port):
     """
 
     tcp = TCPComm(host, port)
-    tcp.connect()
     sm = MainSM(tcp, Brakes(), MotorController())
     health = HealthMonitor(tcp, sm)
 
     try:
         # Separate threads let everything be concurrent
-        tcp_thread = Thread(target=tcp.start, name='TCPThread')
-        sm_thread = Thread(target=sm.warm_up, args=(0.1,), name='StateMachineThread')
-        health_thread = Thread(target=health.run, name='HealthThread')
+        tcp_thread = Thread(target=tcp.connect, name='TCPThread')
+        sm_thread = Thread(target=sm.warm_up, args=(10,), name='StateMachineThread')
+        health_thread = Thread(target=health.run, args=(10,), name='HealthThread')
 
         # Kills threads when the main thread finishes
         tcp_thread.setDaemon(True)
         sm_thread.setDaemon(True)
         health_thread.setDaemon(True)
 
+        # Running the threads
         tcp_thread.start()
         sm_thread.start()
         health_thread.start()

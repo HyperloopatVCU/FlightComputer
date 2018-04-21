@@ -1,36 +1,46 @@
 import logging
+import threading
 from queue import Queue
 from socket import *
 
 
 class TCPComm(object):
 
-    def __init__(self, host='localhost', port=8000):
+    def __init__(self, host, port):
 
         self.logger = logging.getLogger('TCP')
 
         self.logger.info("[+] Initializing Communication")
 
-        self.packets = Queue(-1)
+        self.packets = Queue(-1)  # Might need more than one queue for the different sensors
         self.host = host
         self.port = port
 
-        self.client = None
-        self.client_address = None
+        self.num_of_connections = 4
 
         self.server = socket(AF_INET, SOCK_STREAM)
         self.server.bind((self.host, self.port))
 
     def connect(self):
+
+        threads = []
+
         self.server.listen(10)
         self.logger.info("[+] Listening on port", self.port)  # TODO: [!!!] This is a syntax error
 
-        self.client, self.client_address = self.server.accept()
-        self.logger.info("[+] Connection successful from", self.client_address)  # TODO: [!!!] This is a syntax error
+        for x in range(self.num_of_connections):
+            client, address = self.server.accept()
+            threads.append(threading.Thread(target=self.start, args=(client,), name=address))
 
-    def start(self):
+        for thread in threads:
+            thread.start()
+            thread.join()
+
+        self.logger.info("[+] Connections successful")
+
+    def start(self, client):
         while True:
-            data = self.client.recv(4096)
+            data = client.recv(4096)
 
             if not data:
                 break
