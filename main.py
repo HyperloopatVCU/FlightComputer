@@ -1,5 +1,6 @@
 import argparse
 import logging
+from os import path
 from logging import config
 from time import time
 from threading import Thread
@@ -30,7 +31,7 @@ def main(behavior, host, port):
     try:
         # Separate threads let everything be concurrent
         tcp_thread = Thread(target=tcp.connect, name='TCPThread')
-        sm_thread = Thread(target=sm.warm_up, args=(10,), name='StateMachineThread')
+        sm_thread = Thread(target=sm.warm_up, name='StateMachineThread')
         health_thread = Thread(target=health.run, args=(10,), name='HealthThread')
 
         # Kills threads when the main thread finishes
@@ -63,7 +64,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    logging.config.fileConfig('log.conf')
+    log_file_path = path.join(path.dirname(path.abspath(__file__)), 'log.conf')
+    logging.config.fileConfig(log_file_path)
     logger = logging.getLogger('root')
 
     time_naught = time()
