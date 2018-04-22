@@ -11,7 +11,7 @@ from HardwareControl.hardwarecontroller import Brakes, MotorController
 
 
 # TODO: Added a config file for the configuration of the network for the microcontrollers
-# TODO: Add logging to every package and possibly change from .conf file to .json
+# TODO: Possibly change from .conf file to .json
 def main(behavior, host, port):
     """
 
@@ -49,7 +49,9 @@ def main(behavior, host, port):
         tcp_thread.join()
         health_thread.join()
     except KeyboardInterrupt:
-        return
+        pass
+    finally:
+        tcp.close()
 
 
 if __name__ == "__main__":
@@ -72,6 +74,6 @@ if __name__ == "__main__":
     main(args.behavior, args.host, args.port)
     time_final = time() - time_naught
 
-    logger.info("\n\n[+] Flight Sequence Finished")
+    logger.info("[+] Flight Sequence Finished")
     logger.info("[+] Time Elapsed {} seconds\n\n".format(time_final))
 

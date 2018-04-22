@@ -3,9 +3,9 @@ from time import sleep
 
 
 class HealthMonitor(object):
-    """
-    TODO: Make sure to check everything in the spaceX safety checklist
-    """
+    
+    # TODO: Make sure to check everything in the spaceX safety checklist
+    
 
     def __init__(self, comm, state_machine):
         """

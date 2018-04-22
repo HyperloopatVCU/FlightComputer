@@ -1,0 +1,372 @@
+2018-04-21 18:46:18,119:TCP:INFO:[+] Initializing Communication
+2018-04-21 18:46:18,121:SM:INFO:[+] Initializing State Machine
+2018-04-21 18:46:18,121:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 18:46:18,123:TCP:INFO:[+] Listening on port 8080
+2018-04-21 18:46:22,940:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 18:46:22,942:root:INFO:[+] Time Elapsed 4.821766138076782 seconds
+
+
+2018-04-21 21:22:14,377:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:22:14,378:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:22:14,378:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:22:14,380:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:22:15,766:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 21:22:15,767:root:INFO:[+] Time Elapsed 1.3891336917877197 seconds
+
+
+2018-04-21 21:23:23,965:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:23:23,966:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:23:23,967:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:23:23,968:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:23:30,494:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 21:23:30,495:root:INFO:[+] Time Elapsed 6.529030799865723 seconds
+
+
+2018-04-21 21:31:56,093:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:31:56,094:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:31:56,095:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:31:56,096:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:32:53,014:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 21:32:53,015:root:INFO:[+] Time Elapsed 56.920798540115356 seconds
+
+
+2018-04-21 21:34:49,235:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:34:49,236:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:34:49,237:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:34:49,238:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:38:49,918:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 21:38:49,919:root:INFO:[+] Time Elapsed 240.68275570869446 seconds
+
+
+2018-04-21 21:38:51,504:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:38:51,505:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:38:51,506:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:38:51,507:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:39:18,894:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 21:39:18,895:root:INFO:[+] Time Elapsed 27.390247106552124 seconds
+
+
+2018-04-21 21:40:06,072:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:40:06,073:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:40:06,089:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:40:06,090:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:41:45,206:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 21:41:45,207:root:INFO:[+] Time Elapsed 99.13437080383301 seconds
+
+
+2018-04-21 21:42:45,267:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:42:51,455:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:42:51,456:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:42:51,457:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:42:51,458:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:46:33,406:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 21:46:33,407:root:INFO:[+] Time Elapsed 221.95103192329407 seconds
+
+
+2018-04-21 21:47:06,378:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:47:08,525:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:47:13,359:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:47:17,352:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:47:25,551:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:47:39,688:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:47:39,689:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:47:39,689:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:47:39,691:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:50:00,934:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 21:50:00,935:root:INFO:[+] Time Elapsed 141.2463037967682 seconds
+
+
+2018-04-21 21:51:01,307:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:51:06,718:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:51:24,690:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:51:26,823:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:51:30,251:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:51:42,213:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:52:02,893:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:52:02,894:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:52:02,895:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:52:02,896:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:52:59,660:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:52:59,661:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:52:59,662:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:52:59,663:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:53:00,470:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 21:53:00,481:root:INFO:[+] Time Elapsed 0.8098533153533936 seconds
+
+
+2018-04-21 21:53:02,446:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:53:02,447:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:53:02,448:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:53:02,449:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:53:05,262:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 21:53:05,263:root:INFO:[+] Time Elapsed 2.816070556640625 seconds
+
+
+2018-04-21 21:53:07,040:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:53:07,041:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:53:07,042:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:53:07,044:TCP:INFO:[+] Listening on port 8080
+2018-04-21 21:53:08,198:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 21:53:08,199:root:INFO:[+] Time Elapsed 1.1578600406646729 seconds
+
+
+2018-04-21 21:53:19,765:TCP:INFO:[+] Initializing Communication
+2018-04-21 21:53:19,766:SM:INFO:[+] Initializing State Machine
+2018-04-21 21:53:19,767:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 21:53:19,768:TCP:INFO:[+] Listening on port 8080
+2018-04-21 22:00:21,574:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 22:00:21,576:root:INFO:[+] Time Elapsed 421.80950713157654 seconds
+
+
+2018-04-21 22:09:02,750:TCP:INFO:[+] Initializing Communication
+2018-04-21 22:09:02,754:SM:INFO:[+] Initializing State Machine
+2018-04-21 22:09:02,755:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 22:09:17,174:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 22:09:17,175:root:INFO:[+] Time Elapsed 14.424378395080566 seconds
+
+
+2018-04-21 22:09:45,456:TCP:INFO:[+] Initializing Communication
+2018-04-21 22:09:45,457:SM:INFO:[+] Initializing State Machine
+2018-04-21 22:09:45,458:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 22:09:54,566:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 22:09:54,568:root:INFO:[+] Time Elapsed 9.110707521438599 seconds
+
+
+2018-04-21 22:10:17,381:TCP:INFO:[+] Initializing Communication
+2018-04-21 22:10:17,382:SM:INFO:[+] Initializing State Machine
+2018-04-21 22:10:17,383:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 22:10:17,384:TCP:INFO:[+] Listening on (169.254.29.53, 8080)
+2018-04-21 22:21:24,191:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 22:21:24,192:root:INFO:[+] Time Elapsed 666.8098185062408 seconds
+
+
+2018-04-21 22:21:42,332:TCP:INFO:[+] Initializing Communication
+2018-04-21 22:21:49,852:TCP:INFO:[+] Initializing Communication
+2018-04-21 22:21:49,854:SM:INFO:[+] Initializing State Machine
+2018-04-21 22:21:49,854:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 22:21:49,855:TCP:INFO:[+] Listening on (169.254.29.53, 23)
+2018-04-21 22:24:01,766:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 22:24:01,768:root:INFO:[+] Time Elapsed 131.91395688056946 seconds
+
+
+2018-04-21 22:25:31,737:TCP:INFO:[+] Initializing Communication
+2018-04-21 22:25:31,739:SM:INFO:[+] Initializing State Machine
+2018-04-21 22:25:31,739:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 22:25:31,741:TCP:INFO:[+] Listening on 169.254.29.53, port 23
+2018-04-21 22:27:30,926:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 22:27:30,928:root:INFO:[+] Time Elapsed 119.18905639648438 seconds
+
+
+2018-04-21 22:27:38,527:TCP:INFO:[+] Initializing Communication
+2018-04-21 22:27:38,529:SM:INFO:[+] Initializing State Machine
+2018-04-21 22:27:38,529:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 22:27:38,531:TCP:INFO:[+] Listening on 169.254.29.53, port 23
+2018-04-21 22:55:37,335:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 22:55:37,336:root:INFO:[+] Time Elapsed 1678.8071978092194 seconds
+
+
+2018-04-21 22:55:51,013:TCP:INFO:[+] Initializing Communication
+2018-04-21 22:55:56,531:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:15:25,027:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:15:25,028:SM:INFO:[+] Initializing State Machine
+2018-04-21 23:15:25,029:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 23:15:25,030:TCP:INFO:[+] Listening on 10.0.0.0, port 8080
+2018-04-21 23:21:41,878:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 23:21:41,878:root:INFO:[+] Time Elapsed 376.8509097099304 seconds
+
+
+2018-04-21 23:22:09,954:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:22:12,706:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:22:24,714:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:24:40,930:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:24:40,932:SM:INFO:[+] Initializing State Machine
+2018-04-21 23:24:40,933:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 23:24:40,934:TCP:INFO:[+] Listening on 10.0.0.0, port 8080
+2018-04-21 23:25:36,102:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 23:25:36,103:root:INFO:[+] Time Elapsed 55.171318769454956 seconds
+
+
+2018-04-21 23:25:49,915:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:25:49,916:SM:INFO:[+] Initializing State Machine
+2018-04-21 23:25:49,917:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 23:25:49,919:TCP:INFO:[+] Listening on 10.0.0.0, port 8080
+2018-04-21 23:27:33,422:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 23:27:33,423:root:INFO:[+] Time Elapsed 103.50661516189575 seconds
+
+
+2018-04-21 23:28:51,193:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:28:51,194:SM:INFO:[+] Initializing State Machine
+2018-04-21 23:28:51,195:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 23:28:51,196:TCP:INFO:[+] Listening on 10.0.0.0, port 8080
+2018-04-21 23:29:02,710:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 23:29:02,710:root:INFO:[+] Time Elapsed 11.516805410385132 seconds
+
+
+2018-04-21 23:30:09,352:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:30:09,353:SM:INFO:[+] Initializing State Machine
+2018-04-21 23:30:09,354:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 23:30:09,356:TCP:INFO:[+] Listening on 10.0.0.0, port 8080
+2018-04-21 23:42:02,694:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 23:42:02,694:root:INFO:[+] Time Elapsed 713.3418009281158 seconds
+
+
+2018-04-21 23:43:56,166:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:44:01,091:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:44:10,255:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:44:10,260:SM:INFO:[+] Initializing State Machine
+2018-04-21 23:44:10,261:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 23:44:10,263:TCP:INFO:[+] Listening on localhost, port 8080
+2018-04-21 23:44:15,372:root:INFO:[!!!] Flight Sequence Finished
+2018-04-21 23:44:15,374:root:INFO:[+] Time Elapsed 5.117151975631714 seconds
+
+
+2018-04-21 23:45:16,030:TCP:INFO:[+] Initializing Communication
+2018-04-21 23:45:16,032:SM:INFO:[+] Initializing State Machine
+2018-04-21 23:45:16,033:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-21 23:45:16,034:TCP:INFO:[+] Listening on localhost, port 8080
+2018-04-21 23:45:18,731:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-21 23:45:18,733:root:INFO:[+] Time Elapsed 2.701070547103882 seconds
+
+
+2018-04-22 00:27:57,348:TCP:INFO:[+] Initializing Communication
+2018-04-22 00:27:57,351:SM:INFO:[+] Initializing State Machine
+2018-04-22 00:27:57,352:SM:INFO:[+] State initialized to 'cold'
+2018-04-22 00:29:12,565:TCP:INFO:[+] Initializing Communication
+2018-04-22 00:29:12,567:SM:INFO:[+] Initializing State Machine
+2018-04-22 00:29:12,568:SM:INFO:[+] State initialized to 'cold'
+2018-04-22 00:29:20,579:TCP:INFO:[+] Initializing Communication
+2018-04-22 00:29:20,581:SM:INFO:[+] Initializing State Machine
+2018-04-22 00:29:20,582:SM:INFO:[+] State initialized to 'cold'
+2018-04-22 00:30:13,091:TCP:INFO:[+] Initializing Communication
+2018-04-22 00:30:13,094:SM:INFO:[+] Initializing State Machine
+2018-04-22 00:30:13,094:SM:INFO:[+] State initialized to 'cold'
+2018-04-22 00:30:13,095:HMS:INFO:[+] Initializing Health Monitoring System
+2018-04-22 00:30:13,096:TCP:INFO:[+] Listening on localhost, port 8080
+2018-04-22 00:30:16,139:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-22 00:30:16,140:root:INFO:[+] Time Elapsed 3.0473084449768066 seconds
+
+
+2018-04-22 00:33:18,580:TCP :INFO:[+] Initializing Communication
+2018-04-22 00:33:18,582:SM  :INFO:[+] Initializing State Machine
+2018-04-22 00:33:18,583:SM  :INFO:[+] State initialized to 'cold'
+2018-04-22 00:33:18,583:HMS :INFO:[+] Initializing Health Monitoring System
+2018-04-22 00:33:18,584:TCP :INFO:[+] Listening on localhost, port 8080
+2018-04-22 00:33:20,163:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-22 00:33:20,164:root:INFO:[+] Time Elapsed 1.5828003883361816 seconds
+
+
+2018-04-22 00:52:39,056:TCP :INFO:[+] Initializing Communication
+2018-04-22 00:52:39,058:SM  :INFO:[+] Initializing State Machine
+2018-04-22 00:52:39,059:SM  :INFO:[+] State initialized to 'cold'
+2018-04-22 00:52:39,059:HMS :INFO:[+] Initializing Health Monitoring System
+2018-04-22 00:52:39,060:TCP :INFO:[+] Listening on localhost, port 8080
+2018-04-22 00:52:39,061:SM  :INFO:[+] State set to 'warm'
+2018-04-22 00:52:39,062:SM  :INFO:[+] Launching Pod
+2018-04-22 00:53:43,163:TCP :INFO:[+] Initializing Communication
+2018-04-22 00:53:43,165:SM  :INFO:[+] Initializing State Machine
+2018-04-22 00:53:43,166:SM  :INFO:[+] State initialized to 'cold'
+2018-04-22 00:53:43,166:HMS :INFO:[+] Initializing Health Monitoring System
+2018-04-22 00:53:43,168:TCP :INFO:[+] Listening on localhost, port 8080
+2018-04-22 00:53:43,168:SM  :INFO:[+] State set to 'warm'
+2018-04-22 00:53:43,170:SM  :INFO:[+] Launching Pod
+2018-04-22 00:55:15,959:TCP :INFO:[+] Initializing Communication
+2018-04-22 00:55:15,962:SM  :INFO:[+] Initializing State Machine
+2018-04-22 00:55:15,962:SM  :INFO:[+] State initialized to 'cold'
+2018-04-22 00:55:15,963:HMS :INFO:[+] Initializing Health Monitoring System
+2018-04-22 00:55:15,964:TCP :INFO:[+] Listening on localhost, port 8080
+2018-04-22 00:55:15,965:SM  :INFO:[+] State set to 'warm'
+2018-04-22 00:55:15,966:SM  :INFO:[+] Launching Pod
+2018-04-22 00:55:17,955:TCP :INFO:[+] Shutting down TCP Server
+2018-04-22 00:55:17,956:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-22 00:55:17,957:root:INFO:[+] Time Elapsed 1.9967398643493652 seconds
+
+
+2018-04-22 00:55:55,223:TCP :INFO:[+] Initializing Communication
+2018-04-22 00:55:55,225:SM  :INFO:[+] Initializing State Machine
+2018-04-22 00:55:55,226:SM  :INFO:[+] State initialized to 'cold'
+2018-04-22 00:55:55,227:HMS :INFO:[+] Initializing Health Monitoring System
+2018-04-22 00:55:55,228:TCP :INFO:[+] Listening on localhost, port 8080
+2018-04-22 00:55:55,228:SM  :INFO:[+] State set to 'warm'
+2018-04-22 00:55:55,230:SM  :INFO:[+] State set to hot!
+2018-04-22 00:56:00,571:TCP :INFO:[+] Shutting down TCP Server
+2018-04-22 00:56:00,572:root:INFO:
+
+[+] Flight Sequence Finished
+2018-04-22 00:56:00,573:root:INFO:[+] Time Elapsed 5.348836660385132 seconds
+
+
+2018-04-22 00:56:29,437:TCP :INFO:[+] Initializing Communication
+2018-04-22 00:56:29,448:SM  :INFO:[+] Initializing State Machine
+2018-04-22 00:56:29,449:SM  :INFO:[+] State initialized to 'cold'
+2018-04-22 00:56:29,449:HMS :INFO:[+] Initializing Health Monitoring System
+2018-04-22 00:56:29,450:TCP :INFO:[+] Listening on localhost, port 8080
+2018-04-22 00:56:29,451:SM  :INFO:[+] State set to 'warm'
+2018-04-22 00:56:29,452:SM  :INFO:[+] State set to hot!
+2018-04-22 00:56:32,923:TCP :INFO:[+] Shutting down TCP Server
+2018-04-22 00:56:32,924:root:INFO:[+] Flight Sequence Finished
+2018-04-22 00:56:32,925:root:INFO:[+] Time Elapsed 3.4872896671295166 seconds
+
+
+2018-04-22 01:02:26,261:TCP :INFO:[+] Initializing Communication
+2018-04-22 01:02:26,265:SM  :INFO:[+] Initializing State Machine
+2018-04-22 01:02:26,271:SM  :INFO:[+] State initialized to 'cold'
+2018-04-22 01:02:26,271:HMS :INFO:[+] Initializing Health Monitoring System
+2018-04-22 01:02:26,273:TCP :INFO:[+] Listening on localhost, port 8080
+2018-04-22 01:02:26,273:SM  :INFO:[+] State set to 'warm'
+2018-04-22 01:02:26,275:SM  :INFO:[+] State set to hot!

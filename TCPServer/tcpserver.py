@@ -16,46 +16,46 @@ class TCPComm(object):
         self.host = host
         self.port = port
 
-        self.num_of_connections = 4
-
         self.server = socket(AF_INET, SOCK_STREAM)
         self.server.bind((self.host, self.port))
 
     def connect(self):
 
-        threads = []
-
         self.server.listen(10)
-        self.logger.info("[+] Listening on port %d", self.port)
+        self.logger.info("[+] Listening on %s, port %d", self.host, self.port)
 
-        for x in range(self.num_of_connections):
+        while True:
             client, address = self.server.accept()
-            threads.append(threading.Thread(target=self.start, args=(client,), name=address))
-
-        for thread in threads:
-            thread.start()
-            thread.join()
-
-        self.logger.info("[+] Connections successful")
+            self.logger.debug("[+] Connection successful with %s", address)
+            t = threading.Thread(target=self.start, args=(client,), name=address)
+            t.start()
 
     def start(self, client):
+        addr = client.getpeername()
         while True:
             data = client.recv(4096)
 
             if not data:
                 break
 
-            self.packets.put(data)
+            print(data.decode('utf-8'))
+            self.packets.put(data.decode('utf-8'))
+
+        self.logger.debug("[*] Client disconnect %s", addr)
 
     def broadcast(self, msg):
-        """
-        TODO: Broadcast msg (Which should be some hex number) to all microcontrollers
-        """
+
+        # TODO: Broadcast msg (Which should be some hex number) to all microcontrollers
+        
         self.logger.info("[*] Broadcast: %s", msg)
 
     def pop_data_packet(self):
-        """
-        TODO: pop a data packet and parse it appropriately
+        
+        # TODO: pop a data packet and parse it appropriately
 
-        """
+        
         pass
+
+    def close(self):
+        self.logger.info("[+] Shutting down TCP Server")
+        self.server.close()

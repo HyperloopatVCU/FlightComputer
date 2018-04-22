@@ -24,25 +24,30 @@ class MainSM(object):
             "stop": 0x05   # Emergency stop
         }
 
+        self.logger.info("[+] State initialized to 'cold'")
         self.state = self.states["cold"]
 
     def warm_up(self):
         """
             Disengage Breaks, microcontrollers should zero sensors
         """
+        self.logger.info("[+] State set to 'warm'")
         self.state = self.states["warm"]
         self.hardware["brakes"].disengage()
 
+        self.launch(10)
+
     def launch(self, frame_rate=10):
-        self.logger.info("[+] Launching Pod")
+        self.logger.info("[+] State set to hot!")
+        self.state = self.states["hot!"]
         while True:
             self.update()
             sleep(1/frame_rate)
 
     def update(self):
+        
+        # TODO: Logic to determine state!
         """
-        TODO: Logic to determine state!
-
         if at max speed || at max distance || critical error
             breaks
 
@@ -51,12 +56,15 @@ class MainSM(object):
         pass
 
     def shutdown(self):
-        """
-        TODO: Engage brakes
-        [!!!] Be 100% sure the pod isn't accelerating before brakes engage
-        """
+        
+        # TODO: Engage brakes
+        # [!!!] Be 100% sure the pod isn't accelerating before brakes engage
+        
+        self.logger.info("[+] State set to 'cool'")
         self.state = self.states["cool"]
 
         # After velocity = 0 and systems shutdown
-
+        self.logger.info("[+] State to 'cold'")
         self.state = self.states["cold"]
+
+        self.logger.info("[+] State Machine shutdown")
