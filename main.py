@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    log_file_path = path.join(path.dirname(path.abspath(__file__)), 'log.conf')
+    log_file_path = path.join(path.dirname(path.abspath(__file__)), 'log.ini')
     logging.config.fileConfig(log_file_path)
     logger = logging.getLogger('root')
 

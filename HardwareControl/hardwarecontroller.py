@@ -22,7 +22,6 @@ class Brakes(object):
 
     def engage(self):
         self.logger.debug("[*] Brakes engaged")
-        pass
         
         # TODO: Be sure the pod isn't accelerating
         
@@ -30,7 +29,6 @@ class Brakes(object):
 
     def disengage(self):
         self.logger.debug("[*] Brakes disengaged")
-        pass
         # GPIO.output(self.pin, 0)
 
 
@@ -43,7 +41,7 @@ class MotorController(object):
         self.logger = logging.getLogger('Motor')
 
     def accelerate(self):
-        pass
+        self.logger.debug("[*] Accelerating")
 
     def idle(self):
-        pass
+        self.logger.debug("[*] Motor Idle")

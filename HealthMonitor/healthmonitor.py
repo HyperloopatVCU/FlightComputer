@@ -1,5 +1,6 @@
 import logging
 from time import sleep
+from configparser import ConfigParser
 
 
 class HealthMonitor(object):
@@ -15,6 +16,8 @@ class HealthMonitor(object):
         self.logger = logging.getLogger('HMS')
 
         self.logger.info("[+] Initializing Health Monitoring System")
+
+        self.config = ConfigParser().read('thresholds.ini')
 
         self.comm = comm
         self.state_machine = state_machine
