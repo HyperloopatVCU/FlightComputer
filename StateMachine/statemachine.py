@@ -10,6 +10,8 @@ class MainSM(object):
 
         self.logger.info("[+] Initializing State Machine")
 
+        self.frames = 0
+
         self.tcp = tcp
         self.hardware = {
             "brakes": hardware[0],
@@ -33,6 +35,7 @@ class MainSM(object):
         """
         self.logger.info("[+] State set to 'warm'")
         self.state = self.states["warm"]
+
         self.hardware["brakes"].disengage()
 
         self.launch(10)
@@ -43,17 +46,18 @@ class MainSM(object):
         while True:
             self.update()
             sleep(1/frame_rate)
+            self.frames += 1
 
     def update(self):
         
         # TODO: Logic to determine state!
         """
         if at max speed || at max distance || critical error
-            breaks
-
+            shutdown
         """
-
         pass
+
+
 
     def shutdown(self):
         
@@ -63,8 +67,11 @@ class MainSM(object):
         self.logger.info("[+] State set to 'cool'")
         self.state = self.states["cool"]
 
+        self.hardware["brakes"].engage()
+
         # After velocity = 0 and systems shutdown
-        self.logger.info("[+] State to 'cold'")
+        self.logger.info("[+] State set to 'cold'")
         self.state = self.states["cold"]
 
         self.logger.info("[+] State Machine shutdown")
+

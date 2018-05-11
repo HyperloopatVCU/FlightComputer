@@ -12,8 +12,8 @@ class TCPComm(object):
 
         self.logger.info("[+] Initializing Communication")
 
-        self.packets = Queue(-1)  # Might need more than one queue for the different sensors
-        self.host = host
+        self.packets = Queue(-1)  # TODO: Probably need more than one queue
+        self.host = host          # TODO: One queue for each sensor type
         self.port = port
 
         self.server = socket(AF_INET, SOCK_STREAM)
@@ -23,7 +23,7 @@ class TCPComm(object):
 
         self.server.listen(10)
         self.logger.info("[+] Listening on %s, port %d", self.host, self.port)
-
+        
         while True:
             client, address = self.server.accept()
             self.logger.debug("[+] Connection successful with %s", address)

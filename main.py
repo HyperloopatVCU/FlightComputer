@@ -5,14 +5,14 @@ from logging import config
 from time import time
 from threading import Thread
 from StateMachine.statemachine import MainSM
-from TCPServer.tcpserver import TCPComm
+from Communication.tcpserver import TCPComm
 from HealthMonitor.healthmonitor import HealthMonitor
 from HardwareControl.hardwarecontroller import Brakes, MotorController
 
 
 # TODO: Added a config file for the configuration of the network for the microcontrollers
 # TODO: Possibly change from .conf file to .json
-def main(behavior, host, port):
+def main(root_logger, behavior, host, port):
     """
 
     TODO: Change behavior based on `behavior` argument
@@ -49,9 +49,11 @@ def main(behavior, host, port):
         tcp_thread.join()
         health_thread.join()
     except KeyboardInterrupt:
+        root_logger.info("[*] Keyboard Interrupt!!!") 
         pass
     finally:
-        tcp.close()
+        root_logger.debug("[+] Shutdown triggered")
+        health.shutdown_pod()
 
 
 if __name__ == "__main__":
@@ -70,10 +72,29 @@ if __name__ == "__main__":
     logging.config.fileConfig(log_file_path)
     logger = logging.getLogger('root')
 
+    print("\n\n")
+    print("====================================================================================================================================")
+    print("\n")
+    print("██╗  ██╗██╗   ██╗██████╗ ███████╗██████╗ ██╗      ██████╗  ██████╗ ██████╗      █████╗ ████████╗    ██╗   ██╗ ██████╗██╗   ██╗")
+    print("██║  ██║╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗██║     ██╔═══██╗██╔═══██╗██╔══██╗    ██╔══██╗╚══██╔══╝    ██║   ██║██╔════╝██║   ██║")
+    print("███████║ ╚████╔╝ ██████╔╝█████╗  ██████╔╝██║     ██║   ██║██║   ██║██████╔╝    ███████║   ██║       ██║   ██║██║     ██║   ██║")
+    print("██╔══██║  ╚██╔╝  ██╔═══╝ ██╔══╝  ██╔══██╗██║     ██║   ██║██║   ██║██╔═══╝     ██╔══██║   ██║       ╚██╗ ██╔╝██║     ██║   ██║")
+    print("██║  ██║   ██║   ██║     ███████╗██║  ██║███████╗╚██████╔╝╚██████╔╝██║         ██║  ██║   ██║        ╚████╔╝ ╚██████╗╚██████╔╝")
+    print("╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ ╚═╝         ╚═╝  ╚═╝   ╚═╝         ╚═══╝   ╚═════╝ ╚═════╝")
+    print("\n")
+    print("====================================================================================================================================")
+    print("\n")
+    print("SYSTEM LOGS:")
+    print("------------------------------------------------------------------------")
+
     time_naught = time()
-    main(args.behavior, args.host, args.port)
+    main(logger, args.behavior, args.host, args.port)
     time_final = time() - time_naught
 
     logger.info("[+] Flight Sequence Finished")
-    logger.info("[+] Time Elapsed {} seconds\n\n".format(time_final))
+    logger.info("[+] Time Elapsed {0:.2f} seconds\n".format(time_final))
+
+    print("------------------------------------------------------------------------")
+    print("\n")
+    print("END OF FLIGHT")
 

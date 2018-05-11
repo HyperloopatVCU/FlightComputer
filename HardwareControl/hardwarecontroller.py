@@ -43,7 +43,9 @@ class MotorController(object):
         self.logger = logging.getLogger('Motor')
 
     def accelerate(self):
+        self.logger.debug("[*] Motor set to accelerate")
         pass
 
     def idle(self):
+        self.logger.debug("[*] Motor idle")
         pass
