@@ -1,5 +1,6 @@
 import logging
 from time import sleep
+from configparser import ConfigParser
 
 
 class HealthMonitor(object):
@@ -20,6 +21,8 @@ class HealthMonitor(object):
         self.frames = 0
 
         self.health = "Green"
+
+        self.config = ConfigParser().read('thresholds.ini')
 
         self.comm = comm
         self.state_machine = state_machine

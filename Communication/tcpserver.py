@@ -38,7 +38,6 @@ class TCPComm(object):
             if not data:
                 break
 
-            print(data.decode('utf-8'))
             self.packets.put(data.decode('utf-8'))
 
         self.logger.debug("[*] Client disconnect %s", addr)
@@ -59,3 +58,4 @@ class TCPComm(object):
     def close(self):
         self.logger.info("[+] Shutting down TCP Server")
         self.server.close()
+
