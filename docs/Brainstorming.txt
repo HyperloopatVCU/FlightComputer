@@ -1,3 +1,4 @@
+
 [Major Changes]
 	- Rewrite code base in C/C++
 	- Removes interpreter overhead    
@@ -18,6 +19,6 @@
 	- Maintain documentation on the fly
 	- Continuous Integration
 	- Work more closely with freshman and new members
-		- Members can work in ‘doubles’ where a new member is partnered with a more 			experienced member to understand how our system works and what kind of work we 			expect from members
+		- Members can work in ‘doubles’ where a new member is partnered with a more experienced member to understand how our system works and what kind of work we expect from members
 		- Help us obtain new members as well as keep them
 
