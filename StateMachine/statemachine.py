@@ -28,7 +28,9 @@ class MainSM(object):
         }
 
         self.config = ConfigParser()
-        self.config.read('StateMachine/config.ini')
+        self.config.read('config.ini')
+        
+        self.frame_rate = self.config['State'].getint('frame_rate')
 
         self.logger.info("[+] State initialized to 'cold'")
         self.state = self.states["cold"]
@@ -56,7 +58,7 @@ class MainSM(object):
         self.state = self.states["hot"]
         while True:
             self.update()
-            sleep(1/self.config['run'].getint('frame_rate'))
+            sleep(1/self.frame_rate)
             self.frames += 1
 
     def update(self):

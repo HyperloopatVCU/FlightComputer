@@ -21,7 +21,9 @@ class HealthMonitor(object):
         self.health = "Green"
 
         self.config = ConfigParser()
-        self.config.read('HealthMonitor/config.ini')
+        self.config.read('config.ini')
+
+        self.frame_rate = self.config['Health'].getint('frame_rate')
 
         self.comm = comm
         self.state_machine = state_machine
@@ -43,5 +45,5 @@ class HealthMonitor(object):
     def run(self):
         while True:
             self.update()
-            sleep(1/self.config['Health'].getint('frame_rate'))
+            sleep(1/self.frame_rate)
             self.frames += 1
