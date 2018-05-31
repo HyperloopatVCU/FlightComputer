@@ -12,12 +12,10 @@ from HardwareControl.motor import MotorController
 
 
 # TODO: Added a config file for the configuration of the network for the microcontrollers
-# TODO: Possibly change from .conf file to .json
 def main(root_logger, behavior, host, port):
     """
 
-    2.) Initialize State Machine
-    3.) Initialize Health Monitor
+    Spin out the different threads for comm, state machine, and health.
 
     """
 
@@ -28,8 +26,8 @@ def main(root_logger, behavior, host, port):
     try:
         # Separate threads let everything be concurrent
         tcp_thread = Thread(target=tcp.connect, name='TCPThread')
-        sm_thread = Thread(target=sm.warm_up, name='StateMachineThread')
-        health_thread = Thread(target=health.run, args=(10,), name='HealthThread')
+        sm_thread = Thread(target=sm.cold_loop, name='StateMachineThread')
+        health_thread = Thread(target=health.run, name='HealthThread')
 
         # Kills threads when the main thread finishes
         tcp_thread.setDaemon(True)
