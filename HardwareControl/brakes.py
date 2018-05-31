@@ -31,7 +31,6 @@ class Brakes(object):
         self.logger.debug("[*] Brakes disengaged")
         # GPIO.output(self.pin, 0)
 
-<<<<<<< HEAD:HardwareControl/hardwarecontroller.py
 
 class MotorController(object):
     
@@ -43,10 +42,6 @@ class MotorController(object):
 
     def accelerate(self):
         self.logger.debug("[*] Motor set to accelerate")
-        pass
 
     def idle(self):
         self.logger.debug("[*] Motor idle")
-        pass
-=======
->>>>>>> 084feb6c16e11751b90395e2ac8b2f2b861303d0:HardwareControl/brakes.py
