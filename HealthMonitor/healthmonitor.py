@@ -6,8 +6,6 @@ from configparser import ConfigParser
 class HealthMonitor(object):
     
     # TODO: Make sure to check everything in the spaceX safety checklist
-    # TODO: HAHAHAHAHAHAA
-    
 
     def __init__(self, comm, state_machine):
         """
@@ -22,15 +20,16 @@ class HealthMonitor(object):
 
         self.health = "Green"
 
-        self.config = ConfigParser().read('config.ini')
+        self.config = ConfigParser()
+        self.config.read('HealthMonitor/config.ini')
 
         self.comm = comm
         self.state_machine = state_machine
 
     def shutdown_pod(self):
         self.logger.info("[+] Shutting down pod systems")
-        state_machine.shutdown()
-        comm.close()
+        self.state_machine.shutdown()
+        self.comm.close()
 
     def update(self):
         """
@@ -44,5 +43,5 @@ class HealthMonitor(object):
     def run(self):
         while True:
             self.update()
-            sleep(1/self.config.Health.frame_rate)
+            sleep(1/self.config['Health'].getint('frame_rate'))
             self.frames += 1

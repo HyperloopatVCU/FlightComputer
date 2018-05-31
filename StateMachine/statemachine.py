@@ -22,12 +22,13 @@ class MainSM(object):
         self.states = {
             "cold"     : 0x01,  # Pod is off, This is the safe state
             "warm"     : 0x02,  # Preparing pod for flight
-            "hot!"     : 0x03,  # Pod is in flight
+            "hot"     : 0x03,  # Pod is in flight
             "emergency": 0x04,  # Bring hot pod to a stop
             "stop"     : 0x05   # Emergency stop
         }
 
-        se;f.config = ConfigParser().read('config.ini')
+        self.config = ConfigParser()
+        self.config.read('StateMachine/config.ini')
 
         self.logger.info("[+] State initialized to 'cold'")
         self.state = self.states["cold"]
@@ -51,11 +52,11 @@ class MainSM(object):
         self.launch()
 
     def launch(self):
-        self.logger.info("[+] State set to hot!")
-        self.state = self.states["hot!"]
+        self.logger.info("[+] State set to hot")
+        self.state = self.states["hot"]
         while True:
             self.update()
-            sleep(1/self.config.run.frame_rate)
+            sleep(1/self.config['run'].getint('frame_rate'))
             self.frames += 1
 
     def update(self):

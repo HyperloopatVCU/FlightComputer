@@ -1,4 +1,5 @@
-import argparse
+#!/usr/bin/python3
+
 import logging
 from os import path
 from logging import config
@@ -12,14 +13,14 @@ from HardwareControl.motor import MotorController
 
 
 # TODO: Added a config file for the configuration of the network for the microcontrollers
-def main(root_logger, behavior, host, port):
+def main(root_logger):
     """
 
     Spin out the different threads for comm, state machine, and health.
 
     """
 
-    tcp = TCPComm(host, port)
+    tcp = TCPComm()
     sm = MainSM(tcp, Brakes(), MotorController())
     health = HealthMonitor(tcp, sm)
 
@@ -53,16 +54,6 @@ def main(root_logger, behavior, host, port):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Change pod behavior")
-    parser.add_argument('behavior', metavar='Behavior', type=str,
-                        help="Controller for how the system should run")
-    parser.add_argument('--host', dest='host', type=str,
-                        default='localhost', help="Host address for the server")
-    parser.add_argument('--port', dest='port', type=int,
-                        default=8000, help="Connection port for the server")
-
-    args = parser.parse_args()
-
     log_file_path = path.join(path.dirname(path.abspath(__file__)), 'log.ini')
     logging.config.fileConfig(log_file_path)
     logger = logging.getLogger('root')
@@ -83,7 +74,7 @@ if __name__ == "__main__":
     print("------------------------------------------------------------------------")
 
     time_naught = time()
-    main(logger, args.behavior, args.host, args.port)
+    main(logger)
     time_final = time() - time_naught
 
     logger.info("[+] Flight Sequence Finished")

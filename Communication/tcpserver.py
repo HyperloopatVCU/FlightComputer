@@ -1,20 +1,25 @@
 import logging
 import threading
+from configparser import ConfigParser
 from queue import Queue
 from socket import *
 
 
 class TCPComm(object):
 
-    def __init__(self, host, port):
+    def __init__(self):
 
         self.logger = logging.getLogger('TCP')
 
         self.logger.info("[+] Initializing Communication")
 
         self.packets = Queue(-1)  # TODO: Probably need more than one queue
-        self.host = host          # TODO: One queue for each sensor type
-        self.port = port
+
+        self.config = ConfigParser()
+        self.config.read('Communication/config.ini')
+
+        self.host = self.config['connect']['host'] 
+        self.port = self.config['connect'].getint('port')
 
         self.server = socket(AF_INET, SOCK_STREAM)
         self.server.bind((self.host, self.port))
