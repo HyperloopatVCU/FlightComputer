@@ -22,7 +22,7 @@ class HealthMonitor(object):
 
         self.health = "Green"
 
-        self.config = ConfigParser().read('thresholds.ini')
+        self.config = ConfigParser().read('config.ini')
 
         self.comm = comm
         self.state_machine = state_machine
@@ -41,8 +41,8 @@ class HealthMonitor(object):
         if self.frames != 0 and self.frames % 100 == 0:
             self.logger.debug("[*] System Health: %s", self.health)
 
-    def run(self, frame_rate=10):
+    def run(self):
         while True:
             self.update()
-            sleep(1/frame_rate)
+            sleep(1/self.config.Health.frame_rate)
             self.frames += 1

@@ -1,4 +1,5 @@
 import logging
+from configparser import ConfigParser
 from time import sleep
 
 
@@ -19,15 +20,24 @@ class MainSM(object):
         }
 
         self.states = {
-            "cold": 0x01,  # Pod is off, This is the safe state
-            "warm": 0x02,  # Preparing pod for flight
-            "hot!": 0x03,  # Pod is in flight
-            "cool": 0x04,  # Bring hot pod to a stop
-            "stop": 0x05   # Emergency stop
+            "cold"     : 0x01,  # Pod is off, This is the safe state
+            "warm"     : 0x02,  # Preparing pod for flight
+            "hot!"     : 0x03,  # Pod is in flight
+            "emergency": 0x04,  # Bring hot pod to a stop
+            "stop"     : 0x05   # Emergency stop
         }
+
+        se;f.config = ConfigParser().read('config.ini')
 
         self.logger.info("[+] State initialized to 'cold'")
         self.state = self.states["cold"]
+
+    def cold_loop(self):
+        """
+        Stay here until remotely commanded to warm up
+        """
+        while True:
+            pass
 
     def warm_up(self):
         """
@@ -38,14 +48,14 @@ class MainSM(object):
 
         self.hardware["brakes"].disengage()
 
-        self.launch(10)
+        self.launch()
 
-    def launch(self, frame_rate=10):
+    def launch(self):
         self.logger.info("[+] State set to hot!")
         self.state = self.states["hot!"]
         while True:
             self.update()
-            sleep(1/frame_rate)
+            sleep(1/self.config.run.frame_rate)
             self.frames += 1
 
     def update(self):
@@ -64,8 +74,8 @@ class MainSM(object):
         # TODO: Engage brakes
         # [!!!] Be 100% sure the pod isn't accelerating before brakes engage
         
-        self.logger.info("[+] State set to 'cool'")
-        self.state = self.states["cool"]
+        self.logger.info("[+] State set to 'stop'")
+        self.state = self.states["stop"]
 
         self.hardware["brakes"].engage()
 

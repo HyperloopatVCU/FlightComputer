@@ -1,0 +1,29 @@
+
+[Major Changes]
+	- Rewrite code base in C/C++
+	- Removes interpreter overhead    
+		- Promotes easier parallelism impeded by python’s GIL
+	- Use real-time linux distro
+		- Obviously fast speed due to lack of OS overhead
+		- More logs to more permanent spot in the filesystem
+
+[Minor Changes]
+	- Improved logging
+		- More verbose information in a .log file
+		- Human readable information send to the GUI
+	- Better storing of sensor data
+		- .data file?
+		- More efficient queue?
+    - Addition pod behaviors
+        - Test mode, Launch mode, etc. etc.
+    - Pod REPL
+        - Possible debugging application
+        - Easy test suite
+ 
+[Developmental Changes]
+	- Maintain documentation on the fly
+	- Continuous Integration
+	- Work more closely with freshman and new members
+		- Members can work in ‘doubles’ where a new member is partnered with a more experienced member to understand how our system works and what kind of work we expect from members
+		- Help us obtain new members as well as keep them
+
