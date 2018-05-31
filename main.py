@@ -77,7 +77,7 @@ if __name__ == "__main__":
     main(logger)
     time_final = time() - time_naught
 
-    logger.info("[+] Flight Sequence Finished")
+    logger.info("[+] Finished")
     logger.info("[+] Time Elapsed {0:.2f} seconds\n".format(time_final))
 
     print("------------------------------------------------------------------------")

@@ -55,11 +55,16 @@ class MainSM(object):
 
     def launch(self):
         self.logger.info("[+] State set to hot")
+        self.logger.info("[+] Launch Clock Started")
+        t0 = time.time()
         self.state = self.states["hot"]
         while True:
-            self.update()
+            if self.update(): break
             sleep(1/self.frame_rate)
             self.frames += 1
+
+        self.logger.info("[+] Flight time {:.2f} seconds", time.time() - t0) 
+        self.shutdown()
 
     def update(self):
         
@@ -68,7 +73,7 @@ class MainSM(object):
         if at max speed || at max distance || critical error
             shutdown
         """
-        pass
+        return 1
 
 
 

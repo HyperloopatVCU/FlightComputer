@@ -2,7 +2,7 @@
 # VCU Hyperloop
 ---------------------------------------
 
-System to be run on the main computer
+Program to be run on the main computer
 ---------------------------------------
 
 The software is split into four packages: Communication, StateMachine,
@@ -15,6 +15,16 @@ error or mechanical failure, the HealthMonitor will tell the StateMachine to
 stop the pod. Finally, the HardwareControllers are controlled by the
 StateMachine to control things like the motor and brakes.
 
+## Configuration
+Generally most configuration information and collection of glabal variables on the
+pod are stored in the config.ini file at the programs root. The two things not
+configured in the config.ini file are the logger and the network. The logger is
+configured using its own seperate log.ini file and the network configuration file will be
+created soon. To clarify, by the network configuration, I do not mean the
+configuration file for the tcp server, I am referring to the file that gets
+broadcasted across the network at the start up of the pod to let the
+microcontroller understand how the system looks.
+
 ## Prerequisites
 Certain python 3 packages are needed to run some commands
 ```
@@ -25,5 +35,5 @@ Certain python 3 packages are needed to run some commands
 Command for final launch
 
 ```
-~$ python3 main.py launch
-```    
+~$ sudo python3 main.py
+```  
