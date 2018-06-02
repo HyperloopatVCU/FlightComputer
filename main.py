@@ -16,7 +16,7 @@ from HardwareControl.motor import MotorController
 def main(root_logger):
     """
 
-    Spin out the different threads for comm, state machine, and health.
+    Spin up the different threads for comm, state machine, and health.
 
     """
 
