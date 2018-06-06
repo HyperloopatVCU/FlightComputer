@@ -22,7 +22,7 @@ class MainSM(object):
         self.states = {
             "cold"     : 0x01,  # Pod is off, This is the safe state
             "warm"     : 0x02,  # Preparing pod for flight
-            "hot"     : 0x03,  # Pod is in flight
+            "hot"      : 0x03,  # Pod is in flight
             "emergency": 0x04,  # Bring hot pod to a stop
             "stop"     : 0x05   # Emergency stop
         }
@@ -40,7 +40,11 @@ class MainSM(object):
         Stay here until remotely commanded to warm up
         """
         while True:
-            pass
+            x = input(">>> ")
+            if x == 'warm':
+                self.warm_up()
+            elif x == 'shutdown':
+                self.shutdown()
 
     def warm_up(self):
         """
@@ -64,17 +68,28 @@ class MainSM(object):
             self.frames += 1
 
         self.logger.info("[+] Flight time {:.2f} seconds", time.time() - t0) 
-        self.shutdown()
+        self.cold_loop()
 
     def update(self):
-        
-        # TODO: Logic to determine state!
         """
-        if at max speed || at max distance || critical error
-            shutdown
+        if critical error
+            emergency
+        if at max speed || at max distance
+            stop
         """
         return 1
 
+
+    def emergency(self, ecode):
+        """
+        Determine Severity
+        If it can recover - try to
+        Else - stop the pod
+        """
+
+        logger.info("[!!!] Stae set to 'emergency'")
+        self.state = self.states["emergency"]
+        
 
 
     def shutdown(self):
