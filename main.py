@@ -19,7 +19,7 @@ def main(root_logger):
     Spin up the different threads for comm, state machine, and health.
 
     """
-    PROMPT = "~$"
+    PROMPT = "~$ "
 
     tcp = TCPComm()
     sm = MainSM(tcp, Brakes(), MotorController())
