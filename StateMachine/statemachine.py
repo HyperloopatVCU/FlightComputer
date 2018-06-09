@@ -1,6 +1,6 @@
 import logging
+from time import sleep, time
 from configparser import ConfigParser
-from time import sleep
 
 
 class MainSM(object):
@@ -32,19 +32,9 @@ class MainSM(object):
         
         self.frame_rate = self.config['State'].getint('frame_rate')
 
-        self.logger.info("[+] State initialized to 'cold'")
+    def cold(self):
+        self.logger.info("[+] State set to 'cold'")
         self.state = self.states["cold"]
-
-    def cold_loop(self):
-        """
-        Stay here until remotely commanded to warm up
-        """
-        while True:
-            x = input(">>> ")
-            if x == 'warm':
-                self.warm_up()
-            elif x == 'shutdown':
-                self.shutdown()
 
     def warm_up(self):
         """
@@ -55,22 +45,20 @@ class MainSM(object):
 
         self.hardware["brakes"].disengage()
 
-        self.launch()
 
-    def launch(self):
+    def launch(self, mode):
         self.logger.info("[+] State set to hot")
         self.logger.info("[+] Launch Clock Started")
-        t0 = time.time()
+        t0 = time()
         self.state = self.states["hot"]
         while True:
-            if self.update(): break
+            if self.update(mode): break
             sleep(1/self.frame_rate)
             self.frames += 1
 
-        self.logger.info("[+] Flight time {:.2f} seconds", time.time() - t0) 
-        self.cold_loop()
+        self.logger.info("[+] Flight time {:.2f} seconds".format(time() - t0))
 
-    def update(self):
+    def update(self, mode):
         """
         if critical error
             emergency
@@ -87,12 +75,13 @@ class MainSM(object):
         Else - stop the pod
         """
 
-        logger.info("[!!!] Stae set to 'emergency'")
+        logger.info("[!!!] State set to 'emergency'")
+        logger.debug("[-] %s", ecode)
         self.state = self.states["emergency"]
         
 
 
-    def shutdown(self):
+    def stop(self):
         
         # TODO: Engage brakes
         # [!!!] Be 100% sure the pod isn't accelerating before brakes engage
@@ -102,9 +91,7 @@ class MainSM(object):
 
         self.hardware["brakes"].engage()
 
-        # After velocity = 0 and systems shutdown
-        self.logger.info("[+] State set to 'cold'")
-        self.state = self.states["cold"]
+        # TODO: block until stopped
 
-        self.logger.info("[+] State Machine shutdown")
+
 

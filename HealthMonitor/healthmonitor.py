@@ -16,6 +16,8 @@ class HealthMonitor(object):
 
         self.logger.info("[+] Initializing Health Monitoring System")
 
+        self.stop_signal = False
+
         self.frames = 0
 
         self.health = "Green"
@@ -30,7 +32,7 @@ class HealthMonitor(object):
 
     def shutdown_pod(self):
         self.logger.info("[+] Shutting down pod systems")
-        self.state_machine.shutdown()
+        self.state_machine.stop()
         self.comm.close()
 
     def update(self):
@@ -39,11 +41,10 @@ class HealthMonitor(object):
             Everything in this function will be run every frame for the
             duration of the flight of the pod. 
         """
-        if self.frames != 0 and self.frames % 100 == 0:
-            self.logger.debug("[*] System Health: %s", self.health)
+        pass
 
     def run(self):
-        while True:
+        while not self.stop_signal:
             self.update()
             sleep(1/self.frame_rate)
             self.frames += 1

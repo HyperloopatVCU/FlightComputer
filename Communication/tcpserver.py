@@ -13,6 +13,8 @@ class TCPComm(object):
 
         self.logger.info("[+] Initializing Communication")
 
+        self.stop_signal = False
+
         self.packets = Queue(-1)  # TODO: Probably need more than one queue
 
         self.config = ConfigParser()
@@ -29,11 +31,15 @@ class TCPComm(object):
         self.server.listen(10)
         self.logger.info("[+] Listening on %s, port %d", self.host, self.port)
         
-        while True:
-            client, address = self.server.accept()
-            self.logger.debug("[+] Connection successful with %s", address)
-            t = threading.Thread(target=self.start, args=(client,), name=address)
-            t.start()
+        while not self.stop_signal:
+            try:
+                self.server.settimeout(0.2)
+                client, address = self.server.accept()
+                self.logger.debug("[+] Connection successful with %s", address)
+                t = threading.Thread(target=self.start, args=(client,), name=address)
+                t.start()
+            except:
+                return
 
     def start(self, client):
         addr = client.getpeername()
