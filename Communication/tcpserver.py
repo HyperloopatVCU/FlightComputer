@@ -1,3 +1,4 @@
+import json
 import logging
 import threading
 from configparser import ConfigParser
@@ -49,7 +50,7 @@ class TCPComm(object):
             if not data:
                 break
 
-            self.packets.put(data.decode('utf-8'))
+            self.packets.put(json.loads(data.decode('utf-8')))
 
         self.logger.debug("[*] Client disconnect %s", addr)
 
