@@ -50,6 +50,7 @@ class TCPComm(object):
             if not data:
                 break
 
+            # Decodes message, converts to python dict, puts dict in the queue
             self.packets.put(json.loads(data.decode('utf-8')))
 
         self.logger.debug("[*] Client disconnect %s", addr)
