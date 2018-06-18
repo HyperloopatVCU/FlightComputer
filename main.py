@@ -32,55 +32,28 @@ def main(root_logger):
 
         if user_input == "launch":
 
-            if sm.state != 0x02:
-                self.logger.info("[*] State much be warm before launching")
-                continue
-
-            # Separate threads let everything be concurrent
-            tcp_thread = Thread(target=tcp.connect, name='TCPThread')
             sm_thread = Thread(target=sm.launch, args=(0,), name='StateMachineThread')
-            health_thread = Thread(target=health.run, name='HealthThread')
-
-            # Running the threads
-            tcp_thread.start()
             sm_thread.start()
-            health_thread.start()
-
-            # Joining threads back to main
             sm_thread.join()
-            tcp.stop_signal = True
-            health.stop_signal = True
-            tcp_thread.join()
-            health_thread.join()
 
 
         elif user_input == "warm":
             sm.warm_up()
     
         elif user_input == "idle":
-            if sm.state != 0x02:
-                root_logger.info("[!!!] Cannot move pod before warming up")
-                continue
 
-            # Separate threads let everything be concurrent
-            tcp_thread = Thread(target=tcp.connect, name='TCPThread')
             sm_thread = Thread(target=sm.launch, args=(1,), name='StateMachineThread')
-            health_thread = Thread(target=health.run, name='HealthThread')
-
-            # Running the threads
-            tcp_thread.start()
             sm_thread.start()
-            health_thread.start()
-
-            # Joining threads back to main
             sm_thread.join()
-            tcp.stop_signal = True
-            health.stop_signal = True
-            tcp_thread.join()
-            health_thread.join()
 
         elif user_input == "shutdown":
+            if sm.start != sm.states["cold"]:
+                self.logger.warn("[*] Program cannot exit safety currently!")
+                self.logger.warn("======> State: %s", sm.states_str(sm.state))
             return
+
+        elif user_input == "estop":
+            
 
         else:
             continue
