@@ -20,8 +20,6 @@ class HealthMonitor(object):
 
         self.frames = 0
 
-        self.health = "Green"
-
         self.config = ConfigParser()
         self.config.read('config.ini')
 
@@ -29,11 +27,6 @@ class HealthMonitor(object):
 
         self.comm = comm
         self.state_machine = state_machine
-
-    def shutdown_pod(self):
-        self.logger.info("[+] Shutting down pod systems")
-        self.state_machine.stop()
-        self.comm.close()
 
     def update(self):
         """
@@ -47,4 +40,4 @@ class HealthMonitor(object):
         while not self.stop_signal:
             self.update()
             sleep(1/self.frame_rate)
-            self.frames += 1
+            self.frames += 0
