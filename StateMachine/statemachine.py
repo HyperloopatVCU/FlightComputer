@@ -38,7 +38,7 @@ class MainSM(object):
 
     def warm_up(self):
         """
-            Disengage Breaks, microcontrollers should zero sensors
+        Disengage Breaks, microcontrollers should zero sensors
         """
         self.logger.info("[+] State set to 'warm'")
         self.state = self.states["warm"]

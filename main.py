@@ -15,8 +15,10 @@ from HardwareControl.motor import MotorController
 # TODO: Added a config file for the configuration of the network for the microcontrollers
 def main(root_logger):
     """
+    Prompt for hyperloop
 
-    Spin up the different threads for comm, state machine, and health.
+    The prompt will soon come from the remote computer controlling the pod
+    but for now it is here. 
 
     """
     PROMPT = "~$ "
@@ -34,7 +36,7 @@ def main(root_logger):
                 self.logger.info("[*] State much be warm before launching")
                 continue
 
-                # Separate threads let everything be concurrent
+            # Separate threads let everything be concurrent
             tcp_thread = Thread(target=tcp.connect, name='TCPThread')
             sm_thread = Thread(target=sm.launch, args=(0,), name='StateMachineThread')
             health_thread = Thread(target=health.run, name='HealthThread')

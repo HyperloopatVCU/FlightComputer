@@ -41,7 +41,7 @@ class HealthMonitor(object):
             Everything in this function will be run every frame for the
             duration of the flight of the pod. 
         """
-        pass
+        return
 
     def run(self):
         while not self.stop_signal:
