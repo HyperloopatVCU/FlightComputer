@@ -51,8 +51,8 @@ Command for final launch
 ```  
 
 ## System Commands
-While running, the pod software should present with a prompt. The prompt allwos
-for someone remotely to control the pod's behavior manually. The manual
+While running, the pod software should present with a prompt. The prompt allows
+for a user remotely to control the pod's behavior manually. The manual control
 commands given to the outside user are:
 
 * warm
@@ -68,4 +68,6 @@ commands given to the outside user are:
 * help
     * Displays usage information
 
-
+Anyone using the software should consult the state diagram for the pod to
+understand how to control it properly. Many of the commands require the pod to
+be in a certain state before being used. 
