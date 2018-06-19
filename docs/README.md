@@ -5,10 +5,10 @@
 ## DISCLAIMER
 ------------------------------------
 This is a **prototype** of the program for the main computer. The real program is
-written in C and is currently still in contruction. Although this is a
+written in C and is currently still in construction. Although this is a
 prototype, it works exactly like the real version just slower. By natural of
 the language, python is slower than C but python is much faster to develop
-which is why it is common to prototype projects in python and write them in C
+which is why it is common to prototype projects in python and write them later in C
 later. Python unfortunately has a feature called the GIL. This prevents python
 programs from running different threads parallel to each other on multiple CPU
 cores. This is also why the real program is being written in C. If the real
