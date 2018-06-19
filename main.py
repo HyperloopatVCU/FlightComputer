@@ -21,7 +21,7 @@ def main(root_logger):
     but for now it is here. 
 
     """
-    PROMPT = "~$ "
+    PROMPT = "[Hyperloop@\x1b[33mVCU\x1b[m] ~$ "
 
     tcp = TCPComm()
     sm = MainSM(tcp, Brakes(), MotorController())

@@ -123,5 +123,8 @@ class MainSM(object):
 
         # TODO: block until stopped
 
+    def estop(self):
+        pass
+
 
 
