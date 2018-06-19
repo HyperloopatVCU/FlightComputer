@@ -15,6 +15,7 @@ class MainSM(object):
         self.frames = 0
 
         self.tcp = tcp
+
         self.hardware = {
             "brakes": hardware[0],
             "motor": hardware[1]
@@ -36,6 +37,8 @@ class MainSM(object):
             0x05: "stop"
         }
 
+        self.cold()
+
         self.config = ConfigParser()
         self.config.read('config.ini')
         
@@ -52,7 +55,7 @@ class MainSM(object):
         if self.state != self.states["cold"]:
             self.logger.warn("[*] Pod must be cold in order to enter warm")
             return
-        j
+
         self.logger.info("[+] State set to 'warm'")
         self.state = self.states["warm"]
 
@@ -64,11 +67,9 @@ class MainSM(object):
             self.logger.warn("[*] Pod must be warm to move")
             return
 
-        # Create seperate threads of execution for comm and health
-        tcp_thread = Thread(target=tcp.connect, name='TCPThread')
-        health_thread = Thread(target=health.run, name='HealthThread')
+        # Create seperate execution thread for comm
+        tcp_thread = Thread(target=self.tcp.connect, name='TCPThread')
         tcp_thread.start()
-        health_thread.start()
 
         self.logger.info("[+] State set to hot")
         self.logger.info("[+] Launch Clock Started")
@@ -80,13 +81,14 @@ class MainSM(object):
             sleep(1/self.frame_rate)
             self.frames += 1
 
+        self.stop()
+        self.cold()
+
         self.logger.info("[+] Flight time {:.2f} seconds".format(time() - t0))
 
-        # Join threads after launch finished
-        tcp.stop_signal = True
-        health.stop_signal = True
+        # Join thread after launch finished
+        self.tcp.stop_signal = True
         tcp_thread.join()
-        health_thread.join()
 
     def update(self, mode):
         """

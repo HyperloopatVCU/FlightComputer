@@ -27,6 +27,9 @@ def main(root_logger):
     sm = MainSM(tcp, Brakes(), MotorController())
     health = HealthMonitor(tcp, sm)
 
+    health_thread = Thread(target=health.run, name='HealthThread')
+    health_thread.start()
+
     while True:
         user_input = input(PROMPT)
 
@@ -34,8 +37,6 @@ def main(root_logger):
 
             sm_thread = Thread(target=sm.launch, args=(0,), name='StateMachineThread')
             sm_thread.start()
-            sm_thread.join()
-
 
         elif user_input == "warm":
             sm.warm_up()
@@ -44,12 +45,15 @@ def main(root_logger):
 
             sm_thread = Thread(target=sm.launch, args=(1,), name='StateMachineThread')
             sm_thread.start()
-            sm_thread.join()
 
         elif user_input == "shutdown":
-            if sm.start != sm.states["cold"]:
-                self.logger.warn("[*] Program cannot exit safety currently!")
-                self.logger.warn("======> State: %s", sm.states_str(sm.state))
+            if sm.state != sm.states["cold"]:
+                root_logger.warn("[*] Program cannot exit safety currently!")
+                root_logger.warn("======> State: %s", sm.state_str[sm.state])
+                continue
+
+            health.stop_signal = True
+            health_thread.join()
             return
 
         elif user_input == "estop":
@@ -59,25 +63,32 @@ def main(root_logger):
             else:
                 continue
 
+        elif user_input == "state":
+            print(sm.state_str[sm.state])
+
         elif user_input == "help":
             print("Usage: ")
             print("[1]     help     : This menu")
-            print("[2]     warm     : Warm up pod")
-            print("[3]     launch   : Launch pod with max speed")
-            print("[4]     drift    : Launch pod slowly")
-            print("[5]     estop    : Emergency stop the moving pod")
-            print("[6]     shutdown : Shutdown program")
+            print("[2]     state    : Current state")
+            print("[3]     warm     : Warm up pod")
+            print("[4]     launch   : Launch pod with max speed")
+            print("[5]     drift    : Launch pod slowly")
+            print("[6]     estop    : Emergency stop the moving pod")
+            print("[7]     shutdown : Shutdown program")
             print()
 
         else:
             print("Usage: ")
             print("[1]     help     : This menu")
-            print("[2]     warm     : Warm up pod")
-            print("[3]     launch   : Launch pod with max speed")
-            print("[4]     drift    : Launch pod slowly")
-            print("[5]     estop    : Emergency stop the moving pod")
-            print("[6]     shutdown : Shutdown program")
+            print("[2]     state    : Current State")
+            print("[3]     warm     : Warm up pod")
+            print("[4]     launch   : Launch pod with max speed")
+            print("[5]     drift    : Launch pod slowly")
+            print("[6]     estop    : Emergency stop the moving pod")
+            print("[7]     shutdown : Shutdown program")
             print()
+
+        
 
 if __name__ == "__main__":
 
