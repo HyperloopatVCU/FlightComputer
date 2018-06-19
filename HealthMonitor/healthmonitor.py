@@ -30,7 +30,7 @@ class HealthMonitor(object):
 
     def update(self):
         """
-        Main event loop:
+        Main health event loop:
             Everything in this function will be run every frame for the
             duration of the flight of the pod. 
         """

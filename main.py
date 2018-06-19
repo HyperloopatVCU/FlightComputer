@@ -40,7 +40,7 @@ def main(root_logger):
         elif user_input == "warm":
             sm.warm_up()
     
-        elif user_input == "idle":
+        elif user_input == "drift":
 
             sm_thread = Thread(target=sm.launch, args=(1,), name='StateMachineThread')
             sm_thread.start()
@@ -53,11 +53,31 @@ def main(root_logger):
             return
 
         elif user_input == "estop":
-            
+            if input("Are you sure? [y/N] ") in ("Y", "y"):
+                """ESTOP the pod"""
+                sm.estop()
+            else:
+                continue
+
+        elif user_input == "help":
+            print("Usage: ")
+            print("[1]     help     : This menu")
+            print("[2]     warm     : Warm up pod")
+            print("[3]     launch   : Launch pod with max speed")
+            print("[4]     drift    : Launch pod slowly")
+            print("[5]     estop    : Emergency stop the moving pod")
+            print("[6]     shutdown : Shutdown program")
+            print()
 
         else:
-            continue
-
+            print("Usage: ")
+            print("[1]     help     : This menu")
+            print("[2]     warm     : Warm up pod")
+            print("[3]     launch   : Launch pod with max speed")
+            print("[4]     drift    : Launch pod slowly")
+            print("[5]     estop    : Emergency stop the moving pod")
+            print("[6]     shutdown : Shutdown program")
+            print()
 
 if __name__ == "__main__":
 
