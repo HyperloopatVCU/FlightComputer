@@ -1,4 +1,5 @@
 {
+  "identity":"ETHERx",
   "accelerometer":{
      "error":<string>,
      "acceleration":{
@@ -9,15 +10,11 @@
      },
      "speed":{
         "units":"m/s",
-        "x":<float>,
-        "y":<float>,
-        "z":<float>
+        "x":<float>
      },
      "position":{
         "units":"m",
-        "x":<float>,
-        "y":<float>,
-        "z":<float>
+        "x":<float>
      }
   },
   "gyroscope":{
@@ -43,10 +40,14 @@
      }
   },
   "horizontal":{
-     "error":<string>,
      "position":{
         "units":"mm",
         "z":<float>
      }
+  }, 
+  "brake":{
+    "position":{
+      "units":"mm", 
+      "dist":<float>
   }
 }
