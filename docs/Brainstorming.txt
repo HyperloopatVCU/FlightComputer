@@ -11,6 +11,7 @@
 	- Improved logging
 		- More verbose information in a .log file
 		- Human readable information send to the GUI
+        - Logs on microcontrollers
 	- Better storing of sensor data
 		- .data file?
 		- More efficient queue?
