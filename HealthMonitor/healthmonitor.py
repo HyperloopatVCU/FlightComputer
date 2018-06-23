@@ -9,7 +9,7 @@ class HealthMonitor(object):
 
     def __init__(self, comm, state_machine):
         """
-        Holds pointer to communication system and state machine
+        Holds reference to communication system and state machine
         """
 
         self.logger = logging.getLogger('HMS')
@@ -19,21 +19,13 @@ class HealthMonitor(object):
         self.stop_signal = False
 
         self.frames = 0
-
-        self.health = "Green"
-
+        
         self.config = ConfigParser()
         self.config.read('config.ini')
-
         self.frame_rate = self.config['Health'].getint('frame_rate')
 
         self.comm = comm
         self.state_machine = state_machine
-
-    def shutdown_pod(self):
-        self.logger.info("[+] Shutting down pod systems")
-        self.state_machine.stop()
-        self.comm.close()
 
     def update(self):
         """
@@ -48,3 +40,4 @@ class HealthMonitor(object):
             self.update()
             sleep(1/self.frame_rate)
             self.frames += 1
+
