@@ -15,74 +15,80 @@ from HardwareControl.motor import MotorController
 # TODO: Added a config file for the configuration of the network for the microcontrollers
 def main(root_logger):
     """
+    Prompt for hyperloop
 
-    Spin up the different threads for comm, state machine, and health.
+    The prompt will soon come from the remote computer controlling the pod
+    but for now it is here. 
 
     """
-    PROMPT = "~$"
+    PROMPT = "[Hyperloop@\x1b[33mVCU\x1b[m] ~$ "
 
     tcp = TCPComm()
     sm = MainSM(tcp, Brakes(), MotorController())
     health = HealthMonitor(tcp, sm)
+
+    health_thread = Thread(target=health.run, name='HealthThread')
+    health_thread.start()
 
     while True:
         user_input = input(PROMPT)
 
         if user_input == "launch":
 
-            if sm.state != 0x02:
-                self.logger.info("[*] State much be warm before launching")
-                continue
-
-                # Separate threads let everything be concurrent
-            tcp_thread = Thread(target=tcp.connect, name='TCPThread')
             sm_thread = Thread(target=sm.launch, args=(0,), name='StateMachineThread')
-            health_thread = Thread(target=health.run, name='HealthThread')
-
-            # Running the threads
-            tcp_thread.start()
             sm_thread.start()
-            health_thread.start()
-
-            # Joining threads back to main
-            sm_thread.join()
-            tcp.stop_signal = True
-            health.stop_signal = True
-            tcp_thread.join()
-            health_thread.join()
-
 
         elif user_input == "warm":
             sm.warm_up()
     
-        elif user_input == "idle":
-            if sm.state != 0x02:
-                root_logger.info("[!!!] Cannot move pod before warming up")
-                continue
+        elif user_input == "drift":
 
-            # Separate threads let everything be concurrent
-            tcp_thread = Thread(target=tcp.connect, name='TCPThread')
             sm_thread = Thread(target=sm.launch, args=(1,), name='StateMachineThread')
-            health_thread = Thread(target=health.run, name='HealthThread')
-
-            # Running the threads
-            tcp_thread.start()
             sm_thread.start()
-            health_thread.start()
-
-            # Joining threads back to main
-            sm_thread.join()
-            tcp.stop_signal = True
-            health.stop_signal = True
-            tcp_thread.join()
-            health_thread.join()
 
         elif user_input == "shutdown":
+            if sm.state != sm.states["cold"]:
+                root_logger.warn("[*] Program cannot exit safety currently!")
+                root_logger.warn("======> State: %s", sm.state_str[sm.state])
+                continue
+
+            health.stop_signal = True
+            health_thread.join()
             return
 
-        else:
-            continue
+        elif user_input == "estop":
+            if input("Are you sure? [y/N] ") in ("Y", "y"):
+                """ESTOP the pod"""
+                sm.estop()
+            else:
+                continue
 
+        elif user_input == "state":
+            print(sm.state_str[sm.state])
+
+        elif user_input == "help":
+            print("Usage: ")
+            print("[1]     help     : This menu")
+            print("[2]     state    : Current state")
+            print("[3]     warm     : Warm up pod")
+            print("[4]     launch   : Launch pod with max speed")
+            print("[5]     drift    : Launch pod slowly")
+            print("[6]     estop    : Emergency stop the moving pod")
+            print("[7]     shutdown : Shutdown program")
+            print()
+
+        else:
+            print("Usage: ")
+            print("[1]     help     : This menu")
+            print("[2]     state    : Current State")
+            print("[3]     warm     : Warm up pod")
+            print("[4]     launch   : Launch pod with max speed")
+            print("[5]     drift    : Launch pod slowly")
+            print("[6]     estop    : Emergency stop the moving pod")
+            print("[7]     shutdown : Shutdown program")
+            print()
+
+        
 
 if __name__ == "__main__":
 

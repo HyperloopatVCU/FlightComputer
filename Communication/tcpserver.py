@@ -1,3 +1,4 @@
+import json
 import logging
 import threading
 from configparser import ConfigParser
@@ -49,7 +50,8 @@ class TCPComm(object):
             if not data:
                 break
 
-            self.packets.put(data.decode('utf-8'))
+            # Decodes message, converts to python dict, puts dict in the queue
+            self.packets.put(json.loads(data.decode('utf-8')))
 
         self.logger.debug("[*] Client disconnect %s", addr)
 
@@ -69,4 +71,19 @@ class TCPComm(object):
     def close(self):
         self.logger.info("[+] Shutting down TCP Server")
         self.server.close()
+
+    def test_connection(self):
+        self.logger.info("[*] Testing Communication System")
+        self.server.listen(10)
+
+        for i in range(5):
+            try:
+                self.server.settimeout(0.5)
+                client, addr = self.server.accept()
+                self.logger.info("======> [  %d  ] Controller Connection", i+1)
+            except:
+                self.logger.critical("[!!!] COMMUNCATION TEST FAILURE")
+                break
+        else:
+            self.logger.info("[+] Communcation Test Success!")
 
