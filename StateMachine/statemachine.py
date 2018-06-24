@@ -7,7 +7,7 @@ from configparser import ConfigParser
 
 class MainSM(object):
 
-    def __init__(self, tcp, *hardware):
+    def __init__(self, Pod, *hardware):
 
         self.logger = logging.getLogger('SM')
 
@@ -17,7 +17,7 @@ class MainSM(object):
 
         self.frames = 0
 
-        self.tcp = tcp
+        self.Pod = Pod
 
         self.hardware = {
             "brakes": hardware[0],
@@ -123,7 +123,11 @@ class MainSM(object):
 
     def stop(self):
         
-        # TODO: [!!!] Be 100% sure the pod isn't accelerating before brakes engage
+        # Be 100% sure the pod isn't accelerating before brakes engage
+        while  Pod.acceleration > 0.5 or Pod.acceleration < -0.5: 
+            # Those values need to be tinkered with and put in the config file
+            self.logger.debug("[!!!] Cannot brake, pod is still accelerating")
+
         
         self.logger.info("[+] State set to 'stop'")
         self.state = self.states["stop"]

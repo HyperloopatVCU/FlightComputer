@@ -7,7 +7,7 @@ class HealthMonitor(object):
     
     # TODO: Make sure to check everything in the spaceX safety checklist
 
-    def __init__(self, comm, state_machine):
+    def __init__(self, Pod, comm, state_machine):
         """
         Holds reference to communication system and state machine
         """
@@ -24,6 +24,7 @@ class HealthMonitor(object):
         self.config.read('config.ini')
         self.frame_rate = self.config['Health'].getint('frame_rate')
 
+        self.Pod = Pod
         self.comm = comm
         self.state_machine = state_machine
 

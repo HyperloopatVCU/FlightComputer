@@ -5,6 +5,7 @@ from os import path
 from logging import config
 from time import time
 from threading import Thread
+from pod_structure import Pod
 from StateMachine.statemachine import MainSM
 from Communication.tcpserver import TCPComm
 from HealthMonitor.healthmonitor import HealthMonitor
@@ -22,9 +23,10 @@ def main(root_logger):
     """
     PROMPT = "[Hyperloop@\x1b[33mVCU\x1b[m] ~$ "
 
+    Pod = Pod()
     tcp = TCPComm()
-    sm = MainSM(tcp, Brakes(), Motor())
-    health = HealthMonitor(tcp, sm)
+    sm = MainSM(Pod, Brakes(), Motor())
+    health = HealthMonitor(Pod, tcp, sm)
 
     health_thread = Thread(target=health.run, name='HealthThread')
     health_thread.start()
