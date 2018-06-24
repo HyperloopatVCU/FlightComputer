@@ -9,7 +9,7 @@ from StateMachine.statemachine import MainSM
 from Communication.tcpserver import TCPComm
 from HealthMonitor.healthmonitor import HealthMonitor
 from HardwareControl.brakes import Brakes
-from HardwareControl.motor import MotorController
+from HardwareControl.motor import Motor
 
 # TODO: Added a config file for the configuration of the network for the microcontrollers
 def main(root_logger):
@@ -23,7 +23,7 @@ def main(root_logger):
     PROMPT = "[Hyperloop@\x1b[33mVCU\x1b[m] ~$ "
 
     tcp = TCPComm()
-    sm = MainSM(tcp, Brakes(), MotorController())
+    sm = MainSM(tcp, Brakes(), Motor())
     health = HealthMonitor(tcp, sm)
 
     health_thread = Thread(target=health.run, name='HealthThread')
