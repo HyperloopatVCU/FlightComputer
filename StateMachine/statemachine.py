@@ -1,3 +1,4 @@
+
 import logging
 from time import sleep, time
 from threading import Thread
@@ -11,6 +12,8 @@ class MainSM(object):
         self.logger = logging.getLogger('SM')
 
         self.logger.info("[+] Initializing State Machine")
+
+        self.estop_signal = False
 
         self.frames = 0
 
@@ -97,7 +100,12 @@ class MainSM(object):
         if at max speed || at max distance
             stop
         """
-        return 1
+
+        if self.estop_signal:
+            return 1
+
+
+        return 0
 
 
     def emergency(self, ecode):
@@ -115,8 +123,7 @@ class MainSM(object):
 
     def stop(self):
         
-        # TODO: Engage brakes
-        # [!!!] Be 100% sure the pod isn't accelerating before brakes engage
+        # TODO: [!!!] Be 100% sure the pod isn't accelerating before brakes engage
         
         self.logger.info("[+] State set to 'stop'")
         self.state = self.states["stop"]
@@ -126,7 +133,6 @@ class MainSM(object):
         # TODO: block until stopped
 
     def estop(self):
-        pass
-
+        self.estop_signal = True
 
 

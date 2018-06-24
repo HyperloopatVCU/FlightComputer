@@ -1,14 +1,17 @@
 import logging
 
-class MotorController(object):
-    
-    # TODO: Use CAN protocol to manipulate the motor
-    
+class Motor(object):
+    """
+    Can bus protocol
+    """
 
     def __init__(self):
         self.logger = logging.getLogger('Motor')
 
-    def accelerate(self):
+        self.frequency = 0
+        self.temperature = 0
+
+    def accelerate(self, rpm):
         self.logger.debug("[*] Accelerating")
 
     def idle(self):

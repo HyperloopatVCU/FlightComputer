@@ -1,3 +1,4 @@
+
 import json
 import logging
 import threading
@@ -54,19 +55,6 @@ class TCPComm(object):
             self.packets.put(json.loads(data.decode('utf-8')))
 
         self.logger.debug("[*] Client disconnect %s", addr)
-
-    def broadcast(self, msg):
-
-        # TODO: Broadcast msg (Which should be some hex number) to all microcontrollers
-        
-        self.logger.info("[*] Broadcast: %s", msg)
-
-    def pop_data_packet(self):
-        
-        # TODO: pop a data packet and parse it appropriately
-
-        
-        pass
 
     def close(self):
         self.logger.info("[+] Shutting down TCP Server")
