@@ -8,7 +8,7 @@ class Motor(object):
     def __init__(self):
         self.logger = logging.getLogger('Motor')
 
-        self.frequency = 0
+        self.slip_frequency = 0
         self.temperature = 0
 
     def accelerate(self, rpm):

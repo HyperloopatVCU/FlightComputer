@@ -79,6 +79,9 @@ class MainSM(object):
         t0 = time()
         self.state = self.states["hot"]
 
+        # Turn the motor on at the apppropriate rpm 
+        self.hardware["motor"].accelerate(mode)
+
         while True:
             if self.update(mode): break
             sleep(1/self.frame_rate)
@@ -118,12 +121,22 @@ class MainSM(object):
         logger.info("[!!!] State set to 'emergency'")
         logger.debug("[-] %s", ecode)
         self.state = self.states["emergency"]
+
+        self.stop()
         
 
 
     def stop(self):
         
         # TODO: [!!!] Be 100% sure the pod isn't accelerating before brakes engage
+        self.hardware["motor"].idle()
+
+
+        # If the pod is still acclerating forwards the program will wait one
+        # second before it engages the brakes to the give the motor time to
+        # stop running
+        if Pod.acceleration > 0.5:
+            time.sleep(0.5)
         
         self.logger.info("[+] State set to 'stop'")
         self.state = self.states["stop"]
