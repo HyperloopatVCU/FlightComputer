@@ -1,7 +1,7 @@
 
 [Major Changes]
 	- Rewrite code base in C/C++ (or even Golang)
-	- Removes interpreter overhead    
+	    - Removes interpreter overhead    
 		- Promotes easier parallelism impeded by python’s GIL
 	- Use real-time linux distro
 		- Obviously fast speed due to lack of OS overhead
@@ -17,7 +17,7 @@
 		- More efficient queue?
     - Addition pod behaviors
         - Test mode, Launch mode, etc. etc.
-    - Pod REPL
+    - Better Native Pod REPL
         - Possible debugging application
         - Easy test suite
  

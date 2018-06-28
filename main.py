@@ -12,7 +12,6 @@ from HealthMonitor.healthmonitor import HealthMonitor
 from HardwareControl.brakes import Brakes
 from HardwareControl.motor import Motor
 
-# TODO: Added a config file for the configuration of the network for the microcontrollers
 def main(root_logger):
     """
     Prompt for hyperloop
