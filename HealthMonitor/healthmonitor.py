@@ -25,7 +25,7 @@ class HealthMonitor(object):
         self.frame_rate = self.config['Health'].getint('frame_rate')
 
         self.comm = comm
-        self.state_machine = state_machine
+        self.sm = state_machine
 
     def update(self):
         """
@@ -33,7 +33,26 @@ class HealthMonitor(object):
             Everything in this function will be run every frame for the
             duration of the flight of the pod. 
         """
-        return
+        
+        if sm.state == sm.states["cold"]:
+            return
+
+        elif sm.state == sm.states["warm"]:
+            return
+
+        elif sm.state == sm.states["hot"]:
+            return
+
+        elif sm.state == sm.states["stop"]:
+            return
+
+        elif sm.state == sm.states["emergency"]:
+            return
+        
+        else:
+            # It definitely shouldn't get here
+            self.logger.critical("[!!!] Something is very wrong, State: %s", \
+                                 sm.state)
 
     def run(self):
         while not self.stop_signal:
