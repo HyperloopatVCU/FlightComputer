@@ -23,10 +23,10 @@ def main(root_logger):
     """
     PROMPT = "[Hyperloop@\x1b[33mVCU\x1b[m] ~$ "
 
-    Pod = Pod()
+    pod = Pod()
     tcp = TCPComm()
-    sm = MainSM(Pod, Brakes(), Motor())
-    health = HealthMonitor(Pod, tcp, sm)
+    sm = MainSM(pod, Brakes(pod), Motor())
+    health = HealthMonitor(pod, tcp, sm)
 
     health_thread = Thread(target=health.run, name='HealthThread')
     health_thread.start()

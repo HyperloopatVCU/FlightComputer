@@ -124,7 +124,7 @@ class MainSM(object):
     def stop(self):
         
         # Be 100% sure the pod isn't accelerating before brakes engage
-        while  Pod.acceleration > 0.5 or Pod.acceleration < -0.5: 
+        while  Pod.acceleration > 0.0: 
             # Those values need to be tinkered with and put in the config file
             self.logger.debug("[!!!] Cannot brake, pod is still accelerating")
 
