@@ -8,8 +8,8 @@ class Pod(object):
 
     def __init__(self):
         """
-         Add fields to this 'struct' as necessary for the state machine and
-         remote gui
+        Add to this 'struct' whatever fields are needed for the statemachine
+        and the remote gui
         """
         self.position = 0.0
         self.speed = 0.0
