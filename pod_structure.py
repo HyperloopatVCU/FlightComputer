@@ -7,6 +7,10 @@ class Pod(object):
     """
 
     def __init__(self):
+        """
+        Add to this 'struct' whatever fields are needed for the statemachine
+        and the remote gui
+        """
         self.position = 0.0
         self.speed = 0.0
         self.acceleration = { "x": 0.0, "y": 0.0, "z": 0.0 }
