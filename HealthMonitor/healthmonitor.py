@@ -33,6 +33,9 @@ class HealthMonitor(object):
         Main health event loop:
             Everything in this function will be run every frame for the
             duration of the flight of the pod. 
+
+        Any threshold values that may need to be adjusted should be added to
+        the config.ini file in the root of the program directory. 
         """
         
         if sm.state == sm.states["cold"]:
