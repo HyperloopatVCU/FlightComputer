@@ -20,6 +20,8 @@
     - Better Native Pod REPL
         - Possible debugging application
         - Easy test suite
+    - Add setup.sh file
+        - Easily change computers or operating systems
  
 [Developmental Changes]
 	- Maintain documentation on the fly
