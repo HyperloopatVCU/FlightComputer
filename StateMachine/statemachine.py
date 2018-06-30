@@ -26,18 +26,16 @@ class MainSM(object):
 
         self.states = {
             "cold"     : 0x01,  # Pod is off, This is the safe state
-            "warm"     : 0x02,  # Preparing pod for flight
-            "hot"      : 0x03,  # Pod is in flight
-            "emergency": 0x04,  # Bring hot pod to a stop
-            "stop"     : 0x05   # Emergency stop
+            "ready"     : 0x02,  # Preparing pod for flight
+            "accelerating"      : 0x03,  # Pod is in flight
+            "stopping"     : 0x05   # Emergency stop
         }
 
         self.state_str = {
             0x01: "cold",
-            0x02: "warm",
-            0x03: "hot",
-            0x04: "emergency",
-            0x05: "stop"
+            0x02: "ready",
+            0x03: "accelerating",
+            0x05: "stopping"
         }
 
         self.cold()
@@ -59,14 +57,14 @@ class MainSM(object):
             self.logger.warn("[*] Pod must be cold in order to enter warm")
             return
 
-        self.logger.info("[+] State set to 'warm'")
-        self.state = self.states["warm"]
+        self.logger.info("[+] State set to 'ready'")
+        self.state = self.states["ready"]
 
         self.hardware["brakes"].disengage()
 
 
     def launch(self, mode):
-        if self.state != self.states["warm"]:
+        if self.state != self.states["ready"]:
             self.logger.warn("[*] Pod must be warm to move")
             return
 
@@ -74,10 +72,10 @@ class MainSM(object):
         tcp_thread = Thread(target=self.tcp.connect, name='TCPThread')
         tcp_thread.start()
 
-        self.logger.info("[+] State set to hot")
+        self.logger.info("[+] State set to accelerating")
         self.logger.info("[+] Launch Clock Started")
         t0 = time()
-        self.state = self.states["hot"]
+        self.state = self.states["accelerating"]
 
         # Turn the motor on at the apppropriate rpm 
         self.hardware["motor"].accelerate(mode)
@@ -98,9 +96,7 @@ class MainSM(object):
 
     def update(self, mode):
         """
-        if critical error
-            emergency
-        if at max speed || at max distance
+        if at max speed || at max distance || error
             stop
         """
 
@@ -110,32 +106,9 @@ class MainSM(object):
 
         return 0
 
-
-    def emergency(self, ecode):
-        """
-        Determine Severity
-        If it can recover - try to
-        Else - stop the pod
-        """
-
-        logger.info("[!!!] State set to 'emergency'")
-        logger.debug("[-] %s", ecode)
-        self.state = self.states["emergency"]
-
-        self.stop()
-        
-
-
     def stop(self):
         
-        # Be 100% sure the pod isn't accelerating before brakes engage
-        while  Pod.acceleration > 0.0: 
-            # Those values need to be tinkered with and put in the config file
-            self.logger.debug("[!!!] Cannot brake, pod is still accelerating")
-
-        # TODO: [!!!] Be 100% sure the pod isn't accelerating before brakes engage
         self.hardware["motor"].idle()
-
 
         # If the pod is still acclerating forwards the program will wait one
         # second before it engages the brakes to the give the motor time to
@@ -143,8 +116,8 @@ class MainSM(object):
         if Pod.acceleration > 0.5:
             time.sleep(0.5)
         
-        self.logger.info("[+] State set to 'stop'")
-        self.state = self.states["stop"]
+        self.logger.info("[+] State set to 'stopping'")
+        self.state = self.states["stopping"]
 
         self.hardware["brakes"].engage()
 

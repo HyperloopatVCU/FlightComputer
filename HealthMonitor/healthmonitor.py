@@ -38,18 +38,15 @@ class HealthMonitor(object):
         if sm.state == sm.states["cold"]:
             return
 
-        elif sm.state == sm.states["warm"]:
+        elif sm.state == sm.states["ready"]:
             return
 
-        elif sm.state == sm.states["hot"]:
+        elif sm.state == sm.states["accelerating"]:
             return
 
-        elif sm.state == sm.states["stop"]:
+        elif sm.state == sm.states["stopping"]:
             return
 
-        elif sm.state == sm.states["emergency"]:
-            return
-        
         else:
             # It definitely shouldn't get here
             self.logger.critical("[!!!] Something is very wrong, State: %s", \
