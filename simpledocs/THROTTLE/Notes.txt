@@ -1,0 +1,27 @@
+PINOUT
+-------
+1 -> 9
+2 -> 4
+3 -> 4
+4 -> GND
+5 -> ~CS (see RPI pin allocation)
+6 -> CLK (see RPI pin allocation)
+7 -> SDI (see RPI pin allocation)
+8 -> SDO (see RPI pin allocation)
+9 -> +VOLTAGE
+10 -> THROTTLE
+
+COMMANDS
+---------
+Send one byte to set wiper position.
+
+SPI SETUP
+----------
+CLK rising edge
+CLK high OK
+MSB first
+
+NOTES
+------
+Voltage at wiper (pin 10)
+	Vw = D/256 * +V
