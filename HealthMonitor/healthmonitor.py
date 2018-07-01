@@ -39,15 +39,30 @@ class HealthMonitor(object):
         """
         
         if sm.state == sm.states["cold"]:
+            # accelerating is the only important state right now
             return
 
         elif sm.state == sm.states["ready"]:
+            # accelerating is the only important state right now
             return
 
         elif sm.state == sm.states["accelerating"]:
+            """
+            1.)
+                Compare sensor values from each queue in the tcpserver.py
+                module. If one sensor is a certain deviation away from all the
+                rest or there is an error marked by the microcontroller on the
+                packet then discard it.
+
+            2.) If a critical sensor has been discarded then stop the pod
+
+            3.) Average all the non-discarded sensor values and update the
+                global Pod class in the pod_structure.py module. 
+            """
             return
 
         elif sm.state == sm.states["stopping"]:
+            # accelerating is the only important state right now
             return
 
         else:
