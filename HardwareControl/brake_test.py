@@ -23,6 +23,7 @@ class Brakes(object):
     def __init__(s, pd):
         
         s.current = pd.current #this has to be a reference, not a value
+        s.brakeposition = pd.sensors.brakes.position #need to know how this works
 
         hd.setup(s.DFR, hd.OUT)
         hd.setup(s.DFL, hd.OUT)
