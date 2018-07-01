@@ -17,7 +17,10 @@ class TCPComm(object):
 
         self.stop_signal = False
 
-        self.packets = Queue(-1)  # TODO: Probably need more than one queue
+        self.controller1 = Queue(-1)
+        self.controller2 = Queue(-1)
+        self.controller3 = Queue(-1)
+        self.controller4 = Queue(-1)
 
         self.config = ConfigParser()
         self.config.read('config.ini')
@@ -52,7 +55,18 @@ class TCPComm(object):
                 break
 
             # Decodes message, converts to python dict, puts dict in the queue
-            self.packets.put(json.loads(data.decode('utf-8')))
+            packet = json.loads(data.decode('utf-8'))
+
+            if packet["identity"] == 1:
+                self.controller1.push(packet)
+            elif packet["identity"] == 2:
+                self.controller2.push(packet)
+            elif packet["identity"] == 3:
+                self.contoller3.push(packet)
+            elif packet["identity"] == 4:
+                self.controller4.push(packet)
+            else:
+                self.logger.critical("[!!!] Packet isn't IDed right!")
 
         self.logger.debug("[*] Client disconnect %s", addr)
 

@@ -34,8 +34,8 @@ COLD: Pod is offline
   |   | Cut throttle
   |   | Engage controlled braking
   |
-  +-COOLDOWN: Pod is shutting off...
+  +-SHUTDOWN: Pod is shutting off...
     |
-    | <HUMAN OR SOFTWARE INTERVENTION>
+    | <HUMAN INTERVENTION>
     |
     | Archive flight log
