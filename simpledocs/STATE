@@ -7,7 +7,7 @@ FAIL: Pod has encountered an error...
 
 COLD: Pod is offline
 |
-+-WARM: Pod is online...
++-READY: Pod is online...
   | 
   | <HUMAN INTERVENTION>
   |
@@ -17,7 +17,7 @@ COLD: Pod is offline
   |  -> Wait 99 seconds or until all Arduinos are connected
   |  -> Otherwise FAIL
   |
-  +-HOT: Pod is launched...
+  +-ACCELERATING: Pod is launched...
   | |
   | | <TERMINAL INTERVENTION, PRELIM CHECKS OK>
   | |
@@ -27,7 +27,7 @@ COLD: Pod is offline
   | |  -> FAIL on abnormal response
   | |  -> FAIL on software crash
   | |
-  | +-STOP: Braking is engaged...
+  | +-STOPPING: Braking is engaged...
   |   |
   |   | <TERMINAL INTERVENTION OR SOFTWARE STAGING>
   |   |
