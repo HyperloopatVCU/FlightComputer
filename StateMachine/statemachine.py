@@ -54,7 +54,7 @@ class MainSM(object):
         Disengage Breaks, microcontrollers should zero sensors
         """
         if self.state != self.states["cold"]:
-            self.logger.warn("[*] Pod must be cold in order to enter warm")
+            self.logger.warn("[*] Pod must be cold in order to be ready")
             return
 
         self.logger.info("[+] State set to 'ready'")
@@ -114,6 +114,7 @@ class MainSM(object):
         # second before it engages the brakes to the give the motor time to
         # stop running
         if Pod.acceleration > 0.5:
+            self.logger.debug("[+] Pod still accelerating when trying to brake")
             time.sleep(0.5)
         
         self.logger.info("[+] State set to 'stopping'")
