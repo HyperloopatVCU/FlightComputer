@@ -1,41 +1,36 @@
-FAIL: Pod has encountered an error...
-|
-| <FAULT IN RUNTIME>
-|
-| Cut throttle
-| Engage controlled braking
 
 COLD: Pod is offline
 |
 +-READY: Pod is online...
-  | 
+| | 
+| | <HUMAN INTERVENTION>
+| |
+| | Disengage brakes safety switch
+| | Setup data structures and stuff
+| | Start server
+| |  -> Wait 99 seconds or until all Arduinos are connected
+| |  -> Otherwise FAIL
+| |
+| +-ACCELERATING: Pod is launched...
+|   |
+|   | <TERMINAL INTERVENTION, PRELIM CHECKS OK>
+|   |
+|   | Increase throttle
+|   |  -> Continue until maximum speed or,
+|   |  -> FAIL on sensor readings outside of nominal range
+|   |  -> FAIL on abnormal response
+|   |  -> FAIL on software crash
+|   |
+|   +-STOPPING: Braking is engaged...
+|     |
+|     | <TERMINAL INTERVENTION OR SOFTWARE STAGING>
+|     |
+|     | Cut throttle
+|     | Engage controlled braking
+| 
++-SHUTDOWN: Pod is shutting off...
+  |
   | <HUMAN INTERVENTION>
   |
-  | Disengage brakes safety switch
-  | Setup data structures and stuff
-  | Start server
-  |  -> Wait 99 seconds or until all Arduinos are connected
-  |  -> Otherwise FAIL
-  |
-  +-ACCELERATING: Pod is launched...
-  | |
-  | | <TERMINAL INTERVENTION, PRELIM CHECKS OK>
-  | |
-  | | Increase throttle
-  | |  -> Continue until maximum speed or,
-  | |  -> FAIL on sensor readings outside of nominal range
-  | |  -> FAIL on abnormal response
-  | |  -> FAIL on software crash
-  | |
-  | +-STOPPING: Braking is engaged...
-  |   |
-  |   | <TERMINAL INTERVENTION OR SOFTWARE STAGING>
-  |   |
-  |   | Cut throttle
-  |   | Engage controlled braking
-  |
-  +-SHUTDOWN: Pod is shutting off...
-    |
-    | <HUMAN INTERVENTION>
-    |
-    | Archive flight log
+  | Ensure all pod systems are safely closed
+  | Archive flight log
