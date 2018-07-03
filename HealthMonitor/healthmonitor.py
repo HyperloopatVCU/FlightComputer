@@ -174,39 +174,39 @@
 
     # Checked
     def VPS_check(self,vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount):
-        self.vpsfailcount = 0
+        vpsfailcount = 0
         while True:
 
             packet1 = comm.controller1.get(timeout=2)
             if self.comm.microcontroller[1]["vertical"]["error"] == 0:
-                self.vpsone = 1
+                vpsone = 1
             else:
-                self.vpsone = 0
-                self.vpsfailcount = self.vpsfailcount + 1
+                vpsone = 0
+                vpsfailcount = self.vpsfailcount + 1
                 self.logger.info("[!!!] Error with VPS #1")
 
             packet2 = comm.controller2.get(timeout=2)
             if self.comm.microcontroller[2]["vertical"]["error"] == 0:
-                self.vpstwo = 1
+                vpstwo = 1
             else:
-                self.vpstwo = 0
-                self.vpsfailcount = self.vpsfailcount + 1
+                vpstwo = 0
+                vpsfailcount = self.vpsfailcount + 1
                 self.logger.info("[!!!] Error with VPS #2")
 
             packet3 = comm.controller3.get(timeout=2)
             if self.comm.microcontroller[3]["vertical"]["error"] == 0:
-                self.vpsthree = 1
+                vpsthree = 1
             else:
-                self.vpsthree = 0
-                self.vpsfailcount = self.vpsfailcount + 1
+                vpsthree = 0
+                vpsfailcount = self.vpsfailcount + 1
                 self.logger.info("[!!!] Error with VPS #3")
 
             packet4 = comm.controller4.get(timeout=2)
             if self.comm.microcontroller[4]["vertical"]["error"] == 0:
-                self.vpsfour = 1
+                vpsfour = 1
             else:
-                self.vpsfour = 0
-                self.vpsfailcount = self.vpsfailcount + 1
+                vpsfour = 0
+                vpsfailcount = self.vpsfailcount + 1
                 self.logger.info("[!!!] Error with VPS #4")
 
             if self.vpsfailcount >= 2:
@@ -214,46 +214,46 @@
 
     # Checked
     def IMU_check(self,imuone,imutwo,imuthree,imufour, imufailcount):
-        self.imufailcount = 0
+        imufailcount = 0
         sensorcondition = True
         while sensorcondition:
 
             packet1 = comm.controller1.get(timeout=2)
             if self.comm.microcontroller[1]["accelerometer"]["error"] == 0:
-               self.imuone = 1
+               imuone = 1
             else:
-                self.imuone = 0
+                imuone = 0
                 self.imufailcount = self.imufailcount + 1
                 self.logger.info("[!!!] Error with IMU #1")
 
             packet2 = comm.controller2.get(timeout=2)
             if self.comm.microcontroller[2]["accelerometer"]["error"] == 0:
-                self.imutwo = 1
+                imutwo = 1
             else:
-                self.imutwo = 0
-                self.imufailcount = self.imufailcount + 1
+                imutwo = 0
+                imufailcount = self.imufailcount + 1
                 self.logger.info("[!!!] Error with IMU #2")
 
             packet3 = comm.controller3.get(timeout=2)
             if self.comm.microcontroller[3]["accelerometer"]["error"] == 0:
-                self.imuthree = 1
+                imuthree = 1
             else:
-                self.imuthree = 0
-                self.imufailcount = self.imufailcount + 1
+                imuthree = 0
+                imufailcount = self.imufailcount + 1
                 self.logger.info("[!!!] Error with IMU #3")
 
             packet4 = comm.controller4.get(timeout=2)
             if self.comm.microcontroller[4]["accelerometer"]["error"] == 0:
-                self.imufour = 1
+                imufour = 1
             else:
-                self.imufour = 0
-                self.imufailcount = self.imufailcount + 1
+                imufour = 0
+                imufailcount = self.imufailcount + 1
                 self.logger.info("[!!!] Error with IMU #4")
 
-            if self.imufailcount >= 2:
+            if imufailcount >= 2:
                 sensorcondition = False
 
-                self.sm.estop_signal = True== True
+                self.sm.estop_signal = True
 
     # Checked
     def BMS_check(self, bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount):
@@ -414,7 +414,7 @@ class HealthMonitor(object):
                 packet3 = self.comm.controller3.get(timeout=self.timeout)
                 packet4 = self.comm.controller4.get(timeout=self.timeout)
                 packet5 = self.comm.controller5.get(timeout=self.timeout)
-            except:
+            except: # queue.Empty exception
                 self.logger.critical("[+] Microcontroller timed out!")
                 self.sm.estop_signal = True
                 return
