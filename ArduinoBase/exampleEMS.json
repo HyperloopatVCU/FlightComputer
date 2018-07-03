@@ -1,5 +1,5 @@
 {
-	"identity":"ETHER<number>",
+	"identity":"ESS<number>",
 	"error":<number>,
 	"accelerometer":{
 		 "error":<number>,

@@ -133,12 +133,12 @@ void setup() {
 
 struct {
 	const String prelude = "{";
-	const String info = "\n\t\"identity\":\"ETHER" str(ID_TAG) "\"";
+	const String info = "\n\t\"identity\":\"EMS" str(ID_TAG) "\",\n\t\"error\":\"0\"";
 #ifdef ACEL
 	struct {
 		const String prelude = ",\n\t\"accelerometer\":{";
 		const String error_prelude = "\n\t\t\"error\":";
-		String error = "\"\"";
+		String error = "0";
 		struct {
 			const String prelude = ",\n\t\t\"acceleration\":{";
 			const String info = "\n\t\t\t\"units\":\"g\"";
@@ -171,7 +171,7 @@ struct {
 	struct{
 		const String prelude = ",\n\t\"gyroscope\":{";
 		const String error_prelude = "\n\t\t\"error\":";
-		String error = "\"\"";
+		String error = "0";
 		struct {
 			const String prelude = ",\n\t\t\"velocity\":{";
 			const String info = "\n\t\t\t\"units\":\"deg/s\"";
@@ -201,7 +201,7 @@ struct {
 	struct {
 		const String prelude = ",\n\t\"vertical\":{";
 		const String error_prelude = "\n\t\t\"error\":";
-		String error;
+		String error = "0";
 		struct {
 			const String prelude = ",\n\t\t\"position\":{";
 			const String info = "\n\t\t\t\"units\":\"mm\"";
@@ -215,6 +215,8 @@ struct {
 #ifdef HPSN
 	struct {
 		const String prelude = ",\n\t\"horizontal\":{";
+		const String error_prelude = "\n\t\t\"error\":";
+		String error = "0";
 		struct {
 			const String prelude = "\n\t\t\"position\":{";
 			const String info = "\n\t\t\t\"units\":\"mm\"";
@@ -229,6 +231,8 @@ struct {
 #ifdef BRAK
 	struct {
 		const String prelude = ",\n\t\"brake\":{"
+		const String error_prelude = "\n\t\t\"error\":";
+		String error = "0";
 		struct {
 			const String prelude = "\n\t\t\"position\":{";
 			const String info = "\n\t\t\t\"units\":\"mm\"";
