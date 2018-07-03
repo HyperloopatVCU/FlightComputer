@@ -365,6 +365,8 @@ class HealthMonitor(object):
 
         self.timeout = self.config['Health'].getint('controller_timeout')
 
+        self.bms_allowed_errors = self.config['Health'].getint('bms_allowed_erros')
+
     def run(self):
             while not self.stop_signal:
                 self.update()
@@ -419,7 +421,7 @@ class HealthMonitor(object):
                 self.sm.estop_signal = True
                 return
 
-            for k, v in packet1:
+            for k, v in packet1.items():
                 if v["error"] != 0:
                     self.logger.critical("[+] Microcontroller one error: %s", k)
                     self.sm.estop_signal = True
@@ -431,7 +433,7 @@ class HealthMonitor(object):
                 self.sm.estop_signal = True
                 return
 
-            for k, v in packet2:
+            for k, v in packet2.items():
                 if v["error"] != 0:
                     self.logger.critical("[+] Microcontroller two error: %s", k)
                     self.sm.estop_signal = True
@@ -443,7 +445,7 @@ class HealthMonitor(object):
                 self.sm.estop_signal = True
                 return
 
-            for k, v in packet3:
+            for k, v in packet3.items():
                 if v["error"] != 0:
                     self.logger.critical("[+] Microcontroller three error: %s", k)
                     self.sm.estop_signal = True
@@ -455,20 +457,24 @@ class HealthMonitor(object):
                 self.sm.estop_signal = True
                 return
 
-            for k, v in packet4:
+            for k, v in packet4.items():
                 if v["error"] != 0:
                     self.logger.critical("[+] Microcontroller four error: %s", k)
                     self.sm.estop_signal = True
                     return
 
-            # BMS error checking
-            for k1, v1 in packet5:
-                for k2, v2 in v1:
+            # BMS error checking (This needs to be changed a bit because the for loop won't work)
+            bms_failcount = 0
+            for k1, v1 in packet5.items():
+                for k2, v2 in v1.items():
                     if v2["error"] != 0:
+                        bms_failcount += 1
                         self.logger.critical("[+] Microcontroller five error: %s", k2)
-                        self.sm.estop_signal = True
-                        return
 
+            if bms_failcount >= self.bms_allowed_errors:
+                self.logger.critical("[+] Microcontroller five error: %s")
+                self.sm.estop_signal = True
+                return
 
             # (NOT syntactally correct at all but getting there)
 
