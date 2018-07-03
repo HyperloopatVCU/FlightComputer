@@ -11,15 +11,17 @@ class Pod(object):
         Add to this 'struct' whatever fields are needed for the statemachine
         and the remote gui
         """
-        self.position = 0.0
-        self.speed = 0.0
-        self.acceleration = { "x": 0.0, "y": 0.0, "z": 0.0 }
-        self.temp = {"high": 0.0, "low": 0.0, "front": 0.0, "back": 0.0}
-        self.volt = {"high": 0.0, "low": 0.0, "front": 0.0, "back": 0.0}
-        self.current = {"high": 0.0, "low": 0.0, "front": 0.0, "back": 0.0}
+        self.fiducialCount = 0
+        self.position = { "x": 0.0, "y": 0.0, "z": 0.0, "brake": 0.0}       "meters"
+        self.speed = {"x": 0.0}                                             "meters per second"
+        self.acceleration = { "x": 0.0, "y": 0.0, "z": 0.0 }                "meters per square second"
+        self.temp = {"high": 0.0, "low": 0.0, "front": 0.0, "back": 0.0}    "celsius"
+        self.volt = {"high": 0.0, "low": 0.0, "front": 0.0, "back": 0.0}    "volt"
+        self.current = {"high": 0.0, "low": 0.0, "front": 0.0, "back": 0.0} "ampere"
+        self.throttle = 0.0                                                 "percent"
 
     def __repr__(self):
         return "<POD pos: {:.2f}, vel: {:.2f}, acc:\
-            {:.2f} >".format(self.position, self.speed, self.acceleration["x"])
+            {:.2f} >".format(self.position["x"], self.speed["x"], self.acceleration["x"])
     
 
