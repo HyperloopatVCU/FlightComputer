@@ -115,6 +115,7 @@
             acceleration = -21.5
             distance = acceleration * time**2
 
+    # Checked
     def HPS_check(self,hpsone,hpstwo,hpsthree,hpsfour, hpsfailcount):
         self.hpsfailcount = 0
         while True:
@@ -169,8 +170,9 @@
                 self.logger.info("Error with HPS #3")
 
             if self.hpsfailcount >= 2:
-                self.sm.estop_signal = True== True
+                self.sm.estop_signal = True
 
+    # Checked
     def VPS_check(self,vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount):
         self.vpsfailcount = 0
         while True:
@@ -208,8 +210,9 @@
                 self.logger.info("Error with VPS #4")
 
             if self.vpsfailcount >= 2:
-                self.sm.estop_signal = True== True
+                self.sm.estop_signal = True
 
+    # Checked
     def IMU_check(self,imuone,imutwo,imuthree,imufour, imufailcount):
         self.imufailcount = 0
         sensorcondition = True
@@ -252,7 +255,7 @@
 
                 self.sm.estop_signal = True== True
 
-
+    # Checked
     def BMS_check(self, bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount):
             # while Something
             #if data exist
@@ -416,7 +419,9 @@ class HealthMonitor(object):
                 self.sm.estop_signal = True
                 return
 
-            # Temperature Checks (NOT syntactally correct at all but getting there)
+            # (NOT syntactally correct at all but getting there)
+
+            # Temperature Checks 
             battery_temp_check(battery_temperature)
             motor_temp_check(motor_temperature)
             motor_controller_temp_check(motor_controller_temp)
@@ -426,13 +431,18 @@ class HealthMonitor(object):
             low_one_battery_check(voltage, current)
             low_2A_battery_check(voltage, current)
             low_2B_battery_check(voltage, current)
-            brake_potentiometer_check(voltage, current):
+            brake_potentiometer_check(voltage, current)
 
             # Distance Check
-            pod_distance_from_track(time):
+            pod_distance_from_track(time)
 
+            # More system checks
+            HPS_check(hpsone,hpstwo,hpsthree,hpsfour, hpsfailcount)
+            VPS_check(vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount)
+            IMU_check(imuone,imutwo,imuthree,imufour, imufailcount)
+            BMS_check(bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount)
 
-
+            
             return
 
         elif sm.state == sm.states["stopping"]:
