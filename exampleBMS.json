@@ -1,0 +1,75 @@
+{
+	"identity":"BMS<number>",
+	"high power": {
+		"temperature-<number>": { <multiple of these>
+			"error":<number>,
+			"units":"C",
+			"temp":<number>
+		},
+		"voltage&current-<number>": { <multiple of these>
+			"error":<number>,
+			"voltage": {
+				"units":"V",
+				"V":<number>
+			},
+			"current": {
+				"units":"A",
+				"A":<number>
+			}
+		}
+	},
+	"low power": {
+		"temperature-<number>": { <multiple of these>
+			"error":<number>,
+			"units":"C",
+			"temp":<number>
+		},
+		"voltage&current-<number>": { <multiple of these>
+			"error":<number>,
+			"voltage": {
+				"units":"V",
+				"V":<number>
+			},
+			"current": {
+				"units":"A",
+				"A":<number>
+			}
+		}
+	},
+	"brake front": {
+		"temperature-<number>": { <multiple of these>
+			"error":<number>,
+			"units":"C",
+			"temp":<number>
+		},
+		"voltage&current-<number>": { <multiple of these>
+			"error":<number>,
+			"voltage": {
+				"units":"V",
+				"V":<number>
+			},
+			"current": {
+				"units":"A",
+				"A":<number>
+			}
+		}
+	},
+	"brake back": {
+		"temperature-<number>": { <multiple of these>
+			"error":<number>,
+			"units":"C",
+			"temp":<number>
+		},
+		"voltage&current-<number>": { <multiple of these>
+			"error":<number>,
+			"voltage": {
+				"units":"V",
+				"V":<number>
+			},
+			"current": {
+				"units":"A",
+				"A":<number>
+			}
+		}
+	}
+}
