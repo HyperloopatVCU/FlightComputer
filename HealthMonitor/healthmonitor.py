@@ -413,7 +413,33 @@ class HealthMonitor(object):
                 self.sm.estop_signal = True
                 return
 
-            
+            if packet1["error"] != 0:
+                self.logger.critical("[+] Microcontroller one error")
+                self.sm.estop_signal = True
+                return
+
+            if packet2["error"] != 0:
+                self.logger.critical("[+] Microcontroller two error")
+                self.sm.estop_signal = True
+                return
+
+            if packet3["error"] != 0:
+                self.logger.critical("[+] Microcontroller three error")
+                self.sm.estop_signal = True
+                return
+
+            if packet4["error"] != 0:
+                self.logger.critical("[+] Microcontroller four error")
+                self.sm.estop_signal = True
+                return
+
+            for k1, v1 in packet5:
+                for k2, v2 in v1:
+                    if v2["error"] != 0:
+                        self.logger.critical("[+] Microcontroller five error")
+                        self.sm.estop_signal = True
+                        return
+
 
             # (NOT syntactally correct at all but getting there)
 
