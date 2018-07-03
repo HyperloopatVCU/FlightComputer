@@ -73,6 +73,6 @@ understand how to control it properly. Many of the commands require the pod to
 be in a certain state before being used. 
 
 
-## Questios
+## Questions
 For questions about the system or the organization contact
 John Naylor at naylorjo@vcu.edu or jonaylor89@gmail.com
