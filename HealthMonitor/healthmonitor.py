@@ -3,8 +3,7 @@
     Instead of providing exact numbers, we need ranges of values for necessary data (Add number or ranges to config.ini!)
 """
 
-class Temperature:
-    def battery(self, battery_temperature):
+    def battery_temp_check(self, battery_temperature):
         if self.battery_temperature >= 112:
             self.logger.info("battery temperature good")
         elif self.battery_temperature <= 122:
@@ -13,7 +12,7 @@ class Temperature:
             self.logger.info("battery temperature too high")
             self.sm.estop_signal = True
 
-    def motor(self, motor_temperature):
+    def motor_temp_check(self, motor_temperature):
         if self.motor_temperature >= 165:
             self.logger.info("motor temp good")
         elif self.motor_temperature <=175:
@@ -22,7 +21,7 @@ class Temperature:
             self.logger.info("motor temp too high")
             self.sm.estop_signal = True
 
-    def controller(self, motor_controller):
+    def motor_controller_check(self, motor_controller):
         if self.motor_controller >= 184:
             self.logger.info("controller temp good")
         elif self.motor_controller <= 194:
@@ -31,8 +30,7 @@ class Temperature:
             self.logger.info("controller temp too high")
             self.sm.estop_signal = True
 
-class HighPower:
-    def high_battery(self, voltage, current):
+    def high_battery_check(self, voltage, current):
         if self.voltage <= 90.8 and self.current <= 465:
             self.logger.info("high power battery and voltage are fine")
         else:
@@ -52,8 +50,7 @@ class HighPower:
                 self.logger.info ("current too high")
                 self.sm.estop_signal = True
 
-class LowPowerOne:
-    def LowPowerOne(self, voltage, current):
+    def low_one_battery_check(self, voltage, current):
         if self.voltage <= 50.4 and self.current <= 3:
             self.logger.info("low power systems good")
         else:
@@ -65,9 +62,7 @@ class LowPowerOne:
                 self.logger.info("current too high")
                 self.sm.estop_signal = True
 
-class LowPowerTwoBrake:
-    class BrakeA:
-        def LowBrakeA(self, voltage, current):
+        def low_2A_battery_check(self, voltage, current):
             if self.voltage <= 12.6 and self.current <= 4:
                 self.logger.info("brake power good")
             else:
@@ -78,8 +73,8 @@ class LowPowerTwoBrake:
                 if self.current > 4:
                     self.logger.info("current too high")
                     self.sm.estop_signal = True
-    class BrakeB:
-        def LowBrakeB(self, voltage, current):
+
+        def Low_2B_battery_check(self, voltage, current):
             if self.voltage <= 12.6 and self.current <= 4:
                 self.logger.info("brake power good")
             else:
@@ -91,8 +86,7 @@ class LowPowerTwoBrake:
                     self.logger.info("current too high")
                    self.sm.estop_signal = True
 
-class PotentiometerBrakes:
-    def BrakePotentiometer(self, voltage, current):
+    def brake_potentiometer_check(self, voltage, current):
         if self.voltage <= 1 and self.current <= 3:
             self.logger.info("potentiometer average good")
         else:
@@ -105,7 +99,6 @@ class PotentiometerBrakes:
                self.sm.estop_signal = True
 #        Change Values
 
-class Distance:
     def pod_distance_from_track(self,time):
         if self.time <=17.08:
             acceleration = 4.5
@@ -114,7 +107,6 @@ class Distance:
             acceleration = -21.5
             distance = acceleration * time**2
 
-class Sensors:
     def HPS_check(self,hpsone,hpstwo,hpsthree,hpsfour, hpsfailcount):
         self.hpsfailcount = 0
         while True:
@@ -171,7 +163,7 @@ class Sensors:
             if self.hpsfailcount >= 2:
                 self.sm.estop_signal = True== True
 
-    def VPS(self,vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount):
+    def VPS_check(self,vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount):
         self.vpsfailcount = 0
         while True:
 
@@ -210,7 +202,7 @@ class Sensors:
             if self.vpsfailcount >= 2:
                 self.sm.estop_signal = True== True
 
-    def IMU(self,imuone,imutwo,imuthree,imufour, imufailcount):
+    def IMU_check(self,imuone,imutwo,imuthree,imufour, imufailcount):
         self.imufailcount = 0
         sensorcondition = True
         while sensorcondition:
@@ -253,7 +245,7 @@ class Sensors:
                 self.sm.estop_signal = True== True
 
 
-    def BMS(self, bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount):
+    def BMS_check(self, bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount):
             # while Something
             #if data exist
                 self.bmsone = 1
@@ -366,6 +358,8 @@ class HealthMonitor(object):
         self.frames = 0
         self.frame_rate = self.config['Health'].getint('frame_rate')
 
+        self.timeout = self.config['Health'].getint('controller_timeout')
+
     def run(self):
             while not self.stop_signal:
                 self.update()
@@ -394,11 +388,29 @@ class HealthMonitor(object):
                 rest or there is an error marked by the microcontroller on the
                 packet then discard it.
 
-            2.) If a critical sensor has been discarded then stop the pod
+            2.) 
+                If a critical sensor has been discarded then stop the pod
 
-            3.) Average all the non-discarded sensor values and update the
+            3.) 
+                Average all the non-discarded sensor values and update the
                 global Pod class in the pod_structure.py module. 
             """
+
+            try:
+                # Check to make sure none of the sensors have stopped sending data
+                packet1 = self.comm.controller1.get(timeout=self.timeout)
+                packet2 = self.comm.controller2.get(timeout=self.timeout)
+                packet3 = self.comm.controller3.get(timeout=self.timeout)
+                packet4 = self.comm.controller4.get(timeout=self.timeout)
+                packet5 = self.comm.controller5.get(timeout=self.timeout)
+            except:
+                self.logger.critical("[+] Microcontroller timed out!")
+                self.sm.estop_signal = True
+
+                return
+
+            battery_temp_check(battery_temperature):
+
             return
 
         elif sm.state == sm.states["stopping"]:
