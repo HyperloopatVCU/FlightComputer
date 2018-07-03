@@ -1,12 +1,8 @@
 """
     Improvements that need to be made:
     Instead of providing exact numbers, we need ranges of values for necessary data
-
-
 """
-#Temperature in Fahrenheit
 
-import statemachine
 class Temperature:
     def battery(self, battery_temperature):
         if self.battery_temperature >= 112:
@@ -90,10 +86,10 @@ class LowPowerTwoBrake:
                 print("brake systems critical")
                 if self.voltage > 12.6:
                     print("voltage too high")
-                    statemachine.MainSM.estop_signal
+                    sm.estop_signal
                 if self.current > 4:
                     print("current too high")
-                    statemachine.MainSM.estop_signal
+                    sm.estop_signal
 
 class PotentiometerBrakes:
     def BrakePotentiometer(self, voltage, current):
@@ -103,13 +99,12 @@ class PotentiometerBrakes:
             print("potentiometer average too much voltage or current")
             if self.voltage >= 12.6:
                 print("voltage too high")
-                statemachine.MainSM.estop_signal
+                sm.estop_signal
             if self.current >= 4:
                 print("current too high")
-                statemachine.MainSM.estop_signal
+                sm.estop_signal
 #        Change Values
 
-<<<<<<< HEAD
 class Distance:
     def pod_distance_from_track(self,time):
         if self.time <=17.08:
@@ -175,7 +170,6 @@ class Sensors:
 
             if self.hpsfailcount >= 2:
                 sm.estop_signal == True
-#
 
     def VPS(self,vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount):
         self.vpsfailcount = 0
@@ -260,7 +254,7 @@ class Sensors:
 
 
     def BMS(self, bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount):
-#       while Something
+            # while Something
             #if data exist
                 self.bmsone = 1
             #else
@@ -353,7 +347,22 @@ class Sensors:
                 print("Error with BMS #15")
             if self.bmsfailcount >= 4:
                 sm.estop_signal == True
-=======
+
+class HealthMonitor(object):
+
+    def __init__(self, comm, sm):
+            self.comm = comm
+            self.sm = sm
+
+            self.frame_rate = 10
+
+    def run(self):
+            while True:
+                self.update()
+                sleep(1/self.frame_rate)
+
+    def update(self):    
+        """
         Any threshold values that may need to be adjusted should be added to
         the config.ini file in the root of the program directory. 
         """
@@ -384,6 +393,4 @@ class Sensors:
         elif sm.state == sm.states["stopping"]:
             # accelerating is the only important state right now
             return
->>>>>>> c7b0326c492983168f1f0607a57afa02e3a9dfbc
-
 
