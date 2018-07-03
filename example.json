@@ -26,14 +26,14 @@
 		 }
 	},
 	"horizontal":{
-		"error":100,
+		"error":<number>,
 		"position":{
 			"units":"mm",
 			"z":<float>
 		}
 	}, 
 	"brake":{
-		"error":100,
+		"error":<number>,
 		"position":{
 			"units":"mm", 
 			"dist":<float>
