@@ -56,56 +56,57 @@
 
     # Checked
     def low_one_battery_check(self, voltage, current):
-        if self.voltage <= 50.4 and self.current <= 3:
+        if voltage <= 50.4 and self.current <= 3:
             self.logger.info("low power systems good")
         else:
             self.logger.info("low power critical")
-            if self.voltage > 50.4:
+            if voltage > 50.4:
                 self.logger.info("voltage too high")
                 self.sm.estop_signal = True
-            if self.current >= 3:
+            if current >= 3:
                 self.logger.info("current too high")
                 self.sm.estop_signal = True
 
         # Checked
         def low_2A_battery_check(self, voltage, current):
-            if self.voltage <= 12.6 and self.current <= 4:
+            if voltage <= 12.6 and self.current <= 4:
                 self.logger.info("brake power good")
             else:
                 self.logger.info("brake systems critical")
-                if self.voltage > 12.6:
+                if voltage > 12.6:
                     self.logger.info("voltage too high")
                     self.sm.estop_signal = True
-                if self.current > 4:
+                if current > 4:
                     self.logger.info("current too high")
                     self.sm.estop_signal = True
 
         # Checked
         def low_2B_battery_check(self, voltage, current):
-            if self.voltage <= 12.6 and self.current <= 4:
+            if voltage <= 12.6 and self.current <= 4:
                 self.logger.info("brake power good")
             else:
                 self.logger.info("brake systems critical")
-                if self.voltage > 12.6:
+                if voltage > 12.6:
                     self.logger.info("voltage too high")
                    self.sm.estop_signal = True
-                if self.current > 4:
+                if current > 4:
                     self.logger.info("current too high")
                    self.sm.estop_signal = True
-
+    # Checked
     def brake_potentiometer_check(self, voltage, current):
-        if self.voltage <= 1 and self.current <= 3:
+        if voltage <= 1 and self.current <= 3:
             self.logger.info("potentiometer average good")
         else:
             self.logger.info("potentiometer average too much voltage or current")
-            if self.voltage >= 12.6:
+            if voltage >= 12.6:
                 self.logger.info("voltage too high")
                self.sm.estop_signal = True
-            if self.current >= 4:
+            if current >= 4:
                 self.logger.info("current too high")
                self.sm.estop_signal = True
 #        Change Values
 
+    # Checked
     def pod_distance_from_track(self,time):
         if self.time <=17.08:
             acceleration = 4.5
@@ -419,10 +420,18 @@ class HealthMonitor(object):
             battery_temp_check(battery_temperature)
             motor_temp_check(motor_temperature)
             motor_controller_temp_check(motor_controller_temp)
+
+            # Coltage and current checks
             high_battery_check(voltage, current)
             low_one_battery_check(voltage, current)
             low_2A_battery_check(voltage, current)
-            low_2B_battery_check(voltage, current):
+            low_2B_battery_check(voltage, current)
+            brake_potentiometer_check(voltage, current):
+
+            # Distance Check
+            pod_distance_from_track(time):
+
+
 
             return
 
