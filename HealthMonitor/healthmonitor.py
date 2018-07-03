@@ -21,7 +21,7 @@
             self.logger.info("motor temp too high")
             self.sm.estop_signal = True
 
-    def motor_controller_check(self, motor_controller):
+    def motor_controller_temp_check(self, motor_controller):
         if self.motor_controller >= 184:
             self.logger.info("controller temp good")
         elif self.motor_controller <= 194:
@@ -406,10 +406,12 @@ class HealthMonitor(object):
             except:
                 self.logger.critical("[+] Microcontroller timed out!")
                 self.sm.estop_signal = True
-
                 return
 
-            battery_temp_check(battery_temperature):
+            # Temperature Checks
+            battery_temp_check(battery_temperature)
+            motor_temp_check(motor_temperature)
+            motor_controller_temp_check(motor_controller_temp)
 
             return
 
