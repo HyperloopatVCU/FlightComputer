@@ -26,47 +26,47 @@ class MainSM(object):
         }
 
         self.states = {
-            "cold"     : 0x01,  # Pod is off, This is the safe state
-            "ready"     : 0x02,  # Preparing pod for flight
+            "pre-operational"     : 0x01,  # Pod is off, This is the safe state
+            "operational"     : 0x02,  # Preparing pod for flight
             "accelerating"      : 0x03,  # Pod is in flight
             "stopping"     : 0x05   # Emergency stop
         }
 
         self.state_str = {
-            0x01: "cold",
-            0x02: "ready",
+            0x01: "pre-operational",
+            0x02: "operational",
             0x03: "accelerating",
             0x05: "stopping"
         }
 
-        self.cold()
+        self.pre-operational()
 
         self.config = ConfigParser()
         self.config.read('config.ini')
         
         self.frame_rate = self.config['State'].getint('frame_rate')
 
-    def cold(self):
-        self.logger.info("[+] State set to 'cold'")
-        self.state = self.states["cold"]
+    def pre_operational(self):
+        self.logger.info("[+] State set to 'pre-operational'")
+        self.state = self.states["pre-operational"]
 
-    def warm_up(self):
+    def operational(self):
         """
         Disengage Breaks, microcontrollers should zero sensors
         """
-        if self.state != self.states["cold"]:
-            self.logger.warn("[*] Pod must be cold in order to be ready")
+        if self.state != self.states["pre-operational"]:
+            self.logger.warn("[*] Pod must be pre-operational in order to be operational")
             return
 
-        self.logger.info("[+] State set to 'ready'")
-        self.state = self.states["ready"]
+        self.logger.info("[+] State set to 'operational'")
+        self.state = self.states["operational"]
 
         self.hardware["brakes"].disengage()
 
 
     def launch(self, mode):
-        if self.state != self.states["ready"]:
-            self.logger.warn("[*] Pod must be warm to move")
+        if self.state != self.states["operational"]:
+            self.logger.warn("[*] Pod must be operational to move")
             return
 
         # Create seperate execution thread for comm
@@ -89,7 +89,7 @@ class MainSM(object):
             self.frames += 1
 
         self.stop()
-        self.cold()
+        self.pre-operational()
 
         self.logger.info("[+] Flight time {:.2f} seconds".format(time() - t0))
 
