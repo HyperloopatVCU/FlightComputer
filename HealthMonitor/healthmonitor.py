@@ -116,9 +116,8 @@
             distance = acceleration * time**2
 
     # Checked
-    def HPS_check(self,hpsone,hpstwo,hpsthree,hpsfour, hpsfailcount):
+    def HPS_check(self,hpsone,hpstwo,hpsthree,hpsfour):
         hpsfailcount = 0
-        while True:
             try:
                 packet1 = self.comm.controller1.get(timeout=2)
             except:
@@ -173,9 +172,8 @@
                 self.sm.estop_signal = True
 
     # Checked
-    def VPS_check(self,vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount):
+    def VPS_check(self,vpsone,vpstwo,vpsthree,vpsfour):
         vpsfailcount = 0
-        while True:
 
             packet1 = comm.controller1.get(timeout=2)
             if self.comm.microcontroller[1]["vertical"]["error"] == 0:
@@ -215,15 +213,13 @@
     # Checked
     def IMU_check(self,imuone,imutwo,imuthree,imufour, imufailcount):
         imufailcount = 0
-        sensorcondition = True
-        while sensorcondition:
 
             packet1 = comm.controller1.get(timeout=2)
             if self.comm.microcontroller[1]["accelerometer"]["error"] == 0:
                imuone = 1
             else:
                 imuone = 0
-                self.imufailcount = self.imufailcount + 1
+                self.imufailcount += 1
                 self.logger.info("[!!!] Error with IMU #1")
 
             packet2 = comm.controller2.get(timeout=2)
@@ -231,7 +227,7 @@
                 imutwo = 1
             else:
                 imutwo = 0
-                imufailcount = self.imufailcount + 1
+                imufailcount += 1
                 self.logger.info("[!!!] Error with IMU #2")
 
             packet3 = comm.controller3.get(timeout=2)
@@ -239,7 +235,7 @@
                 imuthree = 1
             else:
                 imuthree = 0
-                imufailcount = self.imufailcount + 1
+                imufailcount += 1
                 self.logger.info("[!!!] Error with IMU #3")
 
             packet4 = comm.controller4.get(timeout=2)
@@ -247,12 +243,10 @@
                 imufour = 1
             else:
                 imufour = 0
-                imufailcount = self.imufailcount + 1
+                imufailcount += 1
                 self.logger.info("[!!!] Error with IMU #4")
 
             if imufailcount >= 2:
-                sensorcondition = False
-
                 self.sm.estop_signal = True
 
     # Checked
@@ -423,6 +417,12 @@ class HealthMonitor(object):
 
             # (NOT syntactally correct at all but getting there)
 
+            # More system checks (Inputs to this are going to be different)
+            HPS_check(hpsone,hpstwo,hpsthree,hpsfour, hpsfailcount)
+            VPS_check(vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount)
+            IMU_check(imuone,imutwo,imuthree,imufour, imufailcount)
+            BMS_check(bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount)
+
             # Temperature Checks 
             battery_temp_check(battery_temperature)
             motor_temp_check(motor_temperature)
@@ -437,13 +437,6 @@ class HealthMonitor(object):
 
             # Distance Check
             pod_distance_from_track(time)
-
-            # More system checks
-            HPS_check(hpsone,hpstwo,hpsthree,hpsfour, hpsfailcount)
-            VPS_check(vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount)
-            IMU_check(imuone,imutwo,imuthree,imufour, imufailcount)
-            BMS_check(bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount)
-
 
             return
 
