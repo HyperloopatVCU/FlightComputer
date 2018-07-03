@@ -115,7 +115,7 @@ class Distance:
             distance = acceleration * time**2
 
 class Sensors:
-    def HPS(self,hpsone,hpstwo,hpsthree,hpsfour, hpsfailcount):
+    def HPS_check(self,hpsone,hpstwo,hpsthree,hpsfour, hpsfailcount):
         self.hpsfailcount = 0
         while True:
             try:

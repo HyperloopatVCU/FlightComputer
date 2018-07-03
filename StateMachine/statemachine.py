@@ -14,6 +14,7 @@ class MainSM(object):
         self.logger.info("[+] Initializing State Machine")
 
         self.estop_signal = False
+        self.nstop_signal = False
 
         self.frames = 0
 
@@ -80,6 +81,8 @@ class MainSM(object):
         # Turn the motor on at the apppropriate rpm 
         self.hardware["motor"].accelerate(mode)
 
+        self.nstop_signal = False
+
         while True:
             if self.update(mode): break
             sleep(1/self.frame_rate)
@@ -96,13 +99,15 @@ class MainSM(object):
 
     def update(self, mode):
         """
-        if at max speed || at max distance || error
+        if at max speed || at max distance
             stop
         """
 
-        if self.estop_signal:
+        if self.nstop_signal:
             return 1
 
+        if self.estop_signal:
+            return 1
 
         return 0
 
@@ -126,5 +131,6 @@ class MainSM(object):
 
     def estop(self):
         self.estop_signal = True
+
 
 
