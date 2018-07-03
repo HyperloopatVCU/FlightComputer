@@ -6,50 +6,50 @@
     # Checked
     def battery_temp_check(self, battery_temperature):
         if battery_temperature >= 112:
-            self.logger.info("battery temperature good")
+            self.logger.info("[!!!] battery temperature good")
         elif battery_temperature <= 122:
-            self.logger.info("max battery temperature reached")
+            self.logger.info("[!!!] max battery temperature reached")
         else:
-            self.logger.info("battery temperature too high")
+            self.logger.info("[!!!] battery temperature too high")
             self.sm.estop_signal = True
 
     # Checked
     def motor_temp_check(self, motor_temperature):
         if motor_temperature >= 165:
-            self.logger.info("motor temp good")
+            self.logger.info("[!!!] motor temp good")
         elif motor_temperature <=175:
-            self.logger.info("max motor temperature reached")
+            self.logger.info("[!!!] max motor temperature reached")
         else:
-            self.logger.info("motor temp too high")
+            self.logger.info("[!!!] motor temp too high")
             self.sm.estop_signal = True
 
     # Checked
     def motor_controller_temp_check(self, motor_controller):
         if motor_controller >= 184:
-            self.logger.info("controller temp good")
+            self.logger.info("[!!!] controller temp good")
         elif motor_controller <= 194:
-            self.logger.info("controller reached max temp")
+            self.logger.info("[!!!] controller reached max temp")
         else:
-            self.logger.info("controller temp too high")
+            self.logger.info("[!!!] controller temp too high")
             self.sm.estop_signal = True
 
     # Checked
     def high_battery_check(self, voltage, current):
         if voltage <= 90.8 and self.current <= 465:
-            self.logger.info("high power battery and voltage are fine")
+            self.logger.info("[!!!] high power battery and voltage are fine")
         else:
-            self.logger.info("high power battery voltage or current too high")
+            self.logger.info("[!!!] high power battery voltage or current too high")
             if voltage >= 90.8:
-                self.logger.info("voltage nearing max")
+                self.logger.info("[!!!] voltage nearing max")
             elif voltage == 100.8:
-                self.logger.info("voltage at maximum")
+                self.logger.info("[!!!] voltage at maximum")
             else:
-                self.logger.info("voltage too high")
+                self.logger.info("[!!!] voltage too high")
                 self.sm.estop_signal = True
             if current >= 465:
-                self.logger.info("current nearing max")
+                self.logger.info("[!!!] current nearing max")
             elif current == 475:
-                self.logger.info("current at max")
+                self.logger.info("[!!!] current at max")
             else:
                 self.logger.info ("current too high")
                 self.sm.estop_signal = True
@@ -57,52 +57,52 @@
     # Checked
     def low_one_battery_check(self, voltage, current):
         if voltage <= 50.4 and self.current <= 3:
-            self.logger.info("low power systems good")
+            self.logger.info("[!!!] low power systems good")
         else:
-            self.logger.info("low power critical")
+            self.logger.info("[!!!] low power critical")
             if voltage > 50.4:
-                self.logger.info("voltage too high")
+                self.logger.info("[!!!] voltage too high")
                 self.sm.estop_signal = True
             if current >= 3:
-                self.logger.info("current too high")
+                self.logger.info("[!!!] current too high")
                 self.sm.estop_signal = True
 
         # Checked
         def low_2A_battery_check(self, voltage, current):
             if voltage <= 12.6 and self.current <= 4:
-                self.logger.info("brake power good")
+                self.logger.info("[!!!] brake power good")
             else:
-                self.logger.info("brake systems critical")
+                self.logger.info("[!!!] brake systems critical")
                 if voltage > 12.6:
-                    self.logger.info("voltage too high")
+                    self.logger.info("[!!!] voltage too high")
                     self.sm.estop_signal = True
                 if current > 4:
-                    self.logger.info("current too high")
+                    self.logger.info("[!!!] current too high")
                     self.sm.estop_signal = True
 
         # Checked
         def low_2B_battery_check(self, voltage, current):
             if voltage <= 12.6 and self.current <= 4:
-                self.logger.info("brake power good")
+                self.logger.info("[!!!] brake power good")
             else:
-                self.logger.info("brake systems critical")
+                self.logger.info("[!!!] brake systems critical")
                 if voltage > 12.6:
-                    self.logger.info("voltage too high")
+                    self.logger.info("[!!!] voltage too high")
                    self.sm.estop_signal = True
                 if current > 4:
-                    self.logger.info("current too high")
+                    self.logger.info("[!!!] current too high")
                    self.sm.estop_signal = True
     # Checked
     def brake_potentiometer_check(self, voltage, current):
         if voltage <= 1 and self.current <= 3:
-            self.logger.info("potentiometer average good")
+            self.logger.info("[!!!] potentiometer average good")
         else:
-            self.logger.info("potentiometer average too much voltage or current")
+            self.logger.info("[!!!] potentiometer average too much voltage or current")
             if voltage >= 12.6:
-                self.logger.info("voltage too high")
+                self.logger.info("[!!!] voltage too high")
                self.sm.estop_signal = True
             if current >= 4:
-                self.logger.info("current too high")
+                self.logger.info("[!!!] current too high")
                self.sm.estop_signal = True
 #        Change Values
 
@@ -130,7 +130,7 @@
             else:
                 self.hpsone = 0
                 self.hpsfailcount = self.hpsfailcount + 1
-                self.logger.info("Error with HPS #1")
+                self.logger.info("[!!!] Error with HPS #1")
 
             try:
                 packet2 = self.comm.controller2.get(timeout=2)
@@ -142,7 +142,7 @@
             else:
                 self.hpstwo = 0
                 self.hpsfailcount = self.hpsfailcount + 1
-                self.logger.info("Error with HPS #2")
+                self.logger.info("[!!!] Error with HPS #2")
 
             try:
                 packet3 = self.comm.controller3.get(timeout=2)
@@ -155,7 +155,7 @@
             else:
                 self.hpsthree = 0
                 self.hpsfailcount = self.hpsfailcount + 1
-                self.logger.info("Error with HPS #3")
+                self.logger.info("[!!!] Error with HPS #3")
 
             try:
                 packet4 = self.comm.controller4.get(timeout=2)
@@ -167,7 +167,7 @@
             else:
                 self.hpsfour = 0
                 self.hpsfailcount = self.hpsfailcount + 1
-                self.logger.info("Error with HPS #3")
+                self.logger.info("[!!!] Error with HPS #3")
 
             if self.hpsfailcount >= 2:
                 self.sm.estop_signal = True
@@ -183,7 +183,7 @@
             else:
                 self.vpsone = 0
                 self.vpsfailcount = self.vpsfailcount + 1
-                self.logger.info("Error with VPS #1")
+                self.logger.info("[!!!] Error with VPS #1")
 
             packet2 = comm.controller2.get(timeout=2)
             if self.comm.microcontroller[2]["vertical"]["error"] == 0:
@@ -191,7 +191,7 @@
             else:
                 self.vpstwo = 0
                 self.vpsfailcount = self.vpsfailcount + 1
-                self.logger.info("Error with VPS #2")
+                self.logger.info("[!!!] Error with VPS #2")
 
             packet3 = comm.controller3.get(timeout=2)
             if self.comm.microcontroller[3]["vertical"]["error"] == 0:
@@ -199,7 +199,7 @@
             else:
                 self.vpsthree = 0
                 self.vpsfailcount = self.vpsfailcount + 1
-                self.logger.info("Error with VPS #3")
+                self.logger.info("[!!!] Error with VPS #3")
 
             packet4 = comm.controller4.get(timeout=2)
             if self.comm.microcontroller[4]["vertical"]["error"] == 0:
@@ -207,7 +207,7 @@
             else:
                 self.vpsfour = 0
                 self.vpsfailcount = self.vpsfailcount + 1
-                self.logger.info("Error with VPS #4")
+                self.logger.info("[!!!] Error with VPS #4")
 
             if self.vpsfailcount >= 2:
                 self.sm.estop_signal = True
@@ -224,7 +224,7 @@
             else:
                 self.imuone = 0
                 self.imufailcount = self.imufailcount + 1
-                self.logger.info("Error with IMU #1")
+                self.logger.info("[!!!] Error with IMU #1")
 
             packet2 = comm.controller2.get(timeout=2)
             if self.comm.microcontroller[2]["accelerometer"]["error"] == 0:
@@ -232,7 +232,7 @@
             else:
                 self.imutwo = 0
                 self.imufailcount = self.imufailcount + 1
-                self.logger.info("Error with IMU #2")
+                self.logger.info("[!!!] Error with IMU #2")
 
             packet3 = comm.controller3.get(timeout=2)
             if self.comm.microcontroller[3]["accelerometer"]["error"] == 0:
@@ -240,7 +240,7 @@
             else:
                 self.imuthree = 0
                 self.imufailcount = self.imufailcount + 1
-                self.logger.info("Error with IMU #3")
+                self.logger.info("[!!!] Error with IMU #3")
 
             packet4 = comm.controller4.get(timeout=2)
             if self.comm.microcontroller[4]["accelerometer"]["error"] == 0:
@@ -248,7 +248,7 @@
             else:
                 self.imufour = 0
                 self.imufailcount = self.imufailcount + 1
-                self.logger.info("Error with IMU #4")
+                self.logger.info("[!!!] Error with IMU #4")
 
             if self.imufailcount >= 2:
                 sensorcondition = False
@@ -263,91 +263,91 @@
             #else
                 self.bmsone = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #1")
+                self.logger.info("[!!!] Error with BMS #1")
             #if data exists
                 self.bmstwo = 1
             #else
                 self.bmstwo = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #2")
+                self.logger.info("[!!!] Error with BMS #2")
             #if data exists
                 self.bmsthree = 1
             #else
                 self.bmsthree = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #3")
+                self.logger.info("[!!!] Error with BMS #3")
             #if data exists
                 self.bmsfour = 1
             #else
                 self.bmsfour = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #4")
+                self.logger.info("[!!!] Error with BMS #4")
             #if data exists
                 self.bmsfive = 1
             #else
                 self.bmsfive = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #5")
+                self.logger.info("[!!!] Error with BMS #5")
             #if data exists
                 self.bmssix = 1
             #else
                 self.bmssix = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #6")
+                self.logger.info("[!!!] Error with BMS #6")
             #if data exists
                 self.bmsseven = 1
             #else
                 self.bmsseven = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #7")
+                self.logger.info("[!!!] Error with BMS #7")
             #if data exists
                 self.bmseight = 1
             #else
                 self.bmseight = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #8")
+                self.logger.info("[!!!] Error with BMS #8")
             #if data exists
                 self.bmsnine = 1
             #else
                 self.bmsnine = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #9")
+                self.logger.info("[!!!] Error with BMS #9")
             #if data exists
                 self.bmsten = 1
             #else
                 self.bmsten = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #10")
+                self.logger.info("[!!!] Error with BMS #10")
             #if data exists
                 self.bmseleven = 1
             #else
                 self.bmseleven = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #11")
+                self.logger.info("[!!!] Error with BMS #11")
             #if data exists
                 self.bmstwelve = 1
             #else
                 self.bmstwelve = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #12")
+                self.logger.info("[!!!] Error with BMS #12")
             #if data exists
                 self.bmsthirteen = 1
             #else
                 self.bmsthirteen = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #13")
+                self.logger.info("[!!!] Error with BMS #13")
             #if data exists
                 self.bmsfourteen = 1
             #else
                 self.bmsfourteen = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #14")
+                self.logger.info("[!!!] Error with BMS #14")
             #if data exists
                 self.bmsfifteen = 1
             #else
                 self.bmsfifteen = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                self.logger.info("Error with BMS #15")
+                self.logger.info("[!!!] Error with BMS #15")
             if self.bmsfailcount >= 4:
                 self.sm.estop_signal = True== True
 
@@ -359,7 +359,7 @@ class HealthMonitor(object):
 
         self.logger = logging.getLogger('TCP')
 
-        self.logger.info("[+] Initializing Health Monitoring")
+        self.logger.info("[!!!] [+] Initializing Health Monitoring")
 
         self.stop_signal = False
 
@@ -383,12 +383,12 @@ class HealthMonitor(object):
         the config.ini file in the root of the program directory. 
         """
         
-        if sm.state == sm.states["cold"]:
-            # accelerating is the only important state right now
+        if sm.state == sm.states["pre-operational"]:
+            # Add checks for pre-operational
             return
 
-        elif sm.state == sm.states["ready"]:
-            # accelerating is the only important state right now
+        elif sm.state == sm.states["operational"]:
+            # Add checks for operational
             return
 
         elif sm.state == sm.states["accelerating"]:
@@ -442,10 +442,10 @@ class HealthMonitor(object):
             IMU_check(imuone,imutwo,imuthree,imufour, imufailcount)
             BMS_check(bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount)
 
-            
+
             return
 
         elif sm.state == sm.states["stopping"]:
-            # accelerating is the only important state right now
+            # Add checks for stopping
             return
 
