@@ -115,98 +115,6 @@
             acceleration = -21.5
             distance = acceleration * time**2
 
-    # Checked
-    def HPS_check(self, packet1, packet2, packet3, packet4):
-        hpsfailcount = 0
-            try:
-                packet1 = self.comm.controller1.get(timeout=2)
-            except:
-                "Emergency Stop the Pod"
-                hpsfailcount += 1
-
-            if packet1["horizontal"]["error"] == 0:
-                hpsone = 1
-            else:
-                hpsone = 0
-                hpsfailcount += 1
-                self.logger.info("[!!!] Error with HPS #1")
-
-            try:
-                packet2 = self.comm.controller2.get(timeout=2)
-            except:
-                "Emergency Stop the Pod"
-                hpsfailcount += 1
-            if packet2["horizontal"]["error"] == 0:
-                hpstwo = 1
-            else:
-                hpstwo = 0
-                hpsfailcount += 1
-                self.logger.info("[!!!] Error with HPS #2")
-
-            try:
-                packet3 = self.comm.controller3.get(timeout=2)
-            except:
-                "Emergency Stop the Pod"
-                self.hpsfailcount = self.hpsfailcount + 1
-                return 1
-            if packet3["horizontal"]["error"] == 0:
-                self.hpsthree = 1
-            else:
-                self.hpsthree = 0
-                self.hpsfailcount = self.hpsfailcount + 1
-                self.logger.info("[!!!] Error with HPS #3")
-
-            try:
-                packet4 = self.comm.controller4.get(timeout=2)
-            except:
-                "Emergency Stop the Pod"
-                self.hpsfailcount = self.hpsfailcount + 1
-            if packet4["horizontal"]["error"] == 0:
-                self.hpsfour = 1
-            else:
-                self.hpsfour = 0
-                self.hpsfailcount = self.hpsfailcount + 1
-                self.logger.info("[!!!] Error with HPS #3")
-
-            if hpsfailcount >= 2:
-                self.sm.estop_signal = True
-
-
-    def VPS_check(self, packet1, packet2, packet3, packet4):
-        vpsfailcount = 0
-
-        if packet1["vertical"]["error"] != 0:
-            vpsfailcount += 1
-            self.logger.info("[!!!] Error with VPS #1")
-
-        packet2 = comm.controller2.get(timeout=2)
-        if self.comm.microcontroller[2]["vertical"]["error"] == 0:
-            vpstwo = 1
-        else:
-            vpstwo = 0
-            vpsfailcount += 1
-            self.logger.info("[!!!] Error with VPS #2")
-
-        packet3 = comm.controller3.get(timeout=2)
-        if self.comm.microcontroller[3]["vertical"]["error"] == 0:
-            vpsthree = 1
-        else:
-            vpsthree = 0
-            vpsfailcount += 1
-            self.logger.info("[!!!] Error with VPS #3")
-
-        packet4 = comm.controller4.get(timeout=2)
-        if self.comm.microcontroller[4]["vertical"]["error"] == 0:
-            vpsfour = 1
-        else:
-            vpsfour = 0
-            vpsfailcount += 1
-            self.logger.info("[!!!] Error with VPS #4")
-
-        if self.vpsfailcount >= 2:
-            self.sm.estop_signal = True
-
-
 class HealthMonitor(object):
 
     def __init__(self, comm, sm, pod):
@@ -307,6 +215,27 @@ class HealthMonitor(object):
         elif sm.state == sm.states["stopping"]:
             # Add checks for stopping
             return
+
+    def HPS_check(self, packet1, packet2, packet3, packet4):
+        hpsfailcount = 0
+        if packet1["horizontal"]["error"] != 0:
+            hpsfailcount += 1
+            self.logger.info("[!!!] Error with HPS #1")
+
+        if packet2["horizontal"]["error"] != 0:
+            hpsfailcount += 1
+            self.logger.info("[!!!] Error with HPS #2")
+
+        if packet3["horizontal"]["error"] != 0:
+            self.hpsfailcount += 1
+            self.logger.info("[!!!] Error with HPS #3")
+
+        if packet4["horizontal"]["error"] != 0:
+            self.hpsfailcount += 1
+            self.logger.info("[!!!] Error with HPS #3")
+
+        if hpsfailcount >= 2:
+            self.sm.estop_signal = True
 
     def VPS_check(self, packet1, packet2, packet3, packet4):
     """
