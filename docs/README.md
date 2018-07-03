@@ -15,7 +15,7 @@ cores. This is also why the real program is being written in C. If the real
 version hasn't been finished yet and you need this program immediately then **it
 will work**. 
 
-# Program to be run on the main computer
+## Program to be run on the main computer
 ---------------------------------------
 
 The software is split into four packages: Communication, StateMachine,
@@ -71,3 +71,8 @@ commands given to the outside user are:
 Anyone using the software should consult the state diagram for the pod to
 understand how to control it properly. Many of the commands require the pod to
 be in a certain state before being used. 
+
+
+## Questios
+For questions about the system or the organization contact
+John Naylor at naylorjo@vcu.edu or jonaylor89@gmail.com
