@@ -108,7 +108,7 @@
 
     # Checked
     def pod_distance_from_track(self,time):
-        if self.time <=17.08:
+        if time <=17.08:
             acceleration = 4.5
             distance = acceleration * time**2
         else:
@@ -117,31 +117,31 @@
 
     # Checked
     def HPS_check(self,hpsone,hpstwo,hpsthree,hpsfour, hpsfailcount):
-        self.hpsfailcount = 0
+        hpsfailcount = 0
         while True:
             try:
                 packet1 = self.comm.controller1.get(timeout=2)
             except:
                 "Emergency Stop the Pod"
-                self.hpsfailcount = self.hpsfailcount + 1
+                hpsfailcount += 1
 
             if packet1["horizontal"]["error"] == 0:
-                self.hpsone = 1
+                hpsone = 1
             else:
-                self.hpsone = 0
-                self.hpsfailcount = self.hpsfailcount + 1
+                hpsone = 0
+                hpsfailcount += 1
                 self.logger.info("[!!!] Error with HPS #1")
 
             try:
                 packet2 = self.comm.controller2.get(timeout=2)
             except:
                 "Emergency Stop the Pod"
-                self.hpsfailcount = self.hpsfailcount + 1
+                hpsfailcount += 1
             if packet2["horizontal"]["error"] == 0:
-                self.hpstwo = 1
+                hpstwo = 1
             else:
-                self.hpstwo = 0
-                self.hpsfailcount = self.hpsfailcount + 1
+                hpstwo = 0
+                hpsfailcount += 1
                 self.logger.info("[!!!] Error with HPS #2")
 
             try:
@@ -262,94 +262,94 @@
                 self.bmsone = 1
             #else
                 self.bmsone = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #1")
             #if data exists
                 self.bmstwo = 1
             #else
                 self.bmstwo = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #2")
             #if data exists
                 self.bmsthree = 1
             #else
                 self.bmsthree = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #3")
             #if data exists
                 self.bmsfour = 1
             #else
                 self.bmsfour = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #4")
             #if data exists
                 self.bmsfive = 1
             #else
                 self.bmsfive = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #5")
             #if data exists
                 self.bmssix = 1
             #else
                 self.bmssix = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #6")
             #if data exists
                 self.bmsseven = 1
             #else
                 self.bmsseven = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #7")
             #if data exists
                 self.bmseight = 1
             #else
                 self.bmseight = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #8")
             #if data exists
                 self.bmsnine = 1
             #else
                 self.bmsnine = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #9")
             #if data exists
                 self.bmsten = 1
             #else
                 self.bmsten = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #10")
             #if data exists
                 self.bmseleven = 1
             #else
                 self.bmseleven = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #11")
             #if data exists
                 self.bmstwelve = 1
             #else
                 self.bmstwelve = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #12")
             #if data exists
                 self.bmsthirteen = 1
             #else
                 self.bmsthirteen = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount    1
                 self.logger.info("[!!!] Error with BMS #13")
             #if data exists
                 self.bmsfourteen = 1
             #else
                 self.bmsfourteen = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #14")
             #if data exists
                 self.bmsfifteen = 1
             #else
                 self.bmsfifteen = 0
-                self.bmsfailcount = self.bmsfailcount + 1
+                self.bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #15")
             if self.bmsfailcount >= 4:
-                self.sm.estop_signal = True== True
+                self.sm.estop_signal = True
 
 class HealthMonitor(object):
 
@@ -418,6 +418,8 @@ class HealthMonitor(object):
                 self.logger.critical("[+] Microcontroller timed out!")
                 self.sm.estop_signal = True
                 return
+
+            
 
             # (NOT syntactally correct at all but getting there)
 
