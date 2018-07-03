@@ -25,3 +25,5 @@ NOTES
 ------
 Voltage at wiper (pin 10)
 	Vw = D/256 * +V
+
+Motor controller can set RPM
