@@ -129,8 +129,5 @@ class MainSM(object):
 
         # TODO: block until stopped
 
-    def estop(self):
-        self.estop_signal = True
-
 
 

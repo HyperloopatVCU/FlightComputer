@@ -61,7 +61,7 @@ def main(root_logger):
         elif user_input == "estop":
             if input("Are you sure (Program must be restarted to recover from estop)? [y/N] ") in ("Y", "y"):
                 """ESTOP the pod"""
-                sm.estop()
+                sm.estop_signal = True
             else:
                 continue
 

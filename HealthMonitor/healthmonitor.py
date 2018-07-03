@@ -6,102 +6,102 @@
 class Temperature:
     def battery(self, battery_temperature):
         if self.battery_temperature >= 112:
-            print("battery temperature good")
+            self.logger.info("battery temperature good")
         elif self.battery_temperature <= 122:
-            print("max battery temperature reached")
+            self.logger.info("max battery temperature reached")
         else:
-            print("battery temperature too high")
+            self.logger.info("battery temperature too high")
             self.sm.estop_signal = True
 
     def motor(self, motor_temperature):
         if self.motor_temperature >= 165:
-            print("motor temp good")
+            self.logger.info("motor temp good")
         elif self.motor_temperature <=175:
-            print("max motor temperature reached")
+            self.logger.info("max motor temperature reached")
         else:
-            print("motor temp too high")
+            self.logger.info("motor temp too high")
             self.sm.estop_signal = True
 
     def controller(self, motor_controller):
         if self.motor_controller >= 184:
-            print("controller temp good")
+            self.logger.info("controller temp good")
         elif self.motor_controller <= 194:
-            print("controller reached max temp")
+            self.logger.info("controller reached max temp")
         else:
-            print("controller temp too high")
+            self.logger.info("controller temp too high")
             self.sm.estop_signal = True
 
 class HighPower:
     def high_battery(self, voltage, current):
         if self.voltage <= 90.8 and self.current <= 465:
-            print("high power battery and voltage are fine")
+            self.logger.info("high power battery and voltage are fine")
         else:
-            print("high power battery voltage or current too high")
+            self.logger.info("high power battery voltage or current too high")
             if self.voltage >= 90.8:
-                print("voltage nearing max")
+                self.logger.info("voltage nearing max")
             elif voltage == 100.8:
-                print("voltage at maximum")
+                self.logger.info("voltage at maximum")
             else:
-                print("voltage too high")
+                self.logger.info("voltage too high")
                 self.sm.estop_signal = True
             if self.current >= 465:
-                print("current nearing max")
+                self.logger.info("current nearing max")
             elif current == 475:
-                print("current at max")
+                self.logger.info("current at max")
             else:
-                print ("current too high")
+                self.logger.info ("current too high")
                 self.sm.estop_signal = True
 
 class LowPowerOne:
     def LowPowerOne(self, voltage, current):
         if self.voltage <= 50.4 and self.current <= 3:
-            print("low power systems good")
+            self.logger.info("low power systems good")
         else:
-            print("low power critical")
+            self.logger.info("low power critical")
             if self.voltage > 50.4:
-                print("voltage too high")
+                self.logger.info("voltage too high")
                 self.sm.estop_signal = True
             if self.current >= 3:
-                print("current too high")
+                self.logger.info("current too high")
                 self.sm.estop_signal = True
 
 class LowPowerTwoBrake:
     class BrakeA:
         def LowBrakeA(self, voltage, current):
             if self.voltage <= 12.6 and self.current <= 4:
-                print("brake power good")
+                self.logger.info("brake power good")
             else:
-                print("brake systems critical")
+                self.logger.info("brake systems critical")
                 if self.voltage > 12.6:
-                    print("voltage too high")
+                    self.logger.info("voltage too high")
                     self.sm.estop_signal = True
                 if self.current > 4:
-                    print("current too high")
+                    self.logger.info("current too high")
                     self.sm.estop_signal = True
     class BrakeB:
         def LowBrakeB(self, voltage, current):
             if self.voltage <= 12.6 and self.current <= 4:
-                print("brake power good")
+                self.logger.info("brake power good")
             else:
-                print("brake systems critical")
+                self.logger.info("brake systems critical")
                 if self.voltage > 12.6:
-                    print("voltage too high")
+                    self.logger.info("voltage too high")
                    self.sm.estop_signal = True
                 if self.current > 4:
-                    print("current too high")
+                    self.logger.info("current too high")
                    self.sm.estop_signal = True
 
 class PotentiometerBrakes:
     def BrakePotentiometer(self, voltage, current):
         if self.voltage <= 1 and self.current <= 3:
-            print("potentiometer average good")
+            self.logger.info("potentiometer average good")
         else:
-            print("potentiometer average too much voltage or current")
+            self.logger.info("potentiometer average too much voltage or current")
             if self.voltage >= 12.6:
-                print("voltage too high")
+                self.logger.info("voltage too high")
                self.sm.estop_signal = True
             if self.current >= 4:
-                print("current too high")
+                self.logger.info("current too high")
                self.sm.estop_signal = True
 #        Change Values
 
@@ -129,7 +129,7 @@ class Sensors:
             else:
                 self.hpsone = 0
                 self.hpsfailcount = self.hpsfailcount + 1
-                print("Error with HPS #1")
+                self.logger.info("Error with HPS #1")
 
             try:
                 packet2 = self.comm.controller2.get(timeout=2)
@@ -141,7 +141,7 @@ class Sensors:
             else:
                 self.hpstwo = 0
                 self.hpsfailcount = self.hpsfailcount + 1
-                print("Error with HPS #2")
+                self.logger.info("Error with HPS #2")
 
             try:
                 packet3 = self.comm.controller3.get(timeout=2)
@@ -154,7 +154,7 @@ class Sensors:
             else:
                 self.hpsthree = 0
                 self.hpsfailcount = self.hpsfailcount + 1
-                print("Error with HPS #3")
+                self.logger.info("Error with HPS #3")
 
             try:
                 packet4 = self.comm.controller4.get(timeout=2)
@@ -166,7 +166,7 @@ class Sensors:
             else:
                 self.hpsfour = 0
                 self.hpsfailcount = self.hpsfailcount + 1
-                print("Error with HPS #3")
+                self.logger.info("Error with HPS #3")
 
             if self.hpsfailcount >= 2:
                 self.sm.estop_signal = True== True
@@ -181,7 +181,7 @@ class Sensors:
             else:
                 self.vpsone = 0
                 self.vpsfailcount = self.vpsfailcount + 1
-                print("Error with VPS #1")
+                self.logger.info("Error with VPS #1")
 
             packet2 = comm.controller2.get(timeout=2)
             if self.comm.microcontroller[2]["vertical"]["error"] == 0:
@@ -189,7 +189,7 @@ class Sensors:
             else:
                 self.vpstwo = 0
                 self.vpsfailcount = self.vpsfailcount + 1
-                print("Error with VPS #2")
+                self.logger.info("Error with VPS #2")
 
             packet3 = comm.controller3.get(timeout=2)
             if self.comm.microcontroller[3]["vertical"]["error"] == 0:
@@ -197,7 +197,7 @@ class Sensors:
             else:
                 self.vpsthree = 0
                 self.vpsfailcount = self.vpsfailcount + 1
-                print("Error with VPS #3")
+                self.logger.info("Error with VPS #3")
 
             packet4 = comm.controller4.get(timeout=2)
             if self.comm.microcontroller[4]["vertical"]["error"] == 0:
@@ -205,7 +205,7 @@ class Sensors:
             else:
                 self.vpsfour = 0
                 self.vpsfailcount = self.vpsfailcount + 1
-                print("Error with VPS #4")
+                self.logger.info("Error with VPS #4")
 
             if self.vpsfailcount >= 2:
                 self.sm.estop_signal = True== True
@@ -221,7 +221,7 @@ class Sensors:
             else:
                 self.imuone = 0
                 self.imufailcount = self.imufailcount + 1
-                print("Error with IMU #1")
+                self.logger.info("Error with IMU #1")
 
             packet2 = comm.controller2.get(timeout=2)
             if self.comm.microcontroller[2]["accelerometer"]["error"] == 0:
@@ -229,7 +229,7 @@ class Sensors:
             else:
                 self.imutwo = 0
                 self.imufailcount = self.imufailcount + 1
-                print("Error with IMU #2")
+                self.logger.info("Error with IMU #2")
 
             packet3 = comm.controller3.get(timeout=2)
             if self.comm.microcontroller[3]["accelerometer"]["error"] == 0:
@@ -237,7 +237,7 @@ class Sensors:
             else:
                 self.imuthree = 0
                 self.imufailcount = self.imufailcount + 1
-                print("Error with IMU #3")
+                self.logger.info("Error with IMU #3")
 
             packet4 = comm.controller4.get(timeout=2)
             if self.comm.microcontroller[4]["accelerometer"]["error"] == 0:
@@ -245,7 +245,7 @@ class Sensors:
             else:
                 self.imufour = 0
                 self.imufailcount = self.imufailcount + 1
-                print("Error with IMU #4")
+                self.logger.info("Error with IMU #4")
 
             if self.imufailcount >= 2:
                 sensorcondition = False
@@ -260,91 +260,91 @@ class Sensors:
             #else
                 self.bmsone = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #1")
+                self.logger.info("Error with BMS #1")
             #if data exists
                 self.bmstwo = 1
             #else
                 self.bmstwo = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #2")
+                self.logger.info("Error with BMS #2")
             #if data exists
                 self.bmsthree = 1
             #else
                 self.bmsthree = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #3")
+                self.logger.info("Error with BMS #3")
             #if data exists
                 self.bmsfour = 1
             #else
                 self.bmsfour = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #4")
+                self.logger.info("Error with BMS #4")
             #if data exists
                 self.bmsfive = 1
             #else
                 self.bmsfive = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #5")
+                self.logger.info("Error with BMS #5")
             #if data exists
                 self.bmssix = 1
             #else
                 self.bmssix = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #6")
+                self.logger.info("Error with BMS #6")
             #if data exists
                 self.bmsseven = 1
             #else
                 self.bmsseven = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #7")
+                self.logger.info("Error with BMS #7")
             #if data exists
                 self.bmseight = 1
             #else
                 self.bmseight = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #8")
+                self.logger.info("Error with BMS #8")
             #if data exists
                 self.bmsnine = 1
             #else
                 self.bmsnine = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #9")
+                self.logger.info("Error with BMS #9")
             #if data exists
                 self.bmsten = 1
             #else
                 self.bmsten = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #10")
+                self.logger.info("Error with BMS #10")
             #if data exists
                 self.bmseleven = 1
             #else
                 self.bmseleven = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #11")
+                self.logger.info("Error with BMS #11")
             #if data exists
                 self.bmstwelve = 1
             #else
                 self.bmstwelve = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #12")
+                self.logger.info("Error with BMS #12")
             #if data exists
                 self.bmsthirteen = 1
             #else
                 self.bmsthirteen = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #13")
+                self.logger.info("Error with BMS #13")
             #if data exists
                 self.bmsfourteen = 1
             #else
                 self.bmsfourteen = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #14")
+                self.logger.info("Error with BMS #14")
             #if data exists
                 self.bmsfifteen = 1
             #else
                 self.bmsfifteen = 0
                 self.bmsfailcount = self.bmsfailcount + 1
-                print("Error with BMS #15")
+                self.logger.info("Error with BMS #15")
             if self.bmsfailcount >= 4:
                 self.sm.estop_signal = True== True
 
