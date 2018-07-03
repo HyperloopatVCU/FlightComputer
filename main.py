@@ -38,7 +38,7 @@ def main(root_logger):
             sm_thread = Thread(target=sm.launch, args=(0,), name='StateMachineThread')
             sm_thread.start()
 
-        elif user_input == "warm":
+        elif user_input == "ready":
             sm.warm_up()
     
         elif user_input == "drift":
