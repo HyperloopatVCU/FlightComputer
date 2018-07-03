@@ -1,6 +1,6 @@
 """
     Improvements that need to be made:
-    Instead of providing exact numbers, we need ranges of values for necessary data
+    Instead of providing exact numbers, we need ranges of values for necessary data (Add number or ranges to config.ini!)
 """
 
 class Temperature:
