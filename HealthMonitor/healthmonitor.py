@@ -3,46 +3,50 @@
     Instead of providing exact numbers, we need ranges of values for necessary data (Add number or ranges to config.ini!)
 """
 
+    # Checked
     def battery_temp_check(self, battery_temperature):
-        if self.battery_temperature >= 112:
+        if battery_temperature >= 112:
             self.logger.info("battery temperature good")
-        elif self.battery_temperature <= 122:
+        elif battery_temperature <= 122:
             self.logger.info("max battery temperature reached")
         else:
             self.logger.info("battery temperature too high")
             self.sm.estop_signal = True
 
+    # Checked
     def motor_temp_check(self, motor_temperature):
-        if self.motor_temperature >= 165:
+        if motor_temperature >= 165:
             self.logger.info("motor temp good")
-        elif self.motor_temperature <=175:
+        elif motor_temperature <=175:
             self.logger.info("max motor temperature reached")
         else:
             self.logger.info("motor temp too high")
             self.sm.estop_signal = True
 
+    # Checked
     def motor_controller_temp_check(self, motor_controller):
-        if self.motor_controller >= 184:
+        if motor_controller >= 184:
             self.logger.info("controller temp good")
-        elif self.motor_controller <= 194:
+        elif motor_controller <= 194:
             self.logger.info("controller reached max temp")
         else:
             self.logger.info("controller temp too high")
             self.sm.estop_signal = True
 
+    # Checked
     def high_battery_check(self, voltage, current):
-        if self.voltage <= 90.8 and self.current <= 465:
+        if voltage <= 90.8 and self.current <= 465:
             self.logger.info("high power battery and voltage are fine")
         else:
             self.logger.info("high power battery voltage or current too high")
-            if self.voltage >= 90.8:
+            if voltage >= 90.8:
                 self.logger.info("voltage nearing max")
             elif voltage == 100.8:
                 self.logger.info("voltage at maximum")
             else:
                 self.logger.info("voltage too high")
                 self.sm.estop_signal = True
-            if self.current >= 465:
+            if current >= 465:
                 self.logger.info("current nearing max")
             elif current == 475:
                 self.logger.info("current at max")
@@ -50,6 +54,7 @@
                 self.logger.info ("current too high")
                 self.sm.estop_signal = True
 
+    # Checked
     def low_one_battery_check(self, voltage, current):
         if self.voltage <= 50.4 and self.current <= 3:
             self.logger.info("low power systems good")
@@ -62,6 +67,7 @@
                 self.logger.info("current too high")
                 self.sm.estop_signal = True
 
+        # Checked
         def low_2A_battery_check(self, voltage, current):
             if self.voltage <= 12.6 and self.current <= 4:
                 self.logger.info("brake power good")
@@ -74,7 +80,8 @@
                     self.logger.info("current too high")
                     self.sm.estop_signal = True
 
-        def Low_2B_battery_check(self, voltage, current):
+        # Checked
+        def low_2B_battery_check(self, voltage, current):
             if self.voltage <= 12.6 and self.current <= 4:
                 self.logger.info("brake power good")
             else:
@@ -408,10 +415,14 @@ class HealthMonitor(object):
                 self.sm.estop_signal = True
                 return
 
-            # Temperature Checks
+            # Temperature Checks (NOT syntactally correct at all but getting there)
             battery_temp_check(battery_temperature)
             motor_temp_check(motor_temperature)
             motor_controller_temp_check(motor_controller_temp)
+            high_battery_check(voltage, current)
+            low_one_battery_check(voltage, current)
+            low_2A_battery_check(voltage, current)
+            low_2B_battery_check(voltage, current):
 
             return
 
