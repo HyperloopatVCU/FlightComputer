@@ -116,7 +116,7 @@
             distance = acceleration * time**2
 
     # Checked
-    def HPS_check(self,hpsone,hpstwo,hpsthree,hpsfour):
+    def HPS_check(self, packet1, packet2, packet3, packet4):
         hpsfailcount = 0
             try:
                 packet1 = self.comm.controller1.get(timeout=2)
@@ -168,86 +168,43 @@
                 self.hpsfailcount = self.hpsfailcount + 1
                 self.logger.info("[!!!] Error with HPS #3")
 
-            if self.hpsfailcount >= 2:
+            if hpsfailcount >= 2:
                 self.sm.estop_signal = True
 
-    # Checked
-    def VPS_check(self,vpsone,vpstwo,vpsthree,vpsfour):
+
+    def VPS_check(self, packet1, packet2, packet3, packet4):
         vpsfailcount = 0
 
-            packet1 = comm.controller1.get(timeout=2)
-            if self.comm.microcontroller[1]["vertical"]["error"] == 0:
-                vpsone = 1
-            else:
-                vpsone = 0
-                vpsfailcount = self.vpsfailcount + 1
-                self.logger.info("[!!!] Error with VPS #1")
+        if packet1["vertical"]["error"] != 0:
+            vpsfailcount += 1
+            self.logger.info("[!!!] Error with VPS #1")
 
-            packet2 = comm.controller2.get(timeout=2)
-            if self.comm.microcontroller[2]["vertical"]["error"] == 0:
-                vpstwo = 1
-            else:
-                vpstwo = 0
-                vpsfailcount = self.vpsfailcount + 1
-                self.logger.info("[!!!] Error with VPS #2")
+        packet2 = comm.controller2.get(timeout=2)
+        if self.comm.microcontroller[2]["vertical"]["error"] == 0:
+            vpstwo = 1
+        else:
+            vpstwo = 0
+            vpsfailcount += 1
+            self.logger.info("[!!!] Error with VPS #2")
 
-            packet3 = comm.controller3.get(timeout=2)
-            if self.comm.microcontroller[3]["vertical"]["error"] == 0:
-                vpsthree = 1
-            else:
-                vpsthree = 0
-                vpsfailcount = self.vpsfailcount + 1
-                self.logger.info("[!!!] Error with VPS #3")
+        packet3 = comm.controller3.get(timeout=2)
+        if self.comm.microcontroller[3]["vertical"]["error"] == 0:
+            vpsthree = 1
+        else:
+            vpsthree = 0
+            vpsfailcount += 1
+            self.logger.info("[!!!] Error with VPS #3")
 
-            packet4 = comm.controller4.get(timeout=2)
-            if self.comm.microcontroller[4]["vertical"]["error"] == 0:
-                vpsfour = 1
-            else:
-                vpsfour = 0
-                vpsfailcount = self.vpsfailcount + 1
-                self.logger.info("[!!!] Error with VPS #4")
+        packet4 = comm.controller4.get(timeout=2)
+        if self.comm.microcontroller[4]["vertical"]["error"] == 0:
+            vpsfour = 1
+        else:
+            vpsfour = 0
+            vpsfailcount += 1
+            self.logger.info("[!!!] Error with VPS #4")
 
-            if self.vpsfailcount >= 2:
-                self.sm.estop_signal = True
-
-    # Checked
-    def IMU_check(self,imuone,imutwo,imuthree,imufour, imufailcount):
-        imufailcount = 0
-
-            packet1 = comm.controller1.get(timeout=2)
-            if self.comm.microcontroller[1]["accelerometer"]["error"] == 0:
-               imuone = 1
-            else:
-                imuone = 0
-                self.imufailcount += 1
-                self.logger.info("[!!!] Error with IMU #1")
-
-            packet2 = comm.controller2.get(timeout=2)
-            if self.comm.microcontroller[2]["accelerometer"]["error"] == 0:
-                imutwo = 1
-            else:
-                imutwo = 0
-                imufailcount += 1
-                self.logger.info("[!!!] Error with IMU #2")
-
-            packet3 = comm.controller3.get(timeout=2)
-            if self.comm.microcontroller[3]["accelerometer"]["error"] == 0:
-                imuthree = 1
-            else:
-                imuthree = 0
-                imufailcount += 1
-                self.logger.info("[!!!] Error with IMU #3")
-
-            packet4 = comm.controller4.get(timeout=2)
-            if self.comm.microcontroller[4]["accelerometer"]["error"] == 0:
-                imufour = 1
-            else:
-                imufour = 0
-                imufailcount += 1
-                self.logger.info("[!!!] Error with IMU #4")
-
-            if imufailcount >= 2:
-                self.sm.estop_signal = True
+        if self.vpsfailcount >= 2:
+            self.sm.estop_signal = True
 
 
 class HealthMonitor(object):
@@ -320,79 +277,15 @@ class HealthMonitor(object):
                 self.sm.estop_signal = True
                 return
 
-            # Micrcontroller 1 error checking
-            if packet1["error"] != 0:
-                self.logger.critical("[+] Microcontroller one, error code: %d", packet1["error"]))
-                self.sm.estop_signal = True
-                return
 
-            for k, v in packet1.items():
-                if v["error"] != 0:
-                    self.logger.critical("[+] Microcontroller one, error: %s", k)
-                    self.sm.estop_signal = True
-                    return
-
-            # Microcontroller 2 error checking
-            if packet2["error"] != 0:
-                self.logger.critical("[+] Microcontroller two, error code: %d", packet2["error"]))
-                self.sm.estop_signal = True
-                return
-
-            for k, v in packet2.items():
-                if v["error"] != 0:
-                    self.logger.critical("[+] Microcontroller two, error: %s", k)
-                    self.sm.estop_signal = True
-                    return
-
-            # Microcontroller 3 error checking
-            if packet3["error"] != 0:
-                self.logger.critical("[+] Microcontroller three, error code: %d", packet3["error"]))
-                self.sm.estop_signal = True
-                return
-
-            for k, v in packet3.items():
-                if v["error"] != 0:
-                    self.logger.critical("[+] Microcontroller three, error: %s", k)
-                    self.sm.estop_signal = True
-                    return
-
-            # Microcontroller 4 error checking
-            if packet4["error"] != 0:
-                self.logger.critical("[+] Microcontroller four, error code: %d", packet4["error"])
-                self.sm.estop_signal = True
-                return
-
-            for k, v in packet4.items():
-                if v["error"] != 0:
-                    self.logger.critical("[+] Microcontroller four, error: %s", k)
-                    self.sm.estop_signal = True
-                    return
-
-            # BMS error checking (This needs to be changed a bit because the for loop won't work)
-            if packet5["error"] != 0:
-                self.logger.critical("[+] Microcontroller five, error code: %d", packet4["error"])
-                self.sm.estop_signal = True
-                return
-            
-            bms_failcount = 0
-            for k1, v1 in packet5.items():
-                for k2, v2 in v1.items():
-                    if v2["error"] != 0:
-                        bms_failcount += 1
-                        self.logger.critical("[+] Microcontroller five, error: %s", k2)
-
-            if bms_failcount >= self.bms_allowed_errors:
-                self.logger.critical("[+] Microcontroller five error")
-                self.sm.estop_signal = True
-                return
 
             # (NOT syntactally correct at all but getting there)
 
             # System checks (Parameters to this are going to be the packets)
-            HPS_check(hpsone,hpstwo,hpsthree,hpsfour, hpsfailcount)
-            VPS_check(vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount)
-            IMU_check(imuone,imutwo,imuthree,imufour, imufailcount)
-            BMS_check(bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount)
+            HPS_check(packet1, packet2, packet3, packet4)
+            VPS_check(packet1, packet2, packet3, packet4)
+            IMU_check(packet1, packet2, packet3, packet4)
+            BMS_check(packet5)
 
             # Temperature Checks 
             battery_temp_check(battery_temperature)
@@ -413,5 +306,76 @@ class HealthMonitor(object):
 
         elif sm.state == sm.states["stopping"]:
             # Add checks for stopping
+            return
+
+    def VPS_check(self, packet1, packet2, packet3, packet4):
+    """
+    VPS error checking
+    """
+        vpsfailcount = 0
+
+        if packet1["vertical"]["error"] != 0:
+            vpsfailcount += 1
+            self.logger.info("[!!!] Error with VPS #1")
+
+        if packet2["vertical"]["error"] != 0:
+            vpsfailcount += 1
+            self.logger.info("[!!!] Error with VPS #2")
+
+        if packet3["vertical"]["error"] != 0:
+            vpsfailcount += 1
+            self.logger.info("[!!!] Error with VPS #3")
+
+        if packet4["vertical"]["error"] != 0:
+            vpsfailcount += 1
+            self.logger.info("[!!!] Error with VPS #4")
+
+        if self.vpsfailcount >= 2:
+            self.sm.estop_signal = True
+
+    def IMU_check(self, packet1, packet2, packet3, packet4):
+    """
+    IMU error checking
+    """
+        imufailcount = 0
+        if packet1["accelerometer"]["error"] != 0:
+            self.imufailcount += 1
+            self.logger.info("[!!!] Error with IMU #1")
+
+        if packet2["accelerometer"]["error"] != 0:
+            imufailcount += 1
+            self.logger.info("[!!!] Error with IMU #2")
+
+        if packet3["accelerometer"]["error"] != 0:
+            imufailcount += 1
+            self.logger.info("[!!!] Error with IMU #3")
+
+        if packet4["accelerometer"]["error"] != 0:
+            imufailcount += 1
+            self.logger.info("[!!!] Error with IMU #4")
+
+        if imufailcount >= 2:
+            self.sm.estop_signal = True
+
+    def BMS_check(self, BMS_packet):
+    """
+    BMS error checking (This needs to be changed a bit because the for loop won't work)
+    """
+
+        if packet5["error"] != 0:
+            self.logger.critical("[+] Microcontroller five, error code: %d", packet4["error"])
+            self.sm.estop_signal = True
+            return
+            
+        bms_failcount = 0
+        for k1, v1 in packet5.items():
+            for k2, v2 in v1.items():
+                if v2["error"] != 0:
+                    bms_failcount += 1
+                    self.logger.critical("[+] Microcontroller five, error: %s", k2)
+
+        if bms_failcount >= self.bms_allowed_errors:
+            self.logger.critical("[+] Microcontroller five error. Too many errors")
+            self.sm.estop_signal = True
             return
 
