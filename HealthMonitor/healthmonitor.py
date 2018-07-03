@@ -86,10 +86,10 @@ class LowPowerTwoBrake:
                 print("brake systems critical")
                 if self.voltage > 12.6:
                     print("voltage too high")
-                    sm.estop_signal
+                   self.sm.estop_signal = True
                 if self.current > 4:
                     print("current too high")
-                    sm.estop_signal
+                   self.sm.estop_signal = True
 
 class PotentiometerBrakes:
     def BrakePotentiometer(self, voltage, current):
@@ -99,10 +99,10 @@ class PotentiometerBrakes:
             print("potentiometer average too much voltage or current")
             if self.voltage >= 12.6:
                 print("voltage too high")
-                sm.estop_signal
+               self.sm.estop_signal = True
             if self.current >= 4:
                 print("current too high")
-                sm.estop_signal
+               self.sm.estop_signal = True
 #        Change Values
 
 class Distance:
@@ -169,7 +169,7 @@ class Sensors:
                 print("Error with HPS #3")
 
             if self.hpsfailcount >= 2:
-                sm.estop_signal == True
+                self.sm.estop_signal = True== True
 
     def VPS(self,vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount):
         self.vpsfailcount = 0
@@ -208,7 +208,7 @@ class Sensors:
                 print("Error with VPS #4")
 
             if self.vpsfailcount >= 2:
-                sm.estop_signal == True
+                self.sm.estop_signal = True== True
 
     def IMU(self,imuone,imutwo,imuthree,imufour, imufailcount):
         self.imufailcount = 0
@@ -250,7 +250,7 @@ class Sensors:
             if self.imufailcount >= 2:
                 sensorcondition = False
 
-                sm.estop_signal == True
+                self.sm.estop_signal = True== True
 
 
     def BMS(self, bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount):
@@ -346,7 +346,7 @@ class Sensors:
                 self.bmsfailcount = self.bmsfailcount + 1
                 print("Error with BMS #15")
             if self.bmsfailcount >= 4:
-                sm.estop_signal == True
+                self.sm.estop_signal = True== True
 
 class HealthMonitor(object):
 
