@@ -11,7 +11,7 @@ class Temperature:
             print("max battery temperature reached")
         else:
             print("battery temperature too high")
-            statemachine.MainSM.estop_signal
+            self.sm.estop_signal = True
 
     def motor(self, motor_temperature):
         if self.motor_temperature >= 165:
@@ -20,7 +20,7 @@ class Temperature:
             print("max motor temperature reached")
         else:
             print("motor temp too high")
-            statemachine.MainSM.estop_signal
+            self.sm.estop_signal = True
 
     def controller(self, motor_controller):
         if self.motor_controller >= 184:
@@ -29,7 +29,7 @@ class Temperature:
             print("controller reached max temp")
         else:
             print("controller temp too high")
-            statemachine.MainSM.estop_signal
+            self.sm.estop_signal = True
 
 class HighPower:
     def high_battery(self, voltage, current):
@@ -43,14 +43,14 @@ class HighPower:
                 print("voltage at maximum")
             else:
                 print("voltage too high")
-                statemachine.MainSM.estop_signal
+                self.sm.estop_signal = True
             if self.current >= 465:
                 print("current nearing max")
             elif current == 475:
                 print("current at max")
             else:
                 print ("current too high")
-                statemachine.MainSM.estop_signal
+                self.sm.estop_signal = True
 
 class LowPowerOne:
     def LowPowerOne(self, voltage, current):
@@ -60,10 +60,10 @@ class LowPowerOne:
             print("low power critical")
             if self.voltage > 50.4:
                 print("voltage too high")
-                statemachine.MainSM.estop_signal
+                self.sm.estop_signal = True
             if self.current >= 3:
                 print("current too high")
-                statemachine.MainSM.estop_signal
+                self.sm.estop_signal = True
 
 class LowPowerTwoBrake:
     class BrakeA:
@@ -74,10 +74,10 @@ class LowPowerTwoBrake:
                 print("brake systems critical")
                 if self.voltage > 12.6:
                     print("voltage too high")
-                    statemachine.MainSM.estop_signal
+                    self.sm.estop_signal = True
                 if self.current > 4:
                     print("current too high")
-                    statemachine.MainSM.estop_signal
+                    self.sm.estop_signal = True
     class BrakeB:
         def LowBrakeB(self, voltage, current):
             if self.voltage <= 12.6 and self.current <= 4:
@@ -350,16 +350,27 @@ class Sensors:
 
 class HealthMonitor(object):
 
-    def __init__(self, comm, sm):
-            self.comm = comm
-            self.sm = sm
+    def __init__(self, comm, sm, pod):
+        self.comm = comm
+        self.sm = sm
 
-            self.frame_rate = 10
+        self.logger = logging.getLogger('TCP')
+
+        self.logger.info("[+] Initializing Health Monitoring")
+
+        self.stop_signal = False
+
+        self.config = ConfigParser()
+        self.config.read('config.ini')
+        
+        self.frames = 0
+        self.frame_rate = self.config['Health'].getint('frame_rate')
 
     def run(self):
-            while True:
+            while not self.stop_signal:
                 self.update()
                 sleep(1/self.frame_rate)
+                self.frames += 1
 
     def update(self):    
         """
