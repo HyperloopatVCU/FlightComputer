@@ -253,96 +253,96 @@
     def BMS_check(self, bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount):
             # while Something
             #if data exist
-                self.bmsone = 1
+                bmsone = 1
             #else
-                self.bmsone = 0
-                self.bmsfailcount += 1
+                bmsone = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #1")
             #if data exists
-                self.bmstwo = 1
+                bmstwo = 1
             #else
-                self.bmstwo = 0
-                self.bmsfailcount += 1
+                bmstwo = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #2")
             #if data exists
-                self.bmsthree = 1
+                bmsthree = 1
             #else
-                self.bmsthree = 0
-                self.bmsfailcount += 1
+                bmsthree = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #3")
             #if data exists
-                self.bmsfour = 1
+                bmsfour = 1
             #else
-                self.bmsfour = 0
-                self.bmsfailcount += 1
+                bmsfour = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #4")
             #if data exists
-                self.bmsfive = 1
+                bmsfive = 1
             #else
-                self.bmsfive = 0
-                self.bmsfailcount += 1
+                bmsfive = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #5")
             #if data exists
-                self.bmssix = 1
+                bmssix = 1
             #else
-                self.bmssix = 0
-                self.bmsfailcount += 1
+                bmssix = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #6")
             #if data exists
-                self.bmsseven = 1
+                bmsseven = 1
             #else
-                self.bmsseven = 0
-                self.bmsfailcount += 1
+                bmsseven = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #7")
             #if data exists
-                self.bmseight = 1
+                bmseight = 1
             #else
-                self.bmseight = 0
-                self.bmsfailcount += 1
+                bmseight = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #8")
             #if data exists
-                self.bmsnine = 1
+                bmsnine = 1
             #else
-                self.bmsnine = 0
-                self.bmsfailcount += 1
+                bmsnine = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #9")
             #if data exists
-                self.bmsten = 1
+                bmsten = 1
             #else
-                self.bmsten = 0
-                self.bmsfailcount += 1
+                bmsten = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #10")
             #if data exists
-                self.bmseleven = 1
+                bmseleven = 1
             #else
-                self.bmseleven = 0
-                self.bmsfailcount += 1
+                bmseleven = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #11")
             #if data exists
-                self.bmstwelve = 1
+                bmstwelve = 1
             #else
-                self.bmstwelve = 0
-                self.bmsfailcount += 1
+                bmstwelve = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #12")
             #if data exists
-                self.bmsthirteen = 1
+                bmsthirteen = 1
             #else
-                self.bmsthirteen = 0
-                self.bmsfailcount    1
+                bmsthirteen = 0
+                bmsfailcount    1
                 self.logger.info("[!!!] Error with BMS #13")
             #if data exists
-                self.bmsfourteen = 1
+                bmsfourteen = 1
             #else
-                self.bmsfourteen = 0
-                self.bmsfailcount += 1
+                bmsfourteen = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #14")
             #if data exists
-                self.bmsfifteen = 1
+                bmsfifteen = 1
             #else
-                self.bmsfifteen = 0
-                self.bmsfailcount += 1
+                bmsfifteen = 0
+                bmsfailcount += 1
                 self.logger.info("[!!!] Error with BMS #15")
-            if self.bmsfailcount >= 4:
+            if bmsfailcount >= 4:
                 self.sm.estop_signal = True
 
 class HealthMonitor(object):
@@ -413,37 +413,66 @@ class HealthMonitor(object):
                 self.sm.estop_signal = True
                 return
 
+            # Micrcontroller 1 error checking
             if packet1["error"] != 0:
-                self.logger.critical("[+] Microcontroller one error")
+                self.logger.critical("[+] Microcontroller one error: %d", packet1["error"]))
                 self.sm.estop_signal = True
                 return
 
+            for k, v in packet1:
+                if v["error"] != 0:
+                    self.logger.critical("[+] Microcontroller one error: %s", k)
+                    self.sm.estop_signal = True
+                    return
+
+            # Microcontroller 2 error checking
             if packet2["error"] != 0:
-                self.logger.critical("[+] Microcontroller two error")
+                self.logger.critical("[+] Microcontroller two error: %d", packet2["error"]))
                 self.sm.estop_signal = True
                 return
 
+            for k, v in packet2:
+                if v["error"] != 0:
+                    self.logger.critical("[+] Microcontroller two error: %s", k)
+                    self.sm.estop_signal = True
+                    return
+
+            # Microcontroller 3 error checking
             if packet3["error"] != 0:
-                self.logger.critical("[+] Microcontroller three error")
+                self.logger.critical("[+] Microcontroller three error: %d", packet3["error"]))
                 self.sm.estop_signal = True
                 return
 
+            for k, v in packet3:
+                if v["error"] != 0:
+                    self.logger.critical("[+] Microcontroller three error: %s", k)
+                    self.sm.estop_signal = True
+                    return
+
+            # Microcontroller 4 error checking
             if packet4["error"] != 0:
-                self.logger.critical("[+] Microcontroller four error")
+                self.logger.critical("[+] Microcontroller four error: %d", packet4["error"])
                 self.sm.estop_signal = True
                 return
 
+            for k, v in packet4:
+                if v["error"] != 0:
+                    self.logger.critical("[+] Microcontroller four error: %s", k)
+                    self.sm.estop_signal = True
+                    return
+
+            # BMS error checking
             for k1, v1 in packet5:
                 for k2, v2 in v1:
                     if v2["error"] != 0:
-                        self.logger.critical("[+] Microcontroller five error")
+                        self.logger.critical("[+] Microcontroller five error: %s", k2)
                         self.sm.estop_signal = True
                         return
 
 
             # (NOT syntactally correct at all but getting there)
 
-            # More system checks (Inputs to this are going to be different)
+            # System checks (Parameters to this are going to be the packets)
             HPS_check(hpsone,hpstwo,hpsthree,hpsfour, hpsfailcount)
             VPS_check(vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount)
             IMU_check(imuone,imutwo,imuthree,imufour, imufailcount)
@@ -454,7 +483,7 @@ class HealthMonitor(object):
             motor_temp_check(motor_temperature)
             motor_controller_temp_check(motor_controller_temp)
 
-            # Coltage and current checks
+            # Voltage and current checks
             high_battery_check(voltage, current)
             low_one_battery_check(voltage, current)
             low_2A_battery_check(voltage, current)
