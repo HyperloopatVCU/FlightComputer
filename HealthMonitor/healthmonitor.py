@@ -1,12 +1,8 @@
 """
     Improvements that need to be made:
     Instead of providing exact numbers, we need ranges of values for necessary data
-
-
 """
-#Temperature in Fahrenheit
 
-import statemachine
 class Temperature:
     def battery(self, battery_temperature):
         if self.battery_temperature >= 112:
@@ -15,7 +11,7 @@ class Temperature:
             print("max battery temperature reached")
         else:
             print("battery temperature too high")
-            statemachine.MainSM.estop_signal
+            self.sm.estop_signal = True
 
     def motor(self, motor_temperature):
         if self.motor_temperature >= 165:
@@ -24,7 +20,7 @@ class Temperature:
             print("max motor temperature reached")
         else:
             print("motor temp too high")
-            statemachine.MainSM.estop_signal
+            self.sm.estop_signal = True
 
     def controller(self, motor_controller):
         if self.motor_controller >= 184:
@@ -33,7 +29,7 @@ class Temperature:
             print("controller reached max temp")
         else:
             print("controller temp too high")
-            statemachine.MainSM.estop_signal
+            self.sm.estop_signal = True
 
 class HighPower:
     def high_battery(self, voltage, current):
@@ -47,14 +43,14 @@ class HighPower:
                 print("voltage at maximum")
             else:
                 print("voltage too high")
-                statemachine.MainSM.estop_signal
+                self.sm.estop_signal = True
             if self.current >= 465:
                 print("current nearing max")
             elif current == 475:
                 print("current at max")
             else:
                 print ("current too high")
-                statemachine.MainSM.estop_signal
+                self.sm.estop_signal = True
 
 class LowPowerOne:
     def LowPowerOne(self, voltage, current):
@@ -64,10 +60,10 @@ class LowPowerOne:
             print("low power critical")
             if self.voltage > 50.4:
                 print("voltage too high")
-                statemachine.MainSM.estop_signal
+                self.sm.estop_signal = True
             if self.current >= 3:
                 print("current too high")
-                statemachine.MainSM.estop_signal
+                self.sm.estop_signal = True
 
 class LowPowerTwoBrake:
     class BrakeA:
@@ -78,10 +74,10 @@ class LowPowerTwoBrake:
                 print("brake systems critical")
                 if self.voltage > 12.6:
                     print("voltage too high")
-                    statemachine.MainSM.estop_signal
+                    self.sm.estop_signal = True
                 if self.current > 4:
                     print("current too high")
-                    statemachine.MainSM.estop_signal
+                    self.sm.estop_signal = True
     class BrakeB:
         def LowBrakeB(self, voltage, current):
             if self.voltage <= 12.6 and self.current <= 4:
@@ -90,10 +86,10 @@ class LowPowerTwoBrake:
                 print("brake systems critical")
                 if self.voltage > 12.6:
                     print("voltage too high")
-                    statemachine.MainSM.estop_signal
+                    sm.estop_signal
                 if self.current > 4:
                     print("current too high")
-                    statemachine.MainSM.estop_signal
+                    sm.estop_signal
 
 class PotentiometerBrakes:
     def BrakePotentiometer(self, voltage, current):
@@ -103,13 +99,12 @@ class PotentiometerBrakes:
             print("potentiometer average too much voltage or current")
             if self.voltage >= 12.6:
                 print("voltage too high")
-                statemachine.MainSM.estop_signal
+                sm.estop_signal
             if self.current >= 4:
                 print("current too high")
-                statemachine.MainSM.estop_signal
+                sm.estop_signal
 #        Change Values
 
-<<<<<<< HEAD
 class Distance:
     def pod_distance_from_track(self,time):
         if self.time <=17.08:
@@ -175,7 +170,6 @@ class Sensors:
 
             if self.hpsfailcount >= 2:
                 sm.estop_signal == True
-#
 
     def VPS(self,vpsone,vpstwo,vpsthree,vpsfour, vpsfailcount):
         self.vpsfailcount = 0
@@ -260,7 +254,7 @@ class Sensors:
 
 
     def BMS(self, bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount):
-#       while Something
+            # while Something
             #if data exist
                 self.bmsone = 1
             #else
@@ -353,7 +347,33 @@ class Sensors:
                 print("Error with BMS #15")
             if self.bmsfailcount >= 4:
                 sm.estop_signal == True
-=======
+
+class HealthMonitor(object):
+
+    def __init__(self, comm, sm, pod):
+        self.comm = comm
+        self.sm = sm
+
+        self.logger = logging.getLogger('TCP')
+
+        self.logger.info("[+] Initializing Health Monitoring")
+
+        self.stop_signal = False
+
+        self.config = ConfigParser()
+        self.config.read('config.ini')
+        
+        self.frames = 0
+        self.frame_rate = self.config['Health'].getint('frame_rate')
+
+    def run(self):
+            while not self.stop_signal:
+                self.update()
+                sleep(1/self.frame_rate)
+                self.frames += 1
+
+    def update(self):    
+        """
         Any threshold values that may need to be adjusted should be added to
         the config.ini file in the root of the program directory. 
         """
@@ -384,6 +404,4 @@ class Sensors:
         elif sm.state == sm.states["stopping"]:
             # accelerating is the only important state right now
             return
->>>>>>> c7b0326c492983168f1f0607a57afa02e3a9dfbc
-
 
