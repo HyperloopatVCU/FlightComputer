@@ -249,101 +249,6 @@
             if imufailcount >= 2:
                 self.sm.estop_signal = True
 
-    # Checked
-    def BMS_check(self, bmsone, bmstwo,bmsthree,bmsfour, bmsfive, bmssix, bmsseven, bmseight, bmsnine, bmsten, bmseleven, bmstwelve, bmsthirteen, bmsfourteen, bmsifteen,bmsfailcount):
-            # while Something
-            #if data exist
-                bmsone = 1
-            #else
-                bmsone = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #1")
-            #if data exists
-                bmstwo = 1
-            #else
-                bmstwo = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #2")
-            #if data exists
-                bmsthree = 1
-            #else
-                bmsthree = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #3")
-            #if data exists
-                bmsfour = 1
-            #else
-                bmsfour = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #4")
-            #if data exists
-                bmsfive = 1
-            #else
-                bmsfive = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #5")
-            #if data exists
-                bmssix = 1
-            #else
-                bmssix = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #6")
-            #if data exists
-                bmsseven = 1
-            #else
-                bmsseven = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #7")
-            #if data exists
-                bmseight = 1
-            #else
-                bmseight = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #8")
-            #if data exists
-                bmsnine = 1
-            #else
-                bmsnine = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #9")
-            #if data exists
-                bmsten = 1
-            #else
-                bmsten = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #10")
-            #if data exists
-                bmseleven = 1
-            #else
-                bmseleven = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #11")
-            #if data exists
-                bmstwelve = 1
-            #else
-                bmstwelve = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #12")
-            #if data exists
-                bmsthirteen = 1
-            #else
-                bmsthirteen = 0
-                bmsfailcount    1
-                self.logger.info("[!!!] Error with BMS #13")
-            #if data exists
-                bmsfourteen = 1
-            #else
-                bmsfourteen = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #14")
-            #if data exists
-                bmsfifteen = 1
-            #else
-                bmsfifteen = 0
-                bmsfailcount += 1
-                self.logger.info("[!!!] Error with BMS #15")
-            if bmsfailcount >= 4:
-                self.sm.estop_signal = True
 
 class HealthMonitor(object):
 
@@ -417,62 +322,67 @@ class HealthMonitor(object):
 
             # Micrcontroller 1 error checking
             if packet1["error"] != 0:
-                self.logger.critical("[+] Microcontroller one error: %d", packet1["error"]))
+                self.logger.critical("[+] Microcontroller one, error code: %d", packet1["error"]))
                 self.sm.estop_signal = True
                 return
 
             for k, v in packet1.items():
                 if v["error"] != 0:
-                    self.logger.critical("[+] Microcontroller one error: %s", k)
+                    self.logger.critical("[+] Microcontroller one, error: %s", k)
                     self.sm.estop_signal = True
                     return
 
             # Microcontroller 2 error checking
             if packet2["error"] != 0:
-                self.logger.critical("[+] Microcontroller two error: %d", packet2["error"]))
+                self.logger.critical("[+] Microcontroller two, error code: %d", packet2["error"]))
                 self.sm.estop_signal = True
                 return
 
             for k, v in packet2.items():
                 if v["error"] != 0:
-                    self.logger.critical("[+] Microcontroller two error: %s", k)
+                    self.logger.critical("[+] Microcontroller two, error: %s", k)
                     self.sm.estop_signal = True
                     return
 
             # Microcontroller 3 error checking
             if packet3["error"] != 0:
-                self.logger.critical("[+] Microcontroller three error: %d", packet3["error"]))
+                self.logger.critical("[+] Microcontroller three, error code: %d", packet3["error"]))
                 self.sm.estop_signal = True
                 return
 
             for k, v in packet3.items():
                 if v["error"] != 0:
-                    self.logger.critical("[+] Microcontroller three error: %s", k)
+                    self.logger.critical("[+] Microcontroller three, error: %s", k)
                     self.sm.estop_signal = True
                     return
 
             # Microcontroller 4 error checking
             if packet4["error"] != 0:
-                self.logger.critical("[+] Microcontroller four error: %d", packet4["error"])
+                self.logger.critical("[+] Microcontroller four, error code: %d", packet4["error"])
                 self.sm.estop_signal = True
                 return
 
             for k, v in packet4.items():
                 if v["error"] != 0:
-                    self.logger.critical("[+] Microcontroller four error: %s", k)
+                    self.logger.critical("[+] Microcontroller four, error: %s", k)
                     self.sm.estop_signal = True
                     return
 
             # BMS error checking (This needs to be changed a bit because the for loop won't work)
+            if packet5["error"] != 0:
+                self.logger.critical("[+] Microcontroller five, error code: %d", packet4["error"])
+                self.sm.estop_signal = True
+                return
+            
             bms_failcount = 0
             for k1, v1 in packet5.items():
                 for k2, v2 in v1.items():
                     if v2["error"] != 0:
                         bms_failcount += 1
-                        self.logger.critical("[+] Microcontroller five error: %s", k2)
+                        self.logger.critical("[+] Microcontroller five, error: %s", k2)
 
             if bms_failcount >= self.bms_allowed_errors:
-                self.logger.critical("[+] Microcontroller five error: %s")
+                self.logger.critical("[+] Microcontroller five error")
                 self.sm.estop_signal = True
                 return
 
