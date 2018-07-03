@@ -21,6 +21,7 @@ class TCPComm(object):
         self.controller2 = Queue(-1)
         self.controller3 = Queue(-1)
         self.controller4 = Queue(-1)
+        self.controller5 = Queue(-1)
 
         self.config = ConfigParser()
         self.config.read('config.ini')
