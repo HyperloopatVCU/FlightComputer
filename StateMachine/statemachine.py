@@ -6,7 +6,7 @@ from configparser import ConfigParser
 
 class MainSM(object):
 
-    def __init__(self, Pod, *hardware):
+    def __init__(self, pod, *hardware):
 
         self.logger = logging.getLogger('SM')
 
@@ -17,7 +17,7 @@ class MainSM(object):
 
         self.frames = 0
 
-        self.Pod = Pod
+        self.pod = pod
 
         self.hardware = {
             "brakes": hardware[0],
@@ -25,9 +25,9 @@ class MainSM(object):
         }
 
         self.states = {
-            "pre-operational"     : 0x01,  # Pod is off, This is the safe state
+            "pre-operational"     : 0x01,  # pod is off, This is the safe state
             "operational"     : 0x02,  # Preparing pod for flight
-            "accelerating"      : 0x03,  # Pod is in flight
+            "accelerating"      : 0x03,  # pod is in flight
             "stopping"     : 0x05   # Emergency stop
         }
 
@@ -65,7 +65,7 @@ class MainSM(object):
 
     def launch(self, mode):
         if self.state != self.states["operational"]:
-            self.logger.warn("[*] Pod must be operational to move")
+            self.logger.warn("[*] pod must be operational to move")
             return
 
         # Create seperate execution thread for comm
@@ -117,8 +117,8 @@ class MainSM(object):
         # If the pod is still acclerating forwards the program will wait one
         # second before it engages the brakes to the give the motor time to
         # stop running
-        if Pod.acceleration > 0.5:
-            self.logger.debug("[+] Pod still accelerating when trying to brake")
+        if pod.acceleration > 0.5:
+            self.logger.debug("[+] pod still accelerating when trying to brake")
             time.sleep(0.5)
         
         self.logger.info("[+] State set to 'stopping'")

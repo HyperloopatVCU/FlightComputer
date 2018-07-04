@@ -110,18 +110,18 @@ class HealthMonitor(object):
             return
 
     def battery_temp_check(self, battery_temperature):
-        if battery_temperature >= 112:
+        if battery_temperature <= self.max_battery_temp:
             self.logger.info("[!!!] battery temperature good")
-        elif battery_temperature <= 122:
+        elif battery_temperature <= self.estop_battery_temp:
             self.logger.info("[!!!] max battery temperature reached")
         else:
             self.logger.info("[!!!] battery temperature too high")
             self.sm.estop_signal = True
 
     def motor_temp_check(self, motor_temperature):
-        if motor_temperature >= 165:
+        if motor_temperature <= self.max_motor_temp:
             self.logger.info("[!!!] motor temp good")
-        elif motor_temperature <=175:
+        elif motor_temperature <=self.estop_motor_temp:
             self.logger.info("[!!!] max motor temperature reached")
         else:
             self.logger.info("[!!!] motor temp too high")
@@ -129,9 +129,9 @@ class HealthMonitor(object):
 
 
     def motor_controller_temp_check(self, motor_controller):
-        if motor_controller >= 184:
+        if motor_controller <= self.max_motor_controller_temp:
             self.logger.info("[!!!] controller temp good")
-        elif motor_controller <= 194:
+        elif motor_controller <= self.estop_motor_controller_temp:
             self.logger.info("[!!!] controller reached max temp")
         else:
             self.logger.info("[!!!] controller temp too high")
