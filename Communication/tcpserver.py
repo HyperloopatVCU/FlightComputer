@@ -6,7 +6,6 @@ from configparser import ConfigParser
 from queue import Queue
 from socket import *
 
-
 class TCPComm(object):
 
     def __init__(self):

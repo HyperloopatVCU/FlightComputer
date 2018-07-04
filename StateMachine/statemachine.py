@@ -4,7 +4,6 @@ from time import sleep, time
 from threading import Thread
 from configparser import ConfigParser
 
-
 class MainSM(object):
 
     def __init__(self, Pod, *hardware):
