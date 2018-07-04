@@ -3,14 +3,8 @@
     Instead of providing exact numbers, we need ranges of values for necessary data (Add number or ranges to config.ini!)
 """
 
-    # WHAT IS THIS?
-    def pod_distance_from_track(self, time):
-        if time <=17.08:
-            acceleration = 4.5
-            distance = acceleration * time**2
-        else:
-            acceleration = -21.5
-            distance = acceleration * time**2
+# TODO: Function for if we reach the end of the tube
+# TODO: Average data code with sensor deviation discarding
 
 class HealthMonitor(object):
 
