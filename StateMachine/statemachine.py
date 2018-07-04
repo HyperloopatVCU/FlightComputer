@@ -21,21 +21,23 @@ class MainSM(object):
 
         self.hardware = {
             "brakes": hardware[0],
-            "motor": hardware[1]
+            "motor" : hardware[1]
         }
 
         self.states = {
             "pre-operational"     : 0x01,  # pod is off, This is the safe state
-            "operational"     : 0x02,  # Preparing pod for flight
-            "accelerating"      : 0x03,  # pod is in flight
-            "stopping"     : 0x05   # Emergency stop
+            "operational"         : 0x02,  # Preparing pod for flight
+            "accelerating"        : 0x03,  # pod is in flight
+            "stopping"            : 0x05   # Normal stopping
+            "broken-stopping"     : 0x06   # Braking with one set off brakes
         }
 
         self.state_str = {
             0x01: "pre-operational",
             0x02: "operational",
             0x03: "accelerating",
-            0x05: "stopping"
+            0x05: "stopping",
+            0x06: "broken-stopping"
         }
 
         self.pre-operational()
@@ -120,6 +122,8 @@ class MainSM(object):
         if pod.acceleration > 0.5:
             self.logger.debug("[+] pod still accelerating when trying to brake")
             time.sleep(0.5)
+
+        # TODO: Activate reply to force stop the motor if still accelerating
         
         self.logger.info("[+] State set to 'stopping'")
         self.state = self.states["stopping"]
