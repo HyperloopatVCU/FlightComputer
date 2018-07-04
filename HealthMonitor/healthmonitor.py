@@ -111,35 +111,35 @@ class HealthMonitor(object):
 
     def battery_temp_check(self, battery_temperature):
         if battery_temperature <= self.max_battery_temp:
-            self.logger.info("[!!!] battery temperature good")
+            self.logger.debug("[+] battery temperature good")
         elif battery_temperature <= self.estop_battery_temp:
-            self.logger.info("[!!!] max battery temperature reached")
+            self.logger.debug("[*] max battery temperature reached")
         else:
-            self.logger.info("[!!!] battery temperature too high")
+            self.logger.critical("[!!!] battery temperature too high")
             self.sm.estop_signal = True
 
     def motor_temp_check(self, motor_temperature):
         if motor_temperature <= self.max_motor_temp:
-            self.logger.info("[!!!] motor temp good")
+            self.logger.info("[+] motor temp good")
         elif motor_temperature <=self.estop_motor_temp:
-            self.logger.info("[!!!] max motor temperature reached")
+            self.logger.info("[*] max motor temperature reached")
         else:
-            self.logger.info("[!!!] motor temp too high")
+            self.logger.critical("[!!!] motor temp too high")
             self.sm.estop_signal = True
 
 
     def motor_controller_temp_check(self, motor_controller):
         if motor_controller <= self.max_motor_controller_temp:
-            self.logger.info("[!!!] controller temp good")
+            self.logger.debug("[+] controller temp good")
         elif motor_controller <= self.estop_motor_controller_temp:
-            self.logger.info("[!!!] controller reached max temp")
+            self.logger.debug("[*] controller reached max temp")
         else:
-            self.logger.info("[!!!] controller temp too high")
+            self.logger.critical("[!!!] controller temp too high")
             self.sm.estop_signal = True
 
     def high_battery_check(self, voltage, current):
         if voltage <= 90.8 and self.current <= 465:
-            self.logger.info("[!!!] high power battery and voltage are fine")
+            self.logger.info("[+] high power battery and voltage are fine")
         else:
             self.logger.info("[!!!] high power battery voltage or current too high")
             if voltage >= 90.8:
