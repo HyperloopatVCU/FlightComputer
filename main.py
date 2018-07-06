@@ -38,7 +38,7 @@ def main(root_logger):
             sm_thread = Thread(target=sm.launch, args=(0,), name='StateMachineThread')
             sm_thread.start()
 
-        elif user_input == "warm":
+        elif user_input == "ready":
             sm.warm_up()
     
         elif user_input == "drift":
@@ -61,7 +61,7 @@ def main(root_logger):
         elif user_input == "estop":
             if input("Are you sure (Program must be restarted to recover from estop)? [y/N] ") in ("Y", "y"):
                 """ESTOP the pod"""
-                sm.estop()
+                sm.estop_signal = True
             else:
                 continue
 

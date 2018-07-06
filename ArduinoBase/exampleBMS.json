@@ -1,5 +1,6 @@
 {
-	"identity":"BMS<number>",
+	"identity":"BMS",
+	"error": <number>,
 	"high power": {
 		"temperature-<number>": { <multiple of these>
 			"error":<number>,

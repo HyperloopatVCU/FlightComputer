@@ -55,8 +55,8 @@ While running, the pod software should present with a prompt. The prompt allows
 for a user remotely to control the pod's behavior manually. The manual control
 commands given to the outside user are:
 
-* warm
-    * Tests readies pod for launch
+* ready
+    * Readies pod for launch
 * drift 
     * Drifts the pod forward slowly
 * launch
