@@ -18,11 +18,11 @@ class TCPComm(object):
 
         # Buffers for each microcontroller
         # TODO: The goal is to get ride of these at some point
-        self.controller1 = Queue(-1)
-        self.controller2 = Queue(-1)
-        self.controller3 = Queue(-1)
-        self.controller4 = Queue(-1)
-        self.controller5 = Queue(-1)
+        self.controller1 = Queue(10)
+        self.controller2 = Queue(10)
+        self.controller3 = Queue(10)
+        self.controller4 = Queue(10)
+        self.controller5 = Queue(10)
 
         self.config = ConfigParser()
         self.config.read('config.ini')
@@ -59,18 +59,21 @@ class TCPComm(object):
             # Decodes message, converts to python dict, puts dict in the buffer
             packet = json.loads(data.decode('utf-8'))
 
-            if packet["identity"] == "EMS1":
-                self.controller1.put(packet)
-            elif packet["identity"] == "EMS2":
-                self.controller2.put(packet)
-            elif packet["identity"] == "EMS3":
-                self.contoller3.put(packet)
-            elif packet["identity"] == "EMS4":
-                self.controller4.put(packet)
-            elif packet["identity"] == "BMS":
-                self.controller5.put(packet)
-            else:
-                self.logger.critical("[!!!] Packet isn't IDed right!")
+            try:
+                if packet["identity"] == "EMS1":
+                    self.controller1.put(packet)
+                elif packet["identity"] == "EMS2":
+                    self.controller2.put(packet)
+                elif packet["identity"] == "EMS3":
+                    self.contoller3.put(packet)
+                elif packet["identity"] == "EMS4":
+                    self.controller4.put(packet)
+                elif packet["identity"] == "BMS":
+                    self.controller5.put(packet)
+                else:
+                    self.logger.critical("[!!!] Packet isn't IDed right!")
+            except:
+                self.logger.critical("[!!!] Buffer Overflow!)
 
         self.logger.debug("[*] Client disconnect %s", addr)
 
