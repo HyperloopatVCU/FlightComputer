@@ -8,6 +8,7 @@ from threading import Thread
 from pod_structure import Pod
 from StateMachine.statemachine import MainSM
 from Communication.tcpserver import TCPComm
+from Communication.data_processing import Data_Proccessing
 from HealthMonitor.healthmonitor import HealthMonitor
 from HardwareControl.brakes import Brakes
 from HardwareControl.motor import Motor
