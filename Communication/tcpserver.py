@@ -17,6 +17,7 @@ class TCPComm(object):
         self.stop_signal = False
 
         # Buffers for each microcontroller
+        # TODO: The goal is to get ride of these at some point
         self.controller1 = Queue(-1)
         self.controller2 = Queue(-1)
         self.controller3 = Queue(-1)
@@ -55,18 +56,18 @@ class TCPComm(object):
             if not data:
                 break
 
-            # Decodes message, converts to python dict, puts dict in the queue
+            # Decodes message, converts to python dict, puts dict in the buffer
             packet = json.loads(data.decode('utf-8'))
 
             if packet["identity"] == "EMS1":
                 self.controller1.put(packet)
-            elif packet["identity"] == "EMS2:
+            elif packet["identity"] == "EMS2":
                 self.controller2.put(packet)
             elif packet["identity"] == "EMS3":
                 self.contoller3.put(packet)
             elif packet["identity"] == "EMS4":
                 self.controller4.put(packet)
-            elif packet["identity"] == "BMS:
+            elif packet["identity"] == "BMS":
                 self.controller5.put(packet)
             else:
                 self.logger.critical("[!!!] Packet isn't IDed right!")
