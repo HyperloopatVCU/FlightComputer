@@ -22,8 +22,8 @@ class Pre_Operational(State):
     def on_event(self, event):
 
         if event == 'start-up':
+            return Pre_Operational(self.controllers)
             # TODO: If moving forward, goto estop
-
         elif event == 'launch':
             return Operational(self.controllers)
         elif event == 'drift':
