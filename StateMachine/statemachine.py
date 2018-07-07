@@ -2,7 +2,7 @@
 import logging
 from time import sleep, time
 from configparser import ConfigParser
-from State import Pre_Operational, Operational, Accelerating, Decelerating, \
+from StateMachine.states import Pre_Operational, Operational, Accelerating, Decelerating, \
 Stop, Estop
 
 class MainSM(object):
