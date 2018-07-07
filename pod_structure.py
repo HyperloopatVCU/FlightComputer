@@ -22,6 +22,9 @@ class Pod(object):
         self.current = {"high": 0.0, "low": 0.0, "front": 0.0, "back": 0.0} # ampere
         self.throttle = 0.0                                                 # percent
 
+        # Contains error code from Communication
+        self.error = 0
+
     def __repr__(self):
         return "<POD pos: {:.2f}, vel: {:.2f}, acc:\
             {:.2f} >".format(self.position["x"], self.speed["x"], self.acceleration["x"])
