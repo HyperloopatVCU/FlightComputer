@@ -18,11 +18,11 @@ class TCPComm(object):
 
         # Buffers for each microcontroller
         # TODO: The goal is to get ride of these at some point
-        self.controller1 = Queue(10)
-        self.controller2 = Queue(10)
-        self.controller3 = Queue(10)
-        self.controller4 = Queue(10)
-        self.controller5 = Queue(10)
+        self.controller1 = Queue(1)
+        self.controller2 = Queue(1)
+        self.controller3 = Queue(1)
+        self.controller4 = Queue(1)
+        self.controller5 = Queue(1)
 
         self.config = ConfigParser()
         self.config.read('config.ini')
