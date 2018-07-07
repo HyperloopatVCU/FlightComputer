@@ -44,19 +44,19 @@ Certain python 3 packages are needed to run some commands
 ```
     
 ## Run Control Program
-Command for final launch
+Command for final launch 
 
 ```
 ~$ sudo python3 main.py
 ```  
+Soon this program will be turned into a service to begin at start up so this
+step won't be necessary in the final version.
 
 ## System Commands
 While running, the pod software should present with a prompt. The prompt allows
 for a user remotely to control the pod's behavior manually. The manual control
 commands given to the outside user are:
 
-* ready
-    * Readies pod for launch
 * drift 
     * Drifts the pod forward slowly
 * launch
@@ -65,6 +65,8 @@ commands given to the outside user are:
     * Emergency stops the pod
 * shutdown
     * Shuts down pod and exits the program
+* state
+    * Displays current state of pod
 * help
     * Displays usage information
 
