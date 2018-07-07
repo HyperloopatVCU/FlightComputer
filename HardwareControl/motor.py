@@ -15,6 +15,8 @@ class Motor(object):
 
         self.m_IDTXT = StringVar(value="000")
         self.m_LengthNUD = StringVar(value="8")
+        self.slip_frequency = 0
+-       self.temperature = 0
 
         # This is used to make sure that default channel is undefined before/after use.
         self.m_PcanHandle = PCAN_NONEBUS
