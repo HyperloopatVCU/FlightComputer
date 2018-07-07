@@ -10,7 +10,7 @@ class TCPComm(object):
 
     def __init__(self):
 
-        self.logger = logging.getLogger('TCP')
+        self.logger = logging.getLogger('COMM')
 
         self.logger.info("[+] Initializing Communication")
 
