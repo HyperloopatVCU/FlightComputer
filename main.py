@@ -25,10 +25,13 @@ def main(root_logger):
     pod = Pod()
     tcp = TCPComm()
     sm = MainSM(pod, Brakes(pod), Motor())
+    dp = Data_Processing(tcp)
     health = HealthMonitor(pod, tcp, sm)
 
     health_thread = Thread(target=health.run, name='HealthThread')
+    dp_thread = Thead(target=health.run, name='DPThread')
     health_thread.start()
+    dp_thread.start()
 
     while True:
         user_input = input(PROMPT)
@@ -37,16 +40,9 @@ def main(root_logger):
 
             if input("Are you sure? [y/N]") in ("Y", "y"):
                 sm.on_event('launch')
-                sm_thread = Thread(target=sm.launch, args=(0,), name='StateMachineThread')
-                sm_thread.start()
 
-        elif user_input == "ready":
-            sm.warm_up()
-    
         elif user_input == "drift":
-
-            sm_thread = Thread(target=sm.launch, args=(1,), name='StateMachineThread')
-            sm_thread.start()
+            sm.on_event('drift')
 
         elif user_input == "shutdown":
             if sm.state != sm.states["cold"]:
@@ -57,18 +53,20 @@ def main(root_logger):
             tcp.close()
 
             health.stop_signal = True
+            dp.stop_signal = True
             health_thread.join()
+            dp_thread.join()
             return
 
         elif user_input == "estop":
             if input("Are you sure (Program must be restarted to recover from estop)? [y/N] ") in ("Y", "y"):
                 """ESTOP the pod"""
-                sm.estop_signal = True
+                sm.on_event('estop')
             else:
                 continue
 
         elif user_input == "state":
-            print(sm.state_str[sm.state])
+            print(sm.state)
 
         else:
             print("Usage: ")
@@ -81,7 +79,6 @@ def main(root_logger):
             print("[7]     shutdown : Shutdown program")
             print()
 
-        
 
 if __name__ == "__main__":
 

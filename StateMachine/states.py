@@ -26,6 +26,8 @@ class Pre_Operational(State):
 
         elif event == 'launch':
             return Operational(self.controllers)
+        elif event == 'drift':
+            return Operational(self.controllers)
         else:
             return Estop(self.controllers)
 
@@ -35,6 +37,8 @@ class Operational(State):
     def on_event(self, event):
         
         if event == 'launch-clear':
+            return Accelerating(self.controllers)
+        if event == 'drift-clear':
             return Accelerating(self.controllers)
         else:
             return Estop(self.controllers)
