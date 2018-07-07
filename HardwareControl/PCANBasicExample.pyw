@@ -28,7 +28,7 @@ import tkFont                  ## Font-Management library
 import time                    ## Time-related library
 import threading               ## Threading-based Timer library
 
-import platform                ## Underlying platform’s info library
+import platform                ## Underlying platformï¿½s info library
 
 TCL_DONT_WAIT           = 1<<1
 TCL_WINDOW_EVENTS       = 1<<2
@@ -48,7 +48,7 @@ COL_DATA = 5
 IS_WINDOWS = platform.system() == 'Windows'
 DISPLAY_UPDATE_MS = 100
 
-if IS_WINDOWS: 
+if IS_WINDOWS:
     FRAME_WIDTH = 760
     FRAME_HEIGHT = 650
     GROUPBOX_WIDTH = 745
@@ -61,11 +61,11 @@ if IS_WINDOWS:
 ### Win32 library for Window32 Events handling                                      #
 ### Module is part of "Python for Win32 Extensions"                                 #
 ### Web: http://starship.python.net/~skippy/                                        #
-##################################################################################### 
+#####################################################################################
     try:
         import win32event
         WINDOWS_EVENT_SUPPORT = True
-    except ImportError:     
+    except ImportError:
         WINDOWS_EVENT_SUPPORT = False
 else:
     FRAME_WIDTH = 970
@@ -74,7 +74,7 @@ else:
     GROUPBOX_HEIGHT = 80
     ENABLE_CAN_FD = False
     # check driver version before enabling FD
-    try: 
+    try:
         with open("/sys/class/pcan/version") as f:
             version = f.readline()
             if (int(version[0]) >= 8):
@@ -88,10 +88,10 @@ else:
 def GetLengthFromDLC(dlc, isSTD):
     if dlc <= 8:
         return dlc
-    
+
     if isSTD :
         return 8
-    
+
     if dlc == 9:
         return 12
     elif dlc == 10:
@@ -106,9 +106,9 @@ def GetLengthFromDLC(dlc, isSTD):
         return 48
     elif dlc == 15:
         return 64
-    
+
     return dlc
-    
+
 
 ###*****************************************************************
 ### Timer class
@@ -209,7 +209,7 @@ class MessageStatus(object):
         self.__m_OldTimeStamp = self.__m_TimeStamp
         self.__m_TimeStamp = canTimestamp
         self.__m_bWasChanged = True
-        self.__m_iCount = self.__m_iCount + 1      
+        self.__m_iCount = self.__m_iCount + 1
 
     @property
     def ShowingPeriod(self):
@@ -228,7 +228,7 @@ class MessageStatus(object):
     @MarkedAsInserted.setter
     def MarkedAsInserted(self, value):
         self.__m_bWasInserted = value
-        
+
     @property
     def MarkedAsUpdated(self):
         return self.__m_bWasChanged
@@ -238,13 +238,13 @@ class MessageStatus(object):
         self.__m_bWasChanged = value
 
     @property
-    def TypeString(self):        
+    def TypeString(self):
         if (self.__m_Msg.MSGTYPE & PCAN_MESSAGE_STATUS.value) == PCAN_MESSAGE_STATUS.value:
             return 'STATUS'
-        
+
         if (self.__m_Msg.MSGTYPE & PCAN_MESSAGE_ERRFRAME.value) == PCAN_MESSAGE_ERRFRAME.value:
-            return 'ERROR'        
-        
+            return 'ERROR'
+
         if (self.__m_Msg.MSGTYPE & PCAN_MESSAGE_EXTENDED.value) == PCAN_MESSAGE_EXTENDED.value:
             strTemp = 'EXT'
         else:
@@ -257,14 +257,14 @@ class MessageStatus(object):
                 strTemp += ' ['
                 if (self.__m_Msg.MSGTYPE & PCAN_MESSAGE_FD.value) == PCAN_MESSAGE_FD.value:
                     strTemp += ' FD'
-                if (self.__m_Msg.MSGTYPE & PCAN_MESSAGE_BRS.value) == PCAN_MESSAGE_BRS.value:                    
+                if (self.__m_Msg.MSGTYPE & PCAN_MESSAGE_BRS.value) == PCAN_MESSAGE_BRS.value:
                     strTemp += ' BRS'
                 if (self.__m_Msg.MSGTYPE & PCAN_MESSAGE_ESI.value) == PCAN_MESSAGE_ESI.value:
                     strTemp += ' ESI'
                 strTemp += ' ]'
-                
+
         return strTemp
-    
+
     @property
     def TimeString(self):
         fTime = self.__m_TimeStamp.value / 1000.0
@@ -285,7 +285,7 @@ class MessageStatus(object):
         if (self.__m_Msg.MSGTYPE & PCAN_MESSAGE_RTR.value) == PCAN_MESSAGE_RTR.value:
             return 'Remote Request'
         else:
-            for i in range(GetLengthFromDLC(self.__m_Msg.DLC, not (self.__m_Msg.MSGTYPE & PCAN_MESSAGE_FD.value))):                
+            for i in range(GetLengthFromDLC(self.__m_Msg.DLC, not (self.__m_Msg.MSGTYPE & PCAN_MESSAGE_FD.value))):
                 strTemp += '%.2X ' % self.__m_Msg.DATA[i]
         return strTemp
 
@@ -318,16 +318,16 @@ class PCANBasicExample(object):
     ## Constructor
     ##
     def __init__(self, parent):
-        # Parent's configuration       
+        # Parent's configuration
         self.m_Parent = parent
         self.m_Parent.wm_title("PCAN-Basic Example")
         self.m_Parent.resizable(False,False)
         self.m_Parent.protocol("WM_DELETE_WINDOW",self.Form_OnClosing)
-               
+
         # Frame's configuration
         self.m_Frame =Frame(self.m_Parent)
         self.m_Frame.grid(row=0, column=0, padx=5, pady=2, sticky="nwes")
-        
+
         # Example's configuration
         self.InitializeBasicComponents()
         self.CenterTheWindow()
@@ -340,9 +340,9 @@ class PCANBasicExample(object):
     ## Destructor
     ##
     def destroy (self):
-        self.m_Parent.destroy()        
+        self.m_Parent.destroy()
 
-        
+
     ## Message loop
     ##
     def loop(self):
@@ -358,7 +358,7 @@ class PCANBasicExample(object):
                 while self.exit < 0:
                     # prevent UI concurrency errors with timers (read and
                     # display)
-                    #with self._lock:                    
+                    #with self._lock:
                     self.m_Parent.tk.dooneevent(TCL_ALL_EVENTS)
             except SystemExit:
                 # Tkinter uses SystemExit to exit
@@ -379,9 +379,9 @@ class PCANBasicExample(object):
                 try: tkMessageBox.showerror ('Error', text)
                 except: pass
                 self.exit = 1
-                raise SystemExit, 1            
+                raise SystemExit, 1
 
-        
+
 ################################################################################################################################################
 ### Help functions
 ################################################################################################################################################
@@ -391,22 +391,22 @@ class PCANBasicExample(object):
     def InitializeBasicComponents(self):
         self.m_Width = FRAME_WIDTH
         self.m_Height = FRAME_HEIGHT
-        self.exit = -1        
+        self.exit = -1
         self.m_objPCANBasic = PCANBasic()
         self.m_PcanHandle = PCAN_NONEBUS
         self.m_LastMsgsList = []
 
         self.m_IsFD = False
         self.m_CanRead = False
-        
+
         if WINDOWS_EVENT_SUPPORT:
             self.m_ReadThread = None
             self.m_Terminated = False
             self.m_ReceiveEvent = win32event.CreateEvent(None, 0, 0, None)
 
         self._lock = threading.RLock()
-        
-        self.m_CHANNELS = {'PCAN_DNGBUS1':PCAN_DNGBUS1, 'PCAN_PCCBUS1':PCAN_PCCBUS1, 'PCAN_PCCBUS2':PCAN_PCCBUS2, 'PCAN_ISABUS1':PCAN_ISABUS1, 
+
+        self.m_CHANNELS = {'PCAN_DNGBUS1':PCAN_DNGBUS1, 'PCAN_PCCBUS1':PCAN_PCCBUS1, 'PCAN_PCCBUS2':PCAN_PCCBUS2, 'PCAN_ISABUS1':PCAN_ISABUS1,
                            'PCAN_ISABUS2':PCAN_ISABUS2, 'PCAN_ISABUS3':PCAN_ISABUS3, 'PCAN_ISABUS4':PCAN_ISABUS4, 'PCAN_ISABUS5':PCAN_ISABUS5,
                            'PCAN_ISABUS6':PCAN_ISABUS6, 'PCAN_ISABUS7':PCAN_ISABUS7, 'PCAN_ISABUS8':PCAN_ISABUS8, 'PCAN_PCIBUS1':PCAN_PCIBUS1,
                            'PCAN_PCIBUS2':PCAN_PCIBUS2, 'PCAN_PCIBUS3':PCAN_PCIBUS3, 'PCAN_PCIBUS4':PCAN_PCIBUS4, 'PCAN_PCIBUS5':PCAN_PCIBUS5,
@@ -430,7 +430,7 @@ class PCANBasicExample(object):
         self.m_HWTYPES = {'ISA-82C200':PCAN_TYPE_ISA, 'ISA-SJA1000':PCAN_TYPE_ISA_SJA, 'ISA-PHYTEC':PCAN_TYPE_ISA_PHYTEC, 'DNG-82C200':PCAN_TYPE_DNG,
                          'DNG-82C200 EPP':PCAN_TYPE_DNG_EPP, 'DNG-SJA1000':PCAN_TYPE_DNG_SJA, 'DNG-SJA1000 EPP':PCAN_TYPE_DNG_SJA_EPP}
 
-        self.m_IOPORTS = {'0100':0x100, '0120':0x120, '0140':0x140, '0200':0x200, '0220':0x220, '0240':0x240, '0260':0x260, '0278':0x278, 
+        self.m_IOPORTS = {'0100':0x100, '0120':0x120, '0140':0x140, '0200':0x200, '0220':0x220, '0240':0x240, '0260':0x260, '0278':0x278,
                           '0280':0x280, '02A0':0x2A0, '02C0':0x2C0, '02E0':0x2E0, '02E8':0x2E8, '02F8':0x2F8, '0300':0x300, '0320':0x320,
                           '0340':0x340, '0360':0x360, '0378':0x378, '0380':0x380, '03BC':0x3BC, '03E0':0x3E0, '03E8':0x3E8, '03F8':0x3F8}
 
@@ -452,9 +452,9 @@ class PCANBasicExample(object):
             self.m_PARAMETERS = {'USBs Device Number':PCAN_DEVICE_NUMBER, 'USB/PC-Cards 5V Power':PCAN_5VOLTS_POWER,
                                  'Auto-reset on BUS-OFF':PCAN_BUSOFF_AUTORESET, 'CAN Listen-Only':PCAN_LISTEN_ONLY,
                                  'Debugs Log':PCAN_LOG_STATUS}
-            
 
-        
+
+
     ## Initializes the complete UI
     ##
     def InitializeWidgets(self):
@@ -463,7 +463,7 @@ class PCANBasicExample(object):
         self.gbConnection.grid_propagate(0)
         self.gbConnection.grid(row=0, column = 0, padx=2, pady=2)
         self.InitializeConnectionWidgets()
-        
+
         ## Message Filtering groupbox
         self.gbMsgFilter = LabelFrame(self.m_Frame, height=GROUPBOX_HEIGHT, width = GROUPBOX_WIDTH, text=" Message Filtering ")
         self.gbMsgFilter.grid_propagate(0)
@@ -493,7 +493,7 @@ class PCANBasicExample(object):
         self.gbInfo.grid_propagate(0)
         self.gbInfo.grid(row=5, column = 0, padx=2, pady=2)
         self.InitializeInformationWidgets()
-        
+
         self.btnHwRefresh.invoke()
 
 
@@ -508,18 +508,18 @@ class PCANBasicExample(object):
         self.m_InterruptLA = StringVar(value="Interrupt:")
         self.m_CanFDCHB = IntVar(value=0);
         self.m_BitrateTXT = StringVar(value="f_clock_mhz=20, nom_brp=5, nom_tseg1=2, nom_tseg2=1, nom_sjw=1, data_brp=2, data_tseg1=3, data_tseg2=1, data_sjw=1")
-        
+
         Label(self.gbConnection, anchor=W, text="Hardware:").grid(row=0, sticky=W)
         self.cbbChannel = Tix.ComboBox(self.gbConnection, command=self.cbbChannel_SelectedIndexChanged)
         self.cbbChannel.subwidget('entry')['width'] = 18
         self.cbbChannel.subwidget('listbox')['width'] = 18
-        self.cbbChannel.grid(row=1,column=0,sticky=W)        
-        
+        self.cbbChannel.grid(row=1,column=0,sticky=W)
+
         self.btnHwRefresh = Button(self.gbConnection, text="Refresh", command=self.btnHwRefresh_Click)
         self.btnHwRefresh.grid(row=1, column=1, sticky=W)
 
         self.txtBitrate = Entry(self.gbConnection, width = 63, textvariable=self.m_BitrateTXT)
-                
+
         Label(self.gbConnection, anchor=W, textvariable=self.m_BaudrateLA).grid(row=0, column=2, sticky=W)
         self.cbbBaudrates = Tix.ComboBox(self.gbConnection)
         self.cbbBaudrates.subwidget('entry')['width'] = 14
@@ -527,23 +527,23 @@ class PCANBasicExample(object):
         self.cbbBaudrates.grid(row=1,column=2,sticky=W)
         for name, value in self.m_BAUDRATES.iteritems(): self.cbbBaudrates.insert(Tix.END,name)
         self.cbbBaudrates['selection']='500 kBit/sec'
-                       
+
         Label(self.gbConnection, anchor=W, textvariable=self.m_HwTypeLA).grid(row=0, column=3, sticky=W)
         self.cbbHwType = Tix.ComboBox(self.gbConnection)
         self.cbbHwType.subwidget('entry')['width'] = 16
-        self.cbbHwType.subwidget('listbox')['width'] = 16        
+        self.cbbHwType.subwidget('listbox')['width'] = 16
         self.cbbHwType.grid(row=1,column=3,sticky=W)
         for name, value in self.m_HWTYPES.iteritems(): self.cbbHwType.insert(Tix.END,name)
         self.cbbHwType['selection']='ISA-82C200'
-        
-        Label(self.gbConnection, anchor=W, textvariable=self.m_IOPortLA).grid(row=0, column=4, sticky=W)        
+
+        Label(self.gbConnection, anchor=W, textvariable=self.m_IOPortLA).grid(row=0, column=4, sticky=W)
         self.cbbIO = Tix.ComboBox(self.gbConnection)
         self.cbbIO.subwidget('entry')['width'] = 5
         self.cbbIO.subwidget('listbox')['width'] = 5
         self.cbbIO.grid(row=1,column=4,sticky=W)
         for name, value in self.m_IOPORTS.iteritems(): self.cbbIO.insert(Tix.END,name)
-        self.cbbIO['selection']=self.cbbIO.pick(0)        
-        
+        self.cbbIO['selection']=self.cbbIO.pick(0)
+
         Label(self.gbConnection, anchor=W,width=13, textvariable=self.m_InterruptLA).grid(row=0, column=5, sticky=W)
         self.cbbInterrupt = Tix.ComboBox(self.gbConnection)
         self.cbbInterrupt.subwidget('entry')['width'] = 5
@@ -562,8 +562,8 @@ class PCANBasicExample(object):
         self.btnInit.grid(row=0, column=7, sticky=W)
 
         self.btnRelease = Button(self.gbConnection, width= 8, state=DISABLED, text="Release", command= self.btnRelease_Click)
-        self.btnRelease.grid(row=1, column=7, sticky=W)        
-  
+        self.btnRelease.grid(row=1, column=7, sticky=W)
+
 
     ## Initializes controls and variables in the groupbox "Message Filtering"
     ##
@@ -579,14 +579,14 @@ class PCANBasicExample(object):
         #
         Label(self.gbMsgFilter, anchor=W, text="From:").grid(row=0, column=4, sticky=W)
         Label(self.gbMsgFilter, anchor=W, width=16, text="To:").grid(row=0, column=5, sticky=W)
-        
+
         self.chbFilterExt = Checkbutton(self.gbMsgFilter, text="Extended Frame", variable=self.m_FilterExtCHB, command=self.chbFilterExt_CheckedChanged)
         self.chbFilterExt.grid(row=1,column=0, padx=0, pady=2)
 
-        self.rdbFilterOpen = Radiobutton(self.gbMsgFilter, text="Open", value = 1, variable=self.m_FilteringRDB)      
+        self.rdbFilterOpen = Radiobutton(self.gbMsgFilter, text="Open", value = 1, variable=self.m_FilteringRDB)
         self.rdbFilterOpen.grid(row=1,column=1, padx=0, pady=2)
 
-        self.rdbFilterClose = Radiobutton(self.gbMsgFilter, text="Close", value = 0, variable=self.m_FilteringRDB)        
+        self.rdbFilterClose = Radiobutton(self.gbMsgFilter, text="Close", value = 0, variable=self.m_FilteringRDB)
         self.rdbFilterClose.grid(row=1,column=2, padx=0, pady=2)
 
         self.rdbFilterCustom = Radiobutton(self.gbMsgFilter, anchor=W, width=20, text="Custom (expand)", value = 2, variable=self.m_FilteringRDB)
@@ -611,13 +611,13 @@ class PCANBasicExample(object):
     ##
     def InitializeConfigurationWidgets(self):
         # Control variables
-        #        
+        #
         self.m_ConfigurationRDB = IntVar(value=1)
         self.m_DeviceIdOrDelayNUD = StringVar(value="0");
         self.m_DeviceIdOrDelay = StringVar(value="Device ID:");
 
         # Controls
-        #        
+        #
         Label(self.gbParameters, anchor=W, text="Parameter:").grid(row=0, column=0, sticky=W)
         self.cbbParameter = Tix.ComboBox(self.gbParameters, command=self.cbbParameter_SelectedIndexChanged)
         self.cbbParameter.subwidget('entry')['width'] = 30
@@ -627,14 +627,14 @@ class PCANBasicExample(object):
         for name, value in self.m_PARAMETERS.iteritems(): self.cbbParameter.insert(Tix.END,name)
         self.cbbParameter.bind("<<ComboboxSelected>>",self.cbbParameter_SelectedIndexChanged)
         self.cbbParameter['selection'] = 'Debugs Log'
-        
+
         Label(self.gbParameters, anchor=W, text="Activation:").grid(row=0, column=1, sticky=W)
         self.rdbParamActive = Radiobutton(self.gbParameters, text="Active", value = 1, variable=self.m_ConfigurationRDB)
         self.rdbParamActive.grid(row=1,column=1, padx=0, pady=2, sticky=W)
 
         self.rdbParamInactive = Radiobutton(self.gbParameters, anchor=W,width = 20, text="Inactive", value = 0, variable=self.m_ConfigurationRDB)
         self.rdbParamInactive.grid(row=1,column=2, padx=0, pady=2, sticky=W)
-        
+
         Label(self.gbParameters, anchor=W, width=20, textvariable=self.m_DeviceIdOrDelay).grid(row=0, column=3, sticky=W)
         self.nudDeviceIdOrDelay = Spinbox(self.gbParameters, width=15, state=DISABLED, from_=0, to=0x7FF, textvariable=self.m_DeviceIdOrDelayNUD)
         self.nudDeviceIdOrDelay.grid(row=1, column=3,padx=0, pady=2, sticky=W)
@@ -655,24 +655,24 @@ class PCANBasicExample(object):
         if IS_WINDOWS:
             self.m_ListColSpace = [18, 10, 7, 6, 8, 20]
         else:
-            self.m_ListColSpace = [18, 10, 7, 8, 13, 30]        
-        
+            self.m_ListColSpace = [18, 10, 7, 8, 13, 30]
+
         self.m_ListCaptionPadxSpaces = []
         for colText, colWidth in zip(self.m_ListColCaption, self.m_ListColSpace):
             self.m_ListCaptionPadxSpaces.append(colWidth - len(colText))
         self.m_ListCaptionPadxSpaces[0] = self.m_ListCaptionPadxSpaces[0]-1
-        
+
         if IS_WINDOWS:
             self.m_ListFont = tkFont.Font(family="Lucida Console", size ="10")
         else:
             self.m_ListFont = tkFont.Font(family="Monospace", size ="10")
-        
+
         self.m_ReadingRDB = IntVar(value=0)
         self.m_ShowPeriod = True
         self.m_ShowPeriodCHB = IntVar(value=1)
 
         self.tmrRead = TimerRepeater("tmrRead", 0.050, self.tmrRead_Tick, False)
-               
+
         # Controls
         #
         self.rdbTimer = Radiobutton(self.gbReading, text="Read using a Timer", value = 1, variable=self.m_ReadingRDB, command=self.rdbTimer_CheckedChanged)
@@ -691,18 +691,18 @@ class PCANBasicExample(object):
 
         self.chbShowPeriod = Checkbutton(self.gbReading, width=16, text="Timestamp as period", variable=self.m_ShowPeriodCHB, command=self.chbShowPeriod_CheckedChanged)
         self.chbShowPeriod.grid(row=0,column=3, padx=5, pady=2)
-        
+
         self.yReadScroll = Scrollbar(self.gbReading, orient=VERTICAL)
         self.yReadScroll.grid(row=1, column=4, rowspan=3, sticky=N+S)
 
         self.xReadScroll = Scrollbar(self.gbReading, orient=HORIZONTAL)
-        self.xReadScroll.grid(row=3, padx=5, column=0, columnspan=4, sticky=W+E)        
+        self.xReadScroll.grid(row=3, padx=5, column=0, columnspan=4, sticky=W+E)
 
-        tempString = ""        
+        tempString = ""
         for caption, spaces in zip(self.m_ListColCaption, self.m_ListCaptionPadxSpaces):
             tempString = tempString + "{0}{1}".format(caption," "*spaces)
         Label(self.gbReading, anchor=W, text=tempString, bg="#E2E2E3", fg="#000000", font=self.m_ListFont, relief=GROOVE).grid(row=1,column=0, columnspan=4, padx=5, sticky="nwes")
-        
+
         self.lstMessages = Tix.TList(self.gbReading, relief=GROOVE, height = 5, orient="horizontal", itemtype ="text", font=self.m_ListFont, command=self.btnMsgClear_Click)
         self.lstMessages.grid(row=2, column=0, padx=5, columnspan=4, sticky="nwes")
 
@@ -712,22 +712,22 @@ class PCANBasicExample(object):
         self.yReadScroll.config(command=self.lstMessages.yview)
         self.lstMessages.config(xscrollcommand=self.xReadScroll.set)
         self.xReadScroll.config(command=self.lstMessages.xview)
-            
+
 
         Label(self.gbReading, width=1, text=" ").grid(row=0,  column=5)
-        
-        self.btnRead = Button(self.gbReading, width = 8, state=DISABLED, text = "Read", command=self.btnRead_Click)        
+
+        self.btnRead = Button(self.gbReading, width = 8, state=DISABLED, text = "Read", command=self.btnRead_Click)
         self.btnRead.grid(row=1, column=6, padx = 4, sticky=NW)
 
         self.btnMsgClear = Button(self.gbReading, width = 8, state=ACTIVE, text = "Clear", command=self.btnMsgClear_Click)
         self.btnMsgClear.grid(row=1, column=7, sticky=NW)
-        
+
 
     ## Initializes controls and variables in the groupbox "Write Messages"
     ##
     def InitializeWritingWidgets(self):
         # Control variables
-        #        
+        #
         self.m_IDTXT = StringVar(value="000")
         self.m_LengthLA = StringVar(value="8 B.")
         self.m_ExtendedCHB = IntVar(value=0)
@@ -799,18 +799,18 @@ class PCANBasicExample(object):
         self.m_Data60TXT = StringVar(value="00")
         self.m_Data61TXT = StringVar(value="00")
         self.m_Data62TXT = StringVar(value="00")
-        self.m_Data63TXT = StringVar(value="00")        
+        self.m_Data63TXT = StringVar(value="00")
 
         # Controls
         #
         Label(self.gbWriting, anchor=W, text="Data (Hex):").grid(row=0, columnspan=2, padx = 0, column=0, sticky=W)
 
         Label(self.gbWriting, anchor=W, text=" ").grid(row=0, padx = 0, column=16, sticky=W)
-       
+
         Label(self.gbWriting, anchor=W, text="ID (Hex):").grid(row=0, padx = 0, column=17, sticky=W)
         self.txtID = Entry(self.gbWriting, width = 11, textvariable=self.m_IDTXT)
         self.txtID.bind("<FocusOut>",self.txtID_Leave)
-        self.txtID.grid(row=1,column=17, padx = 0, pady = 0, sticky=W)        
+        self.txtID.grid(row=1,column=17, padx = 0, pady = 0, sticky=W)
 
         Label(self.gbWriting, anchor=W, width=5, padx=5, text="DLC:").grid(row=0, column=18, sticky=W)
         self.nudLength = Spinbox(self.gbWriting, width=5, from_=0, to=8, textvariable=self.m_LengthNUD, command=self.nudLength_ValueChanged)
@@ -818,13 +818,13 @@ class PCANBasicExample(object):
 
         Label(self.gbWriting, anchor=W, width=5, text="Length:").grid(row=0, column=19, sticky=W)
         Label(self.gbWriting, anchor=W, width=5, textvariable=self.m_LengthLA).grid(row=1, padx=5, column=19, sticky=W)
-                
+
         self.chbExtended = Checkbutton(self.gbWriting, text="Extended", variable=self.m_ExtendedCHB, command=self.txtID_Leave)
         self.chbExtended.grid(row=2,column=17, padx=0, pady=0)
 
         self.chbRemote = Checkbutton(self.gbWriting, text="RTR", variable=self.m_RemoteCHB, command=self.chbRemote_CheckedChanged)
         self.chbRemote.grid(row=2,column=18, padx=0, pady=0, sticky=W)
-        
+
         self.chbFD = Checkbutton(self.gbWriting, text="FD", variable=self.m_FDCHB, command=self.chbFD_CheckedChanged)
         #self.chbFD.grid(row=3,column=17, padx=0, pady=0, sticky=W)
 
@@ -833,8 +833,8 @@ class PCANBasicExample(object):
 
         self.btnWrite = Button(self.gbWriting, width = 6, state=DISABLED, text = "Write", command=self.btnWrite_Click)
         self.btnWrite.grid(row=3, column=19, columnspan=2, sticky=W)
-        
-        self.txtData0 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data0TXT)        
+
+        self.txtData0 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data0TXT)
         self.txtData0.grid(row=1,column=0, padx = 3, pady = 0, sticky=W)
         self.txtData0.bind("<FocusOut>",self.txtData0_Leave)
 
@@ -866,7 +866,7 @@ class PCANBasicExample(object):
         self.txtData7.grid(row=1,column=7, padx = 3, pady = 0, sticky=W)
         self.txtData7.bind("<FocusOut>",self.txtData0_Leave)
 
-        self.txtData8 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data8TXT, state=DISABLED)        
+        self.txtData8 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data8TXT, state=DISABLED)
         self.txtData8.grid(row=1,column=8, padx = 3, pady = 0, sticky=W)
         self.txtData8.bind("<FocusOut>",self.txtData0_Leave)
 
@@ -898,7 +898,7 @@ class PCANBasicExample(object):
         self.txtData15.grid(row=1,column=15, padx = 3, pady = 0, sticky=W)
         self.txtData15.bind("<FocusOut>",self.txtData0_Leave)
 
-        self.txtData16 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data16TXT, state=DISABLED)        
+        self.txtData16 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data16TXT, state=DISABLED)
         self.txtData16.grid(row=2,column=0, padx = 3, pady = 5, sticky=W)
         self.txtData16.bind("<FocusOut>",self.txtData0_Leave)
 
@@ -930,7 +930,7 @@ class PCANBasicExample(object):
         self.txtData23.grid(row=2,column=7, padx = 3, pady = 0, sticky=W)
         self.txtData23.bind("<FocusOut>",self.txtData0_Leave)
 
-        self.txtData24 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data24TXT, state=DISABLED)        
+        self.txtData24 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data24TXT, state=DISABLED)
         self.txtData24.grid(row=2,column=8, padx = 3, pady = 0, sticky=W)
         self.txtData24.bind("<FocusOut>",self.txtData0_Leave)
 
@@ -962,7 +962,7 @@ class PCANBasicExample(object):
         self.txtData31.grid(row=2,column=15, padx = 3, pady = 0, sticky=W)
         self.txtData31.bind("<FocusOut>",self.txtData0_Leave)
 
-        self.txtData32 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data32TXT, state=DISABLED)        
+        self.txtData32 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data32TXT, state=DISABLED)
         self.txtData32.grid(row=3,column=0, padx = 3, pady = 0, sticky=W)
         self.txtData32.bind("<FocusOut>",self.txtData0_Leave)
 
@@ -994,7 +994,7 @@ class PCANBasicExample(object):
         self.txtData39.grid(row=3,column=7, padx = 3, pady = 0, sticky=W)
         self.txtData39.bind("<FocusOut>",self.txtData0_Leave)
 
-        self.txtData40 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data40TXT, state=DISABLED)        
+        self.txtData40 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data40TXT, state=DISABLED)
         self.txtData40.grid(row=3,column=8, padx = 3, pady = 0, sticky=W)
         self.txtData40.bind("<FocusOut>",self.txtData0_Leave)
 
@@ -1026,7 +1026,7 @@ class PCANBasicExample(object):
         self.txtData47.grid(row=3,column=15, padx = 3, pady = 0, sticky=W)
         self.txtData47.bind("<FocusOut>",self.txtData0_Leave)
 
-        self.txtData48 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data48TXT, state=DISABLED)        
+        self.txtData48 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data48TXT, state=DISABLED)
         self.txtData48.grid(row=4,column=0, padx = 3, pady = 5, sticky=W)
         self.txtData48.bind("<FocusOut>",self.txtData0_Leave)
 
@@ -1058,7 +1058,7 @@ class PCANBasicExample(object):
         self.txtData55.grid(row=4,column=7, padx = 3, pady = 0, sticky=W)
         self.txtData55.bind("<FocusOut>",self.txtData0_Leave)
 
-        self.txtData56 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data56TXT, state=DISABLED)        
+        self.txtData56 = Entry(self.gbWriting, width = 4, textvariable=self.m_Data56TXT, state=DISABLED)
         self.txtData56.grid(row=4,column=8, padx = 3, pady = 0, sticky=W)
         self.txtData56.bind("<FocusOut>",self.txtData0_Leave)
 
@@ -1107,35 +1107,35 @@ class PCANBasicExample(object):
                             self.m_Data40TXT, self.m_Data41TXT, self.m_Data42TXT, self.m_Data43TXT, self.m_Data44TXT, self.m_Data45TXT, self.m_Data46TXT, self.m_Data47TXT, \
                             self.m_Data48TXT, self.m_Data49TXT, self.m_Data50TXT, self.m_Data51TXT, self.m_Data52TXT, self.m_Data53TXT, self.m_Data54TXT, self.m_Data55TXT, \
                             self.m_Data56TXT, self.m_Data57TXT, self.m_Data58TXT, self.m_Data59TXT, self.m_Data60TXT, self.m_Data61TXT, self.m_Data62TXT, self.m_Data63TXT]
-        
-        
+
+
     ## Initializes controls and variables in the groupbox "Information"
     ##
     def InitializeInformationWidgets(self):
         # Controls
-        #         
+        #
         self.yInfoScroll = Scrollbar(self.gbInfo, orient=VERTICAL)
         self.yInfoScroll.grid(row=0, column=1, sticky=N+S)
-       
-        self.lbxInfo = Listbox(self.gbInfo, width=90, height=3, activestyle="none", yscrollcommand=self.yInfoScroll.set) 
+
+        self.lbxInfo = Listbox(self.gbInfo, width=90, height=3, activestyle="none", yscrollcommand=self.yInfoScroll.set)
         self.lbxInfo.grid(row=0, column = 0, padx=5, sticky="nwes")
         self.lbxInfo.bind("<Double-1>", self.btnInfoClear_Click)
 
-        self.yInfoScroll['command'] = self.lbxInfo.yview        
+        self.yInfoScroll['command'] = self.lbxInfo.yview
         self.lbxInfo.insert(END,"Select a Hardware and a configuration for it. Then click ""Initialize"" button")
         self.lbxInfo.insert(END,"When activated, the Debug-Log file will be found in the same directory as this application")
-        self.lbxInfo.insert(END,"When activated, the PCAN-Trace file will be found in the same directory as this application")        
+        self.lbxInfo.insert(END,"When activated, the PCAN-Trace file will be found in the same directory as this application")
 
         Label(self.gbInfo, width=2, text=" ").grid(row=0, column=2)
-        
+
         if IS_WINDOWS:
             btnPadx = 4
             btnPady = 25
         else:
             btnPadx = 0
             btnPady = 30
-            
-        
+
+
         self.btnGetVersions = Button(self.gbInfo, width = 8, state=DISABLED, text = "Versions", command=self.btnGetVersions_Click)
         self.btnGetVersions.grid(row=0, column=3, padx = btnPadx, sticky=NW)
 
@@ -1147,19 +1147,19 @@ class PCANBasicExample(object):
 
         self.btnReset = Button(self.gbInfo, width = 8, state=DISABLED, text = "Reset", command=self.btnReset_Click)
         self.btnReset.grid(row=0, column=4, pady=btnPady, sticky=W)
-              
-        
+
+
     ## Centers the app from in the middle of the screen
     ##
     def CenterTheWindow(self):
         Desktop = self.m_Parent.winfo_toplevel()
         desktopWidth = Desktop.winfo_screenwidth()
         desktopHeight = Desktop.winfo_screenheight()
-        
+
         self.m_Parent.geometry("{0}x{1}+{2}+{3}".format(self.m_Width,
                                                         self.m_Height,
                                                         (desktopWidth-self.m_Width)/2,
-                                                        (desktopHeight-self.m_Height)/2))           
+                                                        (desktopHeight-self.m_Height)/2))
 
 
     ## Configures the Debug-Log file of PCAN-Basic
@@ -1169,8 +1169,8 @@ class PCANBasicExample(object):
         #
         iBuffer = LOG_FUNCTION_ALL
 
-        # Configures the log file. 
-        # NOTE: The Log capability is to be used with the NONEBUS Handle. Other handle than this will 
+        # Configures the log file.
+        # NOTE: The Log capability is to be used with the NONEBUS Handle. Other handle than this will
         # cause the function fail.
         #
         self.m_objPCANBasic.SetValue(PCAN_NONEBUS, PCAN_LOG_CONFIGURE, iBuffer)
@@ -1186,17 +1186,17 @@ class PCANBasicExample(object):
         if stsResult != PCAN_ERROR_OK:
             self.IncludeTextMessage(self.GetFormatedError(stsResult))
 
-        # Configure the way how trace files are created: 
+        # Configure the way how trace files are created:
         # * Standard name is used
-        # * Existing file is ovewritten, 
+        # * Existing file is ovewritten,
         # * Only one file is created.
         # * Recording stopts when the file size reaches 5 megabytes.
         #
         iBuffer = TRACE_FILE_SINGLE | TRACE_FILE_OVERWRITE
-        stsResult = self.m_objPCANBasic.SetValue(self.m_PcanHandle, PCAN_TRACE_CONFIGURE, iBuffer)        
+        stsResult = self.m_objPCANBasic.SetValue(self.m_PcanHandle, PCAN_TRACE_CONFIGURE, iBuffer)
         if stsResult != PCAN_ERROR_OK:
             self.IncludeTextMessage(self.GetFormatedError(stsResult))
-            
+
 
     ## Help Function used to get an error as text
     ##
@@ -1248,7 +1248,7 @@ class PCANBasicExample(object):
         else:
             stsConnected = DISABLED
             stsNotConnected = ACTIVE
-            
+
         # Buttons
         #
         self.btnInit['state'] = stsNotConnected
@@ -1277,7 +1277,7 @@ class PCANBasicExample(object):
             # Check-Buttons
             #
             self.chbCanFD['state'] = stsNotConnected;
-        
+
         # Hardware configuration and read mode
         #
         if not bConnected:
@@ -1300,10 +1300,10 @@ class PCANBasicExample(object):
             toRet.set('%s: FD %s (%.2X)' % (devDevice, byChannel, handle.value))
         else:
             toRet.set('%s: %s (%.2X)' % (devDevice, byChannel, handle.value))
-        
+
         return toRet
-        
-    
+
+
 
 ################################################################################################################################################
 ### Message-proccessing functions
@@ -1323,26 +1323,26 @@ class PCANBasicExample(object):
         toRet = toRet + (strTemp + " "*(self.m_ListColSpace[COL_COUNT] - len(strTemp)))
         # The timestamp
         strTemp = msgStatus.TimeString
-        toRet = toRet + (strTemp + " "*(self.m_ListColSpace[COL_TIME] - len(strTemp)))            
+        toRet = toRet + (strTemp + " "*(self.m_ListColSpace[COL_TIME] - len(strTemp)))
         # The Data
         strTemp = msgStatus.DataString
-        toRet = toRet + (strTemp + " "*(self.m_ListColSpace[COL_DATA] - len(strTemp)))                    
+        toRet = toRet + (strTemp + " "*(self.m_ListColSpace[COL_DATA] - len(strTemp)))
 
         return toRet
-            
+
     ## Display CAN messages in the Message-ListView
     ##
     def DisplayMessages(self):
         with self._lock:
             for msgStatus in self.m_LastMsgsList:
-                if not msgStatus.MarkedAsInserted:        
-                    self.lstMessages.insert(msgStatus.Position,text=self.GetMsgString(msgStatus))            
+                if not msgStatus.MarkedAsInserted:
+                    self.lstMessages.insert(msgStatus.Position,text=self.GetMsgString(msgStatus))
                     msgStatus.MarkedAsInserted = True
-                elif msgStatus.MarkedAsUpdated:     
+                elif msgStatus.MarkedAsUpdated:
                     self.lstMessages.delete(msgStatus.Position)
                     self.lstMessages.insert(msgStatus.Position,text=self.GetMsgString(msgStatus))
                     msgStatus.MarkedAsUpdated = False
-                    
+
     ## Inserts a new entry for a new message in the Message-ListView
     ##
     def InsertMsgEntry(self, newMsg, timeStamp):
@@ -1355,28 +1355,28 @@ class PCANBasicExample(object):
             msgStsCurrentMsg.MarkedAsInserted = False
             msgStsCurrentMsg.ShowingPeriod = self.m_ShowPeriod
             self.m_LastMsgsList.append(msgStsCurrentMsg)
-            
+
     def ProcessMessageFD(self, *args):
         with self._lock:
             # Split the arguments. [0] TPCANMsgFD, [1] TPCANTimestampFD
             #
             theMsg = args[0][0]
             itsTimeStamp = args[0][1]
-            
+
             for msg in self.m_LastMsgsList:
                 if (msg.CANMsg.ID == theMsg.ID) and (msg.CANMsg.MSGTYPE == theMsg.MSGTYPE):
-                    msg.Update(theMsg, itsTimeStamp)                    
+                    msg.Update(theMsg, itsTimeStamp)
                     return
             self.InsertMsgEntry(theMsg, itsTimeStamp)
-        
+
     ## Processes a received message, in order to show it in the Message-ListView
     ##
-    def ProcessMessage(self, *args):        
-        with self._lock:       
+    def ProcessMessage(self, *args):
+        with self._lock:
             # Split the arguments. [0] TPCANMsg, [1] TPCANTimestamp
             #
             theMsg = args[0][0]
-            itsTimeStamp = args[0][1]    
+            itsTimeStamp = args[0][1]
 
             newMsg = TPCANMsgFD()
             newMsg.ID = theMsg.ID
@@ -1391,35 +1391,35 @@ class PCANBasicExample(object):
     ## Thread-Function used for reading PCAN-Basic messages
     ##
     def CANReadThreadFunc(self):
-        try:        
+        try:
             self.m_Terminated = False
-        
-            # Configures the Receive-Event. 
+
+            # Configures the Receive-Event.
             #
             stsResult = self.m_objPCANBasic.SetValue(self.m_PcanHandle, PCAN_RECEIVE_EVENT, self.m_ReceiveEvent)
-        
+
             if stsResult != PCAN_ERROR_OK:
-                print ("Error: " + self.GetFormatedError(stsResult))                
+                print ("Error: " + self.GetFormatedError(stsResult))
             else:
                 while not self.m_Terminated:
                     if win32event.WaitForSingleObject(self.m_ReceiveEvent, 50) == win32event.WAIT_OBJECT_0:
                         self.ReadMessages()
-                
+
                 # Resets the Event-handle configuration
                 #
                 self.m_objPCANBasic.SetValue(self.m_PcanHandle, PCAN_RECEIVE_EVENT, 0)
         except:
-            print ("Error occurred while processing CAN data")        
+            print ("Error occurred while processing CAN data")
 
 ################################################################################################################################################
 ### Event Handlers
-################################################################################################################################################        
+################################################################################################################################################
 
     ## Form-Closing Function / Finish function
     ##
     def Form_OnClosing(self, event=None):
-        # close current connection 
-        # if the event-thread is running the process would not terminate 
+        # close current connection
+        # if the event-thread is running the process would not terminate
         if (self.btnRelease['state'] != DISABLED):
             self.btnRelease_Click()
         # Releases the used PCAN-Basic channel
@@ -1433,10 +1433,10 @@ class PCANBasicExample(object):
     ##
     def btnHwRefresh_Click(self):
 
-        # Clears the Channel comboBox and fill it again with 
+        # Clears the Channel comboBox and fill it again with
         # the PCAN-Basic handles for no-Plug&Play hardware and
         # the detected Plug&Play hardware
-        #        
+        #
         items = []
         self.cbbChannel.subwidget('listbox').delete(0,Tix.END)
         for name, value in self.m_CHANNELS.iteritems():
@@ -1447,12 +1447,12 @@ class PCANBasicExample(object):
             else:
                 # Checks for a Plug&Play Handle and, according with the return value, includes it
                 # into the list of available hardware channels.
-                #                
+                #
                 result =  self.m_objPCANBasic.GetValue(value, PCAN_CHANNEL_CONDITION)
                 if  (result[0] == PCAN_ERROR_OK) and (result[1] & PCAN_CHANNEL_AVAILABLE):
                     result =  self.m_objPCANBasic.GetValue(value, PCAN_CHANNEL_FEATURES)
                     items.append(name)
-                    
+
 
         items.sort()
         self.cbbChannel
@@ -1504,7 +1504,7 @@ class PCANBasicExample(object):
                 self.m_Terminated = True
                 self.m_ReadThread.join()
                 self.m_ReadThread = None
-                
+
         # We stop to read from the CAN queue
         #
         self.tmrRead.stop()
@@ -1512,7 +1512,7 @@ class PCANBasicExample(object):
         # Releases a current connected PCAN-Basic channel
         #
         self.m_objPCANBasic.Uninitialize(self.m_PcanHandle)
-                                                 
+
         # Sets the connection status of the main-form
         #
         self.SetConnectionStatus(False)
@@ -1531,7 +1531,7 @@ class PCANBasicExample(object):
         filterRet = self.GetFilterStatus()
 
         if not filterRet[0]:
-            return 
+            return
 
         # Configures the message filter for a custom range of messages
         #
@@ -1565,7 +1565,7 @@ class PCANBasicExample(object):
         result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,
                                               PCAN_MESSAGE_FILTER,
                                               filterMode)
-        
+
         # If success, an information message is written, if it is not, an error message is shown
         #
         if result == PCAN_ERROR_OK:
@@ -1590,7 +1590,7 @@ class PCANBasicExample(object):
                 self.IncludeTextMessage("The Status of the filter is: customized.")
             else:
                 self.IncludeTextMessage("The Status ofself.tmrRead the filter is: Invalid.")
-                
+
 
     ## Button btnParameterSet handler
     ##
@@ -1618,21 +1618,21 @@ class PCANBasicExample(object):
                 self.IncludeTextMessage("The desired Device-Number was successfully configured")
 
         # The 5 Volt Power feature of a PC-card or USB will be set
-        #        
+        #
         elif iVal == PCAN_5VOLTS_POWER:
             result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,PCAN_5VOLTS_POWER,iBuffer)
             if result == PCAN_ERROR_OK:
                 self.IncludeTextMessage("The USB/PC-Card 5 power was successfully " + lastStr)
-            
+
         # The feature for automatic reset on BUS-OFF will be set
-        #        
+        #
         elif iVal == PCAN_BUSOFF_AUTORESET:
             result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,PCAN_BUSOFF_AUTORESET,iBuffer)
             if result == PCAN_ERROR_OK:
                 self.IncludeTextMessage("The automatic-reset on BUS-OFF was successfully " + lastStr)
-            
+
         # The CAN option "Listen Only" will be set
-        #        
+        #
         elif iVal == PCAN_LISTEN_ONLY:
             result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,PCAN_LISTEN_ONLY,iBuffer)
             if result == PCAN_ERROR_OK:
@@ -1646,49 +1646,49 @@ class PCANBasicExample(object):
                 self.IncludeTextMessage("The feature for logging debug information was successfully " + lastStr)
 
         # The channel option "Receive Status" will be set
-        #        
+        #
         elif iVal == PCAN_RECEIVE_STATUS:
             result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,PCAN_RECEIVE_STATUS,iBuffer)
             if result == PCAN_ERROR_OK:
                 self.IncludeTextMessage("The channel option ""Receive Status"" was set to  " + lastStr2)
 
         # The feature for tracing will be set
-        #        
+        #
         elif iVal == PCAN_TRACE_STATUS:
             result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,PCAN_TRACE_STATUS,iBuffer)
             if result == PCAN_ERROR_OK:
                 self.IncludeTextMessage("The feature for tracing data was successfully " + lastStr)
 
         # The feature for tracing will be set
-        #        
+        #
         elif iVal == PCAN_CHANNEL_IDENTIFYING:
             result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,PCAN_CHANNEL_IDENTIFYING,iBuffer)
             if result == PCAN_ERROR_OK:
                 self.IncludeTextMessage("The procedure for channel identification was successfully " + lastStr)
 
         # The feature for using an already configured bit rate will be set
-        #        
+        #
         elif iVal == PCAN_BITRATE_ADAPTING:
             result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,PCAN_BITRATE_ADAPTING,iBuffer)
             if result == PCAN_ERROR_OK:
                 self.IncludeTextMessage("The feature for bit rate adaptation was successfully " + lastStr)
 
         # The option "Allow Status Frames" will be set
-        #        
+        #
         elif iVal == PCAN_ALLOW_STATUS_FRAMES:
             result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,PCAN_ALLOW_STATUS_FRAMES,iBuffer)
             if result == PCAN_ERROR_OK:
                 self.IncludeTextMessage("The reception of Status frames was successfully " + lastStr3)
 
         # The option "Allow RTR Frames" will be set
-        #        
+        #
         elif iVal == PCAN_ALLOW_RTR_FRAMES:
             result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,PCAN_ALLOW_RTR_FRAMES,iBuffer)
             if result == PCAN_ERROR_OK:
                 self.IncludeTextMessage("The reception of RTR frames was successfully " + lastStr3)
 
         # The option "Allow Error Frames" will be set
-        #        
+        #
         elif iVal == PCAN_ALLOW_ERROR_FRAMES:
             result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,PCAN_ALLOW_ERROR_FRAMES,iBuffer)
             if result == PCAN_ERROR_OK:
@@ -1700,8 +1700,8 @@ class PCANBasicExample(object):
             iBuffer = int(self.m_DeviceIdOrDelayNUD.get())
             result = self.m_objPCANBasic.SetValue(self.m_PcanHandle,PCAN_INTERFRAME_DELAY,iBuffer)
             if result == PCAN_ERROR_OK:
-                self.IncludeTextMessage("The delay between transmitting frames was successfully set")               
-                
+                self.IncludeTextMessage("The delay between transmitting frames was successfully set")
+
         # The current parameter is invalid
         #
         else:
@@ -1737,7 +1737,7 @@ class PCANBasicExample(object):
                 else:
                     lastStr = "OFF"
                 self.IncludeTextMessage("The 5-Volt Power of the USB/PC-Card is " + lastStr)
-                
+
         # The activation status of the feature for automatic reset on BUS-OFF will be retrieved
         #
         elif iVal == PCAN_BUSOFF_AUTORESET:
@@ -1830,7 +1830,7 @@ class PCANBasicExample(object):
                     lastStr = "does allow"
                 else:
                     lastStr = "DOESN'T ALLOW"
-                self.IncludeTextMessage("The channel %s using I/O pins " % lastStr)                
+                self.IncludeTextMessage("The channel %s using I/O pins " % lastStr)
 
         # The status of the bit rate adapting feature will be retrieved
         #
@@ -1849,7 +1849,7 @@ class PCANBasicExample(object):
             result = self.m_objPCANBasic.GetValue(self.m_PcanHandle,PCAN_BITRATE_INFO)
             if result[0] == PCAN_ERROR_OK:
                 self.IncludeTextMessage("The bit rate of the channel is %.4Xh" % result[1])
-                                
+
         # The bit rate of the connected FD channel will be retrieved (String value)
         #
         elif iVal == PCAN_BITRATE_INFO_FD:
@@ -1878,7 +1878,7 @@ class PCANBasicExample(object):
         elif iVal == PCAN_IP_ADDRESS:
             result = self.m_objPCANBasic.GetValue(self.m_PcanHandle,PCAN_IP_ADDRESS)
             if result[0] == PCAN_ERROR_OK:
-                self.IncludeTextMessage("The IP address of the channel is %s" % result[1])                
+                self.IncludeTextMessage("The IP address of the channel is %s" % result[1])
 
         # The running status of the LAN Service
         #
@@ -1929,8 +1929,8 @@ class PCANBasicExample(object):
         elif iVal == PCAN_INTERFRAME_DELAY:
             result = self.m_objPCANBasic.GetValue(self.m_PcanHandle,PCAN_INTERFRAME_DELAY)
             if result[0] == PCAN_ERROR_OK:
-                self.IncludeTextMessage("The configured interframe delay is {0} ms".format(result[1]))                
-                
+                self.IncludeTextMessage("The configured interframe delay is {0} ms".format(result[1]))
+
         # The current parameter is invalid
         #
         else:
@@ -1953,7 +1953,7 @@ class PCANBasicExample(object):
             # We show the received message
             #
             self.ProcessMessage(result[1:])
-            
+
         return result[0]
 
     def ReadMessageFD(self):
@@ -1965,7 +1965,7 @@ class PCANBasicExample(object):
             # We show the received message
             #
             self.ProcessMessageFD(result[1:])
-            
+
         return result[0]
 
     def ReadMessages(self):
@@ -2033,12 +2033,12 @@ class PCANBasicExample(object):
     ## Button btnInfoClear handler
     ##
     def btnInfoClear_Click(self, event=None):
-        # The information contained in the Information List-Box 
+        # The information contained in the Information List-Box
         # is cleared
         #
         self.lbxInfo.delete(0,END)
 
-    def WriteFrame(self):   
+    def WriteFrame(self):
         # We create a TPCANMsg message structure
         #
         CANMsg = TPCANMsg()
@@ -2092,7 +2092,7 @@ class PCANBasicExample(object):
 
         # The message is sent to the configured hardware
         #
-        return self.m_objPCANBasic.WriteFD(self.m_PcanHandle, CANMsg)                
+        return self.m_objPCANBasic.WriteFD(self.m_PcanHandle, CANMsg)
 
     ## Button btnWrite handler
     ##
@@ -2127,7 +2127,7 @@ class PCANBasicExample(object):
 
 
     ## Button btnStatus handler
-    ##            
+    ##
     def btnStatus_Click(self):
         # Gets the current BUS status of a PCAN Channel.
         #
@@ -2156,7 +2156,7 @@ class PCANBasicExample(object):
 
 
     ## Combobox cbbChannel handler
-    ##          
+    ##
     def cbbChannel_SelectedIndexChanged(self, currentValue):
         # Get the handle from the text being shown
         #
@@ -2168,7 +2168,7 @@ class PCANBasicExample(object):
         else:
             putItActive = DISABLED
 
-        # Activates/deactivates configuration controls according with the 
+        # Activates/deactivates configuration controls according with the
         # kind of hardware
         #
         self.cbbHwType['state'] = putItActive
@@ -2177,18 +2177,18 @@ class PCANBasicExample(object):
 
 
     ## Combobox cbbParameter handler
-    ##     
+    ##
     def cbbParameter_SelectedIndexChanged(self, currentValue=None):
-        # Activates/deactivates controls according with the selected 
+        # Activates/deactivates controls according with the selected
         # PCAN-Basic parameter
         #
         bIsRB = currentValue != 'USBs Device Number' and currentValue != 'Interframe Transmit Delay'
-        if currentValue == 'Interframe Transmit Delay':            
+        if currentValue == 'Interframe Transmit Delay':
             self.m_DeviceIdOrDelay.set('Delay (ms):')
         else:
             self.m_DeviceIdOrDelay.set('Device ID:')
         root.update_idletasks()
-        
+
         if bIsRB:
             self.rdbParamActive['state'] = ACTIVE
             self.rdbParamInactive['state'] = ACTIVE
@@ -2198,29 +2198,29 @@ class PCANBasicExample(object):
             self.rdbParamInactive['state'] = DISABLED
             self.nudDeviceIdOrDelay['state'] = NORMAL
 
-            
+
     ## Checkbox chbRemote handler
-    ## 
-    def chbRemote_CheckedChanged(self):     
+    ##
+    def chbRemote_CheckedChanged(self):
         # Determines the status for the textboxes
         # according wiht the cehck-status
         #
-        if self.m_RemoteCHB.get():            
+        if self.m_RemoteCHB.get():
             newStatus = DISABLED
             iCount = 8
         else:
             newStatus = NORMAL
-            iCount = int(self.m_LengthNUD.get())        
+            iCount = int(self.m_LengthNUD.get())
 
         self.chbFD['state'] = newStatus
-        
-        # If the message is a RTR, no data is sent. The textboxes for data 
+
+        # If the message is a RTR, no data is sent. The textboxes for data
         # will be disabled
         #
         for i in range(iCount):
             self.m_CtrlEdits[i]['state'] = newStatus
 
-    def chbFD_CheckedChanged(self):        
+    def chbFD_CheckedChanged(self):
         self.chbRemote['state'] = NORMAL if (not self.m_FDCHB.get()) else DISABLED
         self.chbBRS['state'] = NORMAL if self.m_FDCHB.get() else DISABLED
         if self.chbBRS['state'] == DISABLED:
@@ -2230,7 +2230,7 @@ class PCANBasicExample(object):
 
 
     ## Checkbox chbFilterExt handler
-    ##             
+    ##
     def chbFilterExt_CheckedChanged(self):
         # Determines the maximum value for a ID
         # according with the Filter-Type
@@ -2242,7 +2242,7 @@ class PCANBasicExample(object):
             self.nudIdTo['to'] = 0x7FF
             self.nudIdFrom['to'] = 0x7FF
 
-        # We check that the maximum value for a selected filter 
+        # We check that the maximum value for a selected filter
         # mode is used
         #
         if int(self.m_IdToNUD.get()) > self.nudIdTo['to']:
@@ -2251,10 +2251,10 @@ class PCANBasicExample(object):
             self.m_IdFromNUD.set(self.nudIdFrom['to'])
 
     ## Checkbox chbFilterExt handler
-    ##             
+    ##
     def chbCanFD_CheckedChanged(self):
         self.m_IsFD = self.m_CanFDCHB.get()
-        
+
         # Determines the maximum value for a ID
         # according with the Filter-Type
         #
@@ -2289,24 +2289,24 @@ class PCANBasicExample(object):
             self.chbFD_CheckedChanged()
 
     ## checkbutton chbShowPeriod handler
-    ##              
+    ##
     def chbShowPeriod_CheckedChanged(self):
         with self._lock:
             self.m_ShowPeriod = self.m_ShowPeriodCHB.get()
             for msgStatus in self.m_LastMsgsList:
                 msgStatus.ShowingPeriod = self.m_ShowPeriod
-        
+
     ## Radiobutton rdbTimer handler
-    ##              
+    ##
     def rdbTimer_CheckedChanged(self):
         self.m_CanRead = False
-            
+
         if self.btnRelease['state'] == DISABLED:
             return
         # Stop the timer, if running
         #
         self.tmrRead.stop()
-        
+
         #Stop the thread if running
         #
         if WINDOWS_EVENT_SUPPORT:
@@ -2316,28 +2316,28 @@ class PCANBasicExample(object):
                 self.m_ReadThread = None
 
         self.m_CanRead = True
-          
+
         # According with the kind of reading, a timer, a thread or a button will be enabled
         #
         if self.m_ReadingRDB.get() == 1:
             self.tmrRead.start()
 
-        if self.m_ReadingRDB.get() == 2:                
+        if self.m_ReadingRDB.get() == 2:
             if WINDOWS_EVENT_SUPPORT:
                 self.m_Terminate = False
                 self.m_ReadThread = threading.Thread(None, self.CANReadThreadFunc)
                 self.m_ReadThread.start()
             else:
                 tkMessageBox.showerror("Module ''win32Event'' not found", message="The Win32 Library ('Python Win32 Extensions') is not installed.")
-            
+
         if (self.btnRelease['state'] != DISABLED) and (self.m_ReadingRDB.get() == 0):
             self.btnRead['state'] = ACTIVE
         else:
-            self.btnRead['state'] = DISABLED       
+            self.btnRead['state'] = DISABLED
 
-       
+
     ## Entry txtID OnLeave handler
-    ##                   
+    ##
     def txtID_Leave(self,*args):
         # Calculates the text length and Maximum ID value according
         # with the Message Typ
@@ -2348,25 +2348,25 @@ class PCANBasicExample(object):
         else:
             iTextLength = 3
             uiMaxValue = 0x7FF
-        
+
         try:
-            iValue = int(self.m_IDTXT.get(),16)       
+            iValue = int(self.m_IDTXT.get(),16)
         except ValueError:
             iValue = 0
         finally:
-            # The Textbox for the ID is represented with 3 characters for 
+            # The Textbox for the ID is represented with 3 characters for
             # Standard and 8 characters for extended messages.
             # We check that the ID is not bigger than current maximum value
             #
             if iValue > uiMaxValue:
-                iValue = uiMaxValue            
+                iValue = uiMaxValue
             self.m_IDTXT.set("{0:0{1}X}".format(iValue,iTextLength))
             return True
-        
+
 
     ## Entry txtData0 OnLeave handler
-    ##   
-    def txtData0_Leave(self,*args):        
+    ##
+    def txtData0_Leave(self,*args):
         for i in range(8):
             # The format of all Textboxes Data fields are checked.
             #
@@ -2376,7 +2376,7 @@ class PCANBasicExample(object):
     #
     def txtData0_LeaveHelper(self, editVar):
         try:
-            iValue = int(editVar.get(),16)       
+            iValue = int(editVar.get(),16)
         except ValueError:
             iValue = 0
         finally:
@@ -2386,10 +2386,10 @@ class PCANBasicExample(object):
             if iValue > 255:
                 iValue = 255
             editVar.set("{0:0{1}X}".format(iValue,2))
-        
+
 
     # Spinbutton nudLength handler
-    def nudLength_ValueChanged(self):       
+    def nudLength_ValueChanged(self):
         #iCount = self.GetLengthFromDLC(int(self.m_LengthNUD.get()), not self.m_FDCHB.get())
         iCount = GetLengthFromDLC(int(self.m_LengthNUD.get()), not self.m_FDCHB.get())
         self.m_LengthLA.set('%s B.' % iCount)
@@ -2402,43 +2402,43 @@ class PCANBasicExample(object):
                 self.m_CtrlEdits[i]['state'] = NORMAL
             else:
                 self.m_CtrlEdits[i]['state'] = DISABLED
-                
-                             
+
+
     def tmrRead_Tick(self):
         # Checks if in the receive-queue are currently messages for read
-        # 
+        #
         self.ReadMessages()
 
     def tmrDisplayManage(self, active):
         if (active):
             self.m_Parent.after(0, self.tmrThreadSafeDisplay_Tick)
-    
+
     def tmrThreadSafeDisplay_Tick(self):
         self.DisplayMessages()
         if (self.m_Connected):
             self.m_Parent.after(DISPLAY_UPDATE_MS, self.tmrThreadSafeDisplay_Tick)
-            
+
 ###*****************************************************************
 
-        
+
 
 
 ###*****************************************************************
 ### ROOT
 ###*****************************************************************
 
-### Loop-Functionallity  
+### Loop-Functionallity
 def RunMain(root):
     global basicExl
 
     # Creates a PCAN-Basic application
     #
     basicExl = PCANBasicExample(root)
-    
+
     # Runs the Application / loop-start
     #
     basicExl.loop()
-    
+
     # Application's destrution / loop-end
     #
     basicExl.destroy()
@@ -2452,4 +2452,3 @@ if __name__ == '__main__':
     #
     RunMain(root)
 ###*****************************************************************
-

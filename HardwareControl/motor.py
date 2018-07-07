@@ -13,6 +13,9 @@ class Motor(object):
     def InitializeBasicComponents(self):
         self.m_objPCANBasic = PCANBasic()
 
+        self.m_IDTXT = StringVar(value="000")
+        self.m_LengthNUD = StringVar(value="8")
+
         # This is used to make sure that default channel is undefined before/after use.
         self.m_PcanHandle = PCAN_NONEBUS
 
@@ -61,6 +64,37 @@ class Motor(object):
         else:
             return stsReturn[1]
 
+    def WriteDataFD(self):
+
+        CANMsg = TPCANMsg()
+
+        # We configurate the Message.  The ID,
+        # Length of the Data, Message Type and the data
+        #
+        CANMsg.ID = int(self.m_IDTXT.get(),16)
+        CANMsg.DLC = int(self.m_LengthNUD.get())
+        CANMsg.MSGTYPE = PCAN_MESSAGE_EXTENDED if self.m_ExtendedCHB.get() else PCAN_MESSAGE_STANDARD
+        CANMsg.MSGTYPE |= PCAN_MESSAGE_FD.value if self.m_FDCHB.get() else PCAN_MESSAGE_STANDARD.value
+        CANMsg.MSGTYPE |= PCAN_MESSAGE_BRS.value if self.m_BRSCHB.get() else PCAN_MESSAGE_STANDARD.value
+
+        # If a remote frame will be sent, the data bytes are not important.
+        #
+        if self.m_RemoteCHB.get():
+            CANMsg.MSGTYPE |= PCAN_MESSAGE_RTR.value
+        else:
+            #iLength = self.GetLengthFromDLC(CANMsg.DLC, not(CANMsg.MSGTYPE & PCAN_MESSAGE_FD.value))
+            iLength = GetLengthFromDLC(CANMsg.DLC, not(CANMsg.MSGTYPE & PCAN_MESSAGE_FD.value))
+            # We get so much data as the Len of the message
+            #
+            for i in range(iLength):
+                CANMsg.DATA[i] = int(self.m_DataEdits[i].get(),16)
+
+                # The message is sent to the configured hardware
+                #
+        return self.m_objPCANBasic.WriteFD(self.m_PcanHandle, CANMsg)
+
+
+
 
 
     def accelerate(self, rpm):
@@ -68,3 +102,34 @@ class Motor(object):
 
     def idle(self):
         self.logger.debug("[*] Motor Idle")
+
+
+#**************************************************************************************************************#
+    # Error Handlers
+
+    ## Entry txtID OnLeave handler
+    ##
+    def txtID_Leave(self,*args):
+        # Calculates the text length and Maximum ID value according
+        # with the Message Typ
+        #
+        if self.m_ExtendedCHB.get():
+            iTextLength = 8
+            uiMaxValue = 0x1FFFFFFF
+        else:
+            iTextLength = 3
+            uiMaxValue = 0x7FF
+
+        try:
+            iValue = int(self.m_IDTXT.get(),16)
+        except ValueError:
+            iValue = 0
+        finally:
+            # The Textbox for the ID is represented with 3 characters for
+            # Standard and 8 characters for extended messages.
+            # We check that the ID is not bigger than current maximum value
+            #
+            if iValue > uiMaxValue:
+                iValue = uiMaxValue
+                self.m_IDTXT.set("{0:0{1}X}".format(iValue,iTextLength))
+                return True
