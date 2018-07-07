@@ -35,8 +35,10 @@ def main(root_logger):
 
         if user_input == "launch":
 
-            sm_thread = Thread(target=sm.launch, args=(0,), name='StateMachineThread')
-            sm_thread.start()
+            if input("Are you sure? [y/N]") in ("Y", "y"):
+                sm.on_event('launch')
+                sm_thread = Thread(target=sm.launch, args=(0,), name='StateMachineThread')
+                sm_thread.start()
 
         elif user_input == "ready":
             sm.warm_up()
