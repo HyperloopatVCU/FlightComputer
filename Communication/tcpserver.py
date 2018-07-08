@@ -73,7 +73,7 @@ class TCPComm(object):
                 else:
                     self.logger.critical("[!!!] Packet isn't IDed right!")
             except:
-                self.logger.critical("[!!!] Buffer Overflow!)
+                self.logger.critical("[!!!] Buffer Overflow!")
 
         self.logger.debug("[*] Client disconnect %s", addr)
 

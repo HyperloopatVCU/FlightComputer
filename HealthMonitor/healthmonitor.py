@@ -72,7 +72,7 @@ class HealthMonitor(object):
                 packet5 = self.comm.controller5.get(timeout=self.timeout)
             except: # queue.Empty exception
                 self.logger.critical("[+] Microcontroller timed out!")
-                self.sm.estop_signal = True
+                self.sm.on_event('estop')
                 return
 
 
@@ -110,7 +110,7 @@ class HealthMonitor(object):
             self.logger.debug("[*] max battery temperature reached")
         else:
             self.logger.critical("[!!!] battery temperature too high")
-            self.sm.estop_signal = True
+            self.sm.on_event('estop')
 
     def motor_temp_check(self, motor_temperature):
         if motor_temperature <= self.max_motor_temp:
@@ -119,7 +119,7 @@ class HealthMonitor(object):
             self.logger.info("[*] max motor temperature reached")
         else:
             self.logger.critical("[!!!] motor temp too high")
-            self.sm.estop_signal = True
+            self.sm.on_event('estop')
 
 
     def motor_controller_temp_check(self, motor_controller):
@@ -129,7 +129,7 @@ class HealthMonitor(object):
             self.logger.debug("[*] controller reached max temp")
         else:
             self.logger.critical("[!!!] controller temp too high")
-            self.sm.estop_signal = True
+            self.sm.on_event('estop')
 
     def high_battery_check(self, voltage, current):
         if voltage <= 90.8 and self.current <= 465:
@@ -142,14 +142,14 @@ class HealthMonitor(object):
                 self.logger.info("[!!!] voltage at maximum")
             else:
                 self.logger.info("[!!!] voltage too high")
-                self.sm.estop_signal = True
+                self.sm.on_event('estop')
             if current >= 465:
                 self.logger.info("[!!!] current nearing max")
             elif current == 475:
                 self.logger.info("[!!!] current at max")
             else:
                 self.logger.info ("current too high")
-                self.sm.estop_signal = True
+                self.sm.on_event('estop')
 
 
     def low_1_battery_check(self, voltage, current):
@@ -159,10 +159,10 @@ class HealthMonitor(object):
             self.logger.info("[!!!] low power critical")
             if voltage > 50.4:
                 self.logger.info("[!!!] voltage too high")
-                self.sm.estop_signal = True
+                self.sm.on_event('estop')
             if current >= 3:
                 self.logger.info("[!!!] current too high")
-                self.sm.estop_signal = True
+                self.sm.on_event('estop')
 
     def low_2A_battery_check(self, voltage, current):
         if voltage <= 12.6 and self.current <= 4:
@@ -171,10 +171,10 @@ class HealthMonitor(object):
             self.logger.info("[!!!] brake systems critical")
             if voltage > 12.6:
                 self.logger.info("[!!!] voltage too high")
-                self.sm.estop_signal = True
+                self.sm.on_event('estop')
             if current > 4:
                 self.logger.info("[!!!] current too high")
-                self.sm.estop_signal = True
+                self.sm.on_event('estop')
 
     def low_2B_battery_check(self, voltage, current):
         if voltage <= 12.6 and self.current <= 4:
@@ -183,10 +183,10 @@ class HealthMonitor(object):
             self.logger.info("[!!!] brake systems critical")
             if voltage > 12.6:
                 self.logger.info("[!!!] voltage too high")
-                self.sm.estop_signal = True
+                self.sm.on_event('estop')
             if current > 4:
                 self.logger.info("[!!!] current too high")
-                self.sm.estop_signal = True
+                self.sm.on_event('estop')
 
     def brake_potentiometer_check(self, voltage, current):
     # Some values need to be changed here
@@ -196,10 +196,10 @@ class HealthMonitor(object):
             self.logger.info("[!!!] potentiometer average too much voltage or current")
             if voltage >= 12.6:
                 self.logger.info("[!!!] voltage too high")
-               self.sm.estop_signal = True
+               self.sm.on_event('estop')
             if current >= 4:
                 self.logger.info("[!!!] current too high")
-               self.sm.estop_signal = True
+               self.sm.on_event('estop')
 
     def HPS_check(self, packet1, packet2, packet3, packet4):
     """
@@ -223,7 +223,7 @@ class HealthMonitor(object):
             self.logger.info("[!!!] Error with HPS #3")
 
         if hpsfailcount >= 2:
-            self.sm.estop_signal = True
+            self.sm.on_event('estop')
 
     def VPS_check(self, packet1, packet2, packet3, packet4):
     """
@@ -248,7 +248,7 @@ class HealthMonitor(object):
             self.logger.info("[!!!] Error with VPS #4")
 
         if self.vpsfailcount >= 2:
-            self.sm.estop_signal = True
+            self.sm.on_event('estop')
 
     def IMU_check(self, packet1, packet2, packet3, packet4):
     """
@@ -272,7 +272,7 @@ class HealthMonitor(object):
             self.logger.info("[!!!] Error with IMU #4")
 
         if imufailcount >= 2:
-            self.sm.estop_signal = True
+            self.sm.on_event('estop')
 
     def BMS_check(self, BMS_packet):
     """
@@ -281,7 +281,7 @@ class HealthMonitor(object):
 
         if packet5["error"] != 0:
             self.logger.critical("[+] Microcontroller five, error code: %d", packet4["error"])
-            self.sm.estop_signal = True
+            self.sm.on_event('estop')
             return
             
         bms_failcount = 0
@@ -293,6 +293,6 @@ class HealthMonitor(object):
 
         if bms_failcount >= self.bms_allowed_errors:
             self.logger.critical("[+] Microcontroller five error. Too many errors")
-            self.sm.estop_signal = True
+            self.sm.on_event('estop')
             return
 
