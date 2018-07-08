@@ -196,15 +196,15 @@ class HealthMonitor(object):
             self.logger.info("[!!!] potentiometer average too much voltage or current")
             if voltage >= 12.6:
                 self.logger.info("[!!!] voltage too high")
-               self.sm.on_event('estop')
+                self.sm.on_event('estop')
             if current >= 4:
                 self.logger.info("[!!!] current too high")
-               self.sm.on_event('estop')
+                self.sm.on_event('estop')
 
     def HPS_check(self, packet1, packet2, packet3, packet4):
-    """
-    HPS error checking
-    """
+        """
+        HPS error checking
+        """
         hpsfailcount = 0
         if packet1["horizontal"]["error"] != 0:
             hpsfailcount += 1
@@ -226,9 +226,9 @@ class HealthMonitor(object):
             self.sm.on_event('estop')
 
     def VPS_check(self, packet1, packet2, packet3, packet4):
-    """
-    VPS error checking
-    """
+        """
+        VPS error checking
+        """
         vpsfailcount = 0
 
         if packet1["vertical"]["error"] != 0:
@@ -251,9 +251,9 @@ class HealthMonitor(object):
             self.sm.on_event('estop')
 
     def IMU_check(self, packet1, packet2, packet3, packet4):
-    """
-    IMU error checking
-    """
+        """
+        IMU error checking
+        """
         imufailcount = 0
         if packet1["accelerometer"]["error"] != 0:
             self.imufailcount += 1
@@ -275,9 +275,9 @@ class HealthMonitor(object):
             self.sm.on_event('estop')
 
     def BMS_check(self, BMS_packet):
-    """
-    BMS error checking (This needs to be changed a bit because the for loop won't work)
-    """
+        """
+        BMS error checking (This needs to be changed a bit because the for loop won't work)
+        """
 
         if packet5["error"] != 0:
             self.logger.critical("[+] Microcontroller five, error code: %d", packet4["error"])
