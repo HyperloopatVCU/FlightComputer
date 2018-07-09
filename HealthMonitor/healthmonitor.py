@@ -3,9 +3,6 @@
     Instead of providing exact numbers, we need ranges of values for necessary data (Add number or ranges to config.ini!)
 """
 
-# TODO: Function for if we reach the end of the tube
-# TODO: Average data code with sensor deviation discarding
-
 class HealthMonitor(object):
 
     def __init__(self, comm, sm, pod):
@@ -39,15 +36,15 @@ class HealthMonitor(object):
         the config.ini file in the root of the program directory. 
         """
         
-        if sm.state == sm.states["pre-operational"]:
+        if sm.state == "Pre_Operational"j:
             # Add checks for pre-operational
             return
 
-        elif sm.state == sm.states["operational"]:
+        elif sm.state == "Operational":
             # Add checks for operational
             return
 
-        elif sm.state == sm.states["accelerating"]:
+        elif sm.state == "Accelerating":
             """
             1.)
                 Compare sensor values from each queue in the tcpserver.py
@@ -99,9 +96,20 @@ class HealthMonitor(object):
 
             return
 
-        elif sm.state == sm.states["stopping"]:
+        elif sm.state == "Decelerating":
+            return
+
+        elif sm.state == "Stop":
             # Add checks for stopping
             return
+
+        elif sm.state == "Estop":
+            return
+
+        else:
+            self.logger.critical("[!!!] State Machine in unknown state %s", \
+                                 sm.state)
+            sm.on_event('estop')
 
     def battery_temp_check(self, battery_temperature):
         if battery_temperature <= self.max_battery_temp:
