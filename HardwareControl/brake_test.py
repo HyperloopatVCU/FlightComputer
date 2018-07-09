@@ -19,6 +19,12 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
     PBR = 20
     PBL = 21
 
+    # PWM duty cycles
+    E_JS = 70 # TODO
+    E_CR = 90
+    D_JS = 30 # TODO
+    D_CR = 10 # TODO
+
     # error definitions
     E_EARLY_CONVERGENCE = 1 # Brake converging earlier than expected.
     E_LATE_CONVERGENCE = 2 # Brake converging later than expected. (May indicate old brake pad)
@@ -26,7 +32,7 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
     E_UNRESPONSIVE_SAFETY = 8 # Safety determined to be cause of error because of incorrect response (A.K.A.: "A FUSE CAN AND WILL FAIL")
     E_DESTROYED_CLOSED = 16 # Fuse failure determined to be cause of error and pad closed
     E_DESTROYED_OPEN = 32 # Fuse failure determined to be cause of error and pad NOT closed
-    
+    E_OFFSET_CLAMP = 64 # Brakes have closed on improper median
     E_UNCERTAIN = 128 # A failure may have occured, need more info (run selftest() to determine)
 
     status = {"front_left":0, "front_right":0, "back_left":0, "back_right":0, "last_action":"unknown"}
@@ -90,10 +96,10 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
             time.sleep(.01) #--------------------------------------------------------------------------------------- Replace "0.01" with approx. time of two sensor readings
             # test feedback and function
             if abs(s.current["front"] - s.nominal_f) > 0.06: #------------------------------------------------------ Replace "0.06" with 1% of expected max current
-                if (s.position["front_left"] - lastfl) > 3: #------------------------------------------------------- Replace "3" with V/LSB of expected position error
+                if abs(s.position["front_left"] - lastfl) > 2:
                     s.status["front_left"] |= E_UNRESPONSIVE_SAFETY | E_ILLEGAL_MOVEMENT
 
-                if (s.position["front_right"] - lastfr) > 3: #------------------------------------------------------ Replace "3" with V/LSB of expected position error
+                if abs(s.position["front_right"] - lastfr) > 2:
                     s.status["front_right"] |= E_UNRESPONSIVE_SAFETY | E_ILLEGAL_MOVEMENT
             else:
                 if ((s.position["front_left"] + s.position["front_right"]) - 42) >= 0: # attempt to catch a probable fuse failure event
@@ -106,10 +112,10 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
                         s.status["front_right"] |= E_UNCERTAIN
             
             if abs(s.current["back"] - s.nominal_b) > 0.06: #------------------------------------------------------- Replace "0.06" with 1% of expected max current
-                if (s.position["back_left"] - lastbl) > 3: #-------------------------------------------------------- Replace "3" with V/LSB of expected position error
+                if abs(s.position["back_left"] - lastbl) > 2:
                     s.status["back_left"] |= E_UNRESPONSIVE_SAFETY | E_ILLEGAL_MOVEMENT
 
-                if (s.position["back_right"] - lastbr) > 3: #------------------------------------------------------- Replace "3" with V/LSB of expected position error
+                if abs(s.position["back_right"] - lastbr) > 2:
                     s.status["back_right"] |= E_UNRESPONSIVE_SAFETY | E_ILLEGAL_MOVEMENT
             else:
                 if ((s.position["back_left"] + s.position["back_right"]) - 42) >= 0: # attempt to catch a probable fuse failure event
@@ -131,49 +137,57 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
             s.status["last_action"] = "disengage_safety"
             time.sleep(.01) #--------------------------------------------------------------------------------------- Replace "0.01" with approx. time of two sensor readings
             # test feedback and function
-            if abs(s.current["front"] - s.nominal_f) <= 6.3: #------------------------------------------------------ Replace "6.3" with 105% of expected max current
-                # front brake undercurrent
-                
-                # front left
-                if (s.position["front_left"] - lastfl) <= 3: #------------------------------------------------------ Replace "3" with V/LSB of expected position error
-                    s.status["front_left"] |= E_ILLEGAL_MOVEMENT # brake didn't move (it's supposed to)
-                
-                if (s.position["front_left"] - 21) < 0:
-                    s.status["front_left"] |= E_UNCERTAIN # middle of throw, may be dead
-                else:
-                    s.status["front_left"] |= E_DESTROYED_CLOSED # end of throw, assume dead
-
-                # front right
-                if (s.position["front_right"] - lastfr) <= 3: #----------------------------------------------------- Replace "3" with V/LSB of expected position error
-                    s.status["front_right"] |= E_ILLEGAL_MOVEMENT # brake didn't move (it's supposed to)
-                
-                if (s.position["front_right"] - 21) < 0:
-                    s.status["front_right"] |= E_UNCERTAIN # middle of throw, may be dead
-                else:
-                    s.status["front_right"] |= E_DESTROYED_CLOSED # end of throw, assume dead
             
-            if abs(s.current["back"] - s.nominal_b) <= 6.3: #------------------------------------------------------- Replace "6.3" with 105% of expected max current
-                # back brake undercurrent
-                
-                # back left
-                if (s.position["back_left"] - lastbl) <= 3: #------------------------------------------------------ Replace "3" with V/LSB of expected position error
-                    s.status["back_left"] |= E_ILLEGAL_MOVEMENT # brake didn't move (it's supposed to)
-                
-                if (s.position["back_left"] - 21) < 0:
-                    s.status["back_left"] |= E_UNCERTAIN # middle of throw, may be dead
-                else:
-                    s.status["back_left"] |= E_DESTROYED_CLOSED # end of throw, assume dead
+            # did both reach end of throw? (or total of both throws, may be offset)
+            if ((s.position["front_left"] + s.position["front_right"]) - 42) >= 0:
+                s.status["front_left"] |= E_DESTROYED_CLOSED # assume fuse fails (that's what this function is designed to do)
+                s.status["front_right"] |= E_DESTROYED_CLOSED
+                if (abs(s.position["front_left"] - 21) > 4) and (abs(s.position["front_right"] - 21) > 4): # try to catch offset clamp
+                    s.status["front_left"] |= E_OFFSET_CLAMP
+                    s.status["front_right"] |= E_OFFSET_CLAMP
+            else: # if total doesn't add up to total throw, both failed open
+                if (s.current["front"] - s.nominal_f) < 5.6:
+                    # front brake undercurrent, shouldn't assume a fuse failure (cause could be faulty signal)
+                    # front left
+                    if abs(s.position["front_left"] - lastfl) <= 2:
+                        s.status["front_left"] |= E_ILLEGAL_MOVEMENT # brake didn't move (it's supposed to)
+                    if (s.position["front_left"] - 21) < 0:
+                        s.status["front_left"] |= E_UNCERTAIN # brake never converged, not sure what happened to it
+                    # front right
+                    if abs(s.position["front_right"] - lastfr) <= 2:
+                        s.status["front_right"] |= E_ILLEGAL_MOVEMENT # brake didn't move (it's supposed to)
+                    if (s.position["front_right"] - 21) < 0:
+                        s.status["front_right"] |= E_UNCERTAIN # brake never converged, not sure what happened to it
+                elif (s.current["front"] - s.nominal_f) > 6.4:
+                    # front brake overcurrent caught, assume both brakes dead
+                    s.status["front_left"] |= E_DESTROYED_OPEN
 
-                # back right
-                if (s.position["back_right"] - lastbr) <= 3: #----------------------------------------------------- Replace "3" with V/LSB of expected position error
-                    s.status["back_right"] |= E_ILLEGAL_MOVEMENT # brake didn't move (it's supposed to)
-                
-                if (s.position["back_right"] - 21) < 0:
-                    s.status["back_right"] |= E_UNCERTAIN # middle of throw, may be dead
-                else:
-                    s.status["back_right"] |= E_DESTROYED_CLOSED # end of throw, assume dead
+            # did both reach end of throw? (or total of both throws, may be offset)
+            if ((s.position["back_left"] + s.position["back_right"]) - 42) >= 0:
+                s.status["back_left"] |= E_DESTROYED_CLOSED # assume fuse fails (that's what this function is designed to do)
+                s.status["back_right"] |= E_DESTROYED_CLOSED
+                if (abs(s.position["back_left"] - 21) > 4) and (abs(s.position["back_right"] - 21) > 4): # try to catch offset clamp
+                    s.status["back_left"] |= E_OFFSET_CLAMP
+                    s.status["back_right"] |= E_OFFSET_CLAMP
+            else: # if total doesn't add up to total throw, both failed open
+                if (s.current["back"] - s.nominal_b) < 5.6:
+                    # back brake undercurrent, shouldn't assume a fuse failure (cause could be faulty signal)
+                    # back left
+                    if abs(s.position["back_left"] - lastbl) <= 2:
+                        s.status["back_left"] |= E_ILLEGAL_MOVEMENT # brake didn't move (it's supposed to)
+                    if (s.position["back_left"] - 21) < 0:
+                        s.status["back_left"] |= E_UNCERTAIN # brake never converged, not sure what happened to it
+                    # back right
+                    if abs(s.position["back_right"] - lastbr) <= 2:
+                        s.status["back_right"] |= E_ILLEGAL_MOVEMENT # brake didn't move (it's supposed to)
+                    if (s.position["back_right"] - 21) < 0:
+                        s.status["back_right"] |= E_UNCERTAIN # brake never converged, not sure what happened to it
+                elif (s.current["back"] - s.nominal_b) > 6.4:
+                    # back brake overcurrent caught, assume both brakes dead
+                    s.status["back_left"] |= E_DESTROYED_OPEN
+                    s.status["back_right"] |= E_DESTROYED_OPEN
             
-    def selftest(s):
+    def selftest(s): # TODO
         """
         Runs a prelim test on brake system, verifies signal integrity and functionality
         """
@@ -186,9 +200,33 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
         return 0
 
 
-    def engage(s):
-        if s.status == "EXTENDED"
-           return
+    def engage(s): #TODO
+        if s.status["last_action"] == "engage"
+            return
+        s.status["last_action"] = "engage"
+
+        # resolution flags (set to True if resolved)
+        strikeoutf = False
+        strikeoutb = False
+
+        # determine functionality (set to True if dead)
+        deadf = False
+        deadb = False
+
+        # determine individual issue (set to True if issue)
+        strikefl = False
+        strikefr = False
+        strikebl = False
+        strikebr = False
+        
+        # determine convergence (set to True if converged)
+        convf = False
+        convb = False
+        
+        lastfl = 0
+        lastfr = 0
+        lastbl = 0
+        lastbr = 0
 
         # Set directionality
         hd.output(s.DFR, hd.LOW)
@@ -196,102 +234,70 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
         hd.output(s.DBR, hd.LOW)
         hd.output(s.DBL, hd.LOW)
         
-        s.pwmfl.start(90)
-        s.pwmfr.start(90)
-        s.pwmbl.start(90)
-        s.pwmbr.start(90)
+        # Set FORWARD speed
+        s.pwmfl.start(s.E_CR) # "Engage_CRuising"
+        s.pwmfr.start(s.E_CR)
+        s.pwmbl.start(s.E_CR)
+        s.pwmbr.start(s.E_CR)
 
-        time.sleep(4)
-        
-        #These values MUST increase to verify proper activation of brake actuators
-
-        #s.current["front"]
-        #s.current["back"]
-
-        #THIS MUST BE REGULATED FOR PRESSURE
-        #need a current -> pressure reading to do this
-
-        #this ends when current touches "regulated value"
-
-        s.pwmfl.stop()
-        s.pwmfr.stop()
-        s.pwmbl.stop()
-        s.pwmbr.stop()
-
-        #s.status = "EXTENDED"
-
-
-    def disengage(s):
-        brakefl = True
-        brakefr = True
-        brakebl = True
-        brakebr = True
-
-        if s.status == "RETRACTED"
-           return E_RETRACTED
-        
-        # Set directionality
-        hd.output(s.DFR, hd.HIGH)
-        hd.output(s.DFL, hd.HIGH)
-        hd.output(s.DBR, hd.HIGH)
-        hd.output(s.DBL, hd.HIGH)
-
-        # Set speed
-        s.pwmfl.start(90)
-        s.pwmfr.start(90)
-        s.pwmbl.start(90)
-        s.pwmbr.start(90)
-        
-        # This ends when pads converged
-        while True:
-            if (brakefl or brakefr) == True:
-                fcnow = s.current["front"] - s.qc_f
-                if fcnow < 1.6: #----------------------------------------------------------------------------------- Replace "1.6" with minimum expected current draw in Amperes
-                    # Brakes not pulling proper current for engagement
-                    return E_FL_UNDER
-                elif fcnow < 2: #----------------------------------------------------------------------------------- Replace "2" with maximum expected current draw in Amperes
-                    # Brakes engaging properly
-                    # Check front brake displacement
-                    disp = s.brakePosition["front_left"] - s.brakePosition["front_right"]
-                    if disp > 5:
-                        # Front left pad too fast
-                    elif disp < 5:
-                        # Front right pad too fast
-                else:
-                    # Brakes drawing more current
-                    # A pad may have converged or some other error
-                    # Check front brake position sensor for proper range
-                    if brakefl == True:
-                        if ((s.brakePosition["front_left"] - 20) > 0): #-------------------------------------------- Replace "0" with maximum tolerance for brake retraction
-                            brakefl = False
-                            s.pwmfl.stop()
-                        else:
-                            # Error on front_left: overdrawing current
+        while not (deadf and deadb) and not (convf and convb):
+            if not deadf:
+                if (s.current["front"] - s.nominal_f) > 6.4:
+                    # overcurrent, brakes converging. This wouldn't (in normal circumstances) happen unless both brakes are binding.
+                    s.pwmfl.stop()
+                    s.pwmfr.stop()
+                    convf = True
+            
+                if not strikeoutf and ((s.current["front"] - s.nominal_f) < 5.6):
+                    # undercurrent, check for failure
+                    if strikefl or strikefr:
+                        if abs(s.position["front_left"] - lastfl) > 2:
+                            strikefl = False        # false error
+                        elif abs(s.position["front_right"] - lastfr) > 2:
+                            strikefr = False        # false error
+                        if strikefl or strikefr:
                             s.pwmfl.stop()
                             s.pwmfr.stop()
-                    if brakefr == True:
-                        if ((s.brakePosition["front_right"] - 20) > 0): #------------------------------------------- Replace "0" with maximum tolerance for brake retraction
-                            brakefr = False
-                            s.pwmfr.stop()
-                        else:
-                            # Error on front_right: overdrawing current
-                            s.pwmfr.stop()
-                            s.pwmfl.stop()
+                            deadf = True
+                        strikeoutf = True       # determined error
+                    elif ((s.current["front"] - nominal_f) - 3) < .4: # current reflects one or zero brakes moving
+                        strikefl = True
+                        strikefr = True
+                        lastfl = s.position["front_left"]
+                        lastfr = s.position["front_right"]
+                    # otherwise brakes are just slow
 
-            if (s.current["back"] - s.nominal_b) < 2: #------------------------------------------------------------- Replace "2" with expected current draw in Amperes
-                # Check front brake displacement
-            else:
-                # A pad may have converged
-                # Check back brake position sensor for proper range
-                if ((s.brakePosition["back_left"] - 20) > 0) and (brakebl == True):
-                    brakebr = False
+            if not deadb:
+                if (s.current["back"] - s.nominal_b) > 6.4:
+                    # overcurrent, brakes converging.
                     s.pwmbl.stop()
-                if ((s.brakePosition["back_right"] - 20) > 0) and (brakebr == True):
-                    brakebr = False
                     s.pwmbr.stop()
+                    convb = True
+            
+                if not strikeoutb and ((current["back"] - s.nomainal_b) < 5.6):
+                    # undercurrent, check for failure
+                    if strikebl or strikebr:
+                        if abs(s.position["back_left"] - lastbl) > 2:
+                            strikebl = False        # false error
+                        elif abs(s.position["back_right"] - lastbr) > 2:
+                            strikebr = False        # false error
+                        if strikebl or strikebr:
+                            s.pwmbl.stop()
+                            s.pwmbr.stop()
+                            deadb = True
+                        strikeoutb = True       # determined error
+                    elif ((s.current["back"] - nominal_b) - 3) < .4: # current reflects one or zero brakes moving
+                        strikebl = True
+                        strikefr = True
+                        lastbl = s.position["back_left"]
+                        lastbr = s.position["back_right"]
+                    # otherwise brakes are just slow
 
-            if (brakefl or brakefr or brakebl or brakebr) == False:
-                # If deceleration is nominal, return success
-                return 0
+        # fill in errors, if any.
+        if strikeoutf: # determined an error
+        if strikeoutb: # determined an error
 
-        #s.status = "RETRACTED"
+        # (directionality already set to engage, skip this step)
+
+
+    def disengage(s): #TODO
