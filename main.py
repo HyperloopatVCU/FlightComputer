@@ -37,7 +37,10 @@ def main(root_logger):
     while True:
         user_input = input(PROMPT)
 
-        if user_input == "launch":
+        if user_input == "state":
+            print(sm.state)
+			
+		elif user_input == "launch":
 
             if input("Are you sure? [y/N]") in ("Y", "y"):
                 sm.on_event('launch')
@@ -45,7 +48,14 @@ def main(root_logger):
         elif user_input == "drift":
             sm.on_event('drift')
 
-        elif user_input == "shutdown":
+        elif user_input == "estop":
+            if input("Are you sure (Program must be restarted to recover from estop)? [y/N] ") in ("Y", "y"):
+                """ESTOP the pod"""
+                sm.on_event('estop')
+            else:
+                continue
+				
+		elif user_input == "shutdown":
             if sm.state != sm.states["cold"]:
                 root_logger.warn("[*] Program cannot exit safety currently!")
                 root_logger.warn("======> State: %s", sm.state_str[sm.state])
@@ -59,26 +69,14 @@ def main(root_logger):
             dp_thread.join()
             return
 
-        elif user_input == "estop":
-            if input("Are you sure (Program must be restarted to recover from estop)? [y/N] ") in ("Y", "y"):
-                """ESTOP the pod"""
-                sm.on_event('estop')
-            else:
-                continue
-
-        elif user_input == "state":
-            print(sm.state)
-
         else:
             print("Usage: ")
             print("[1]     help     : This menu")
             print("[2]     state    : Current State")
-            print("[3]     warm     : Warm up pod")
-            print("[4]     launch   : Launch pod with max speed")
-            print("[5]     drift    : Launch pod slowly")
-            print("[6]     estop    : Emergency stop the moving pod")
-            print("[7]     shutdown : Shutdown program")
-            print()
+            print("[3]     launch   : Launch pod with max speed")
+            print("[4]     drift    : Launch pod slowly")
+            print("[5]     estop    : Emergency stop the moving pod")
+            print("[6]     shutdown : Shutdown program")
 
 
 if __name__ == "__main__":
