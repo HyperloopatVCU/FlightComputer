@@ -87,40 +87,37 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
 #------------------------------------------------------------------------------#
     
     def _rankposition(s):
-        s.status[FL] = 0
-        s.status[FR] = 0
-        s.status[BL] = 0
-        s.status[BR] = 0
+        s.status[_BR] = s.status[_BL] = s.status[_FR] = s.status[_FL] = 0
 
         p = copy.deepcopy(s.position)
-        pfront = (p[FL] + p[FR]) / 2
-        pback = (p[BL] + p[BR]) / 2
+        pfront = (p[_FL] + p[_FR]) / 2
+        pback = (p[_BL] + p[_BR]) / 2
 
-        if ((p[FL] + p[FR]) - 42) >= 0:
+        if ((p[_FL] + p[_FR]) - 42) >= 0:
             s.status[_FF] |= CLOSED
         else:
             s.status[_FF] |= OPEN
         
-        if abs(p[FL] - p[FR]) > 3:
-            if p[FL] > p[FR]:
-                s.status[FL] |= AHEAD
-                s.status[FR] |= BEHIND
+        if abs(p[_FL] - p[_FR]) > 3:
+            if p[_FL] > p[_FR]:
+                s.status[_FL] |= AHEAD
+                s.status[_FR] |= BEHIND
             else:
-                s.status[FL] |= BEHIND
-                s.status[FR] |= AHEAD
+                s.status[_FL] |= BEHIND
+                s.status[_FR] |= AHEAD
 
-        if ((p[BL] + p[BR]) - 42) >= 0:
+        if ((p[_BL] + p[_BR]) - 42) >= 0:
             s.status[_BB] |= CLOSED
         else:
             s.status[_BB] |= OPEN
 
-        if abs(p[BL] - p[BR]) > 3:
-            if p[BL] > p[BR]:
-                s.status[BL] |= AHEAD
-                s.status[BR] |= BEHIND
+        if abs(p[_BL] - p[_BR]) > 3:
+            if p[_BL] > p[_BR]:
+                s.status[_BL] |= AHEAD
+                s.status[_BR] |= BEHIND
             else:
-                s.status[BL] |= BEHIND
-                s.status[BR] |= AHEAD
+                s.status[_BL] |= BEHIND
+                s.status[_BR] |= AHEAD
 
         if abs(pfront + pback) > 3:
             if pfront > pback:
@@ -162,10 +159,7 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
         hd.output(s.DBL, hd.LOW)
         hd.output(s.DBR, hd.LOW)
 
-        s.error[_FL] = 0
-        s.error[_FR] = 0
-        s.error[_BL] = 0
-        s.error[_BR] = 0
+        s.error[_BR] = s.error[_BL] = s.error[_FR] = s.error[_FL] = 0
 
         move = True
 
@@ -266,28 +260,16 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
             return
         s.status["last_action"] = "engage"
 
-        # resolution flags (set to True if resolved)
-        strikeoutf = False
-        strikeoutb = False
-
         # determine functionality (set to True if dead)
-        deadf = False
-        deadb = False
+        deadb = deadf = False
 
-        # determine individual issue (set to True if issue)
-        strikefl = False
-        strikefr = False
-        strikebl = False
-        strikebr = False
+        # flag (used for sync)
+        fbr = fbl = ffr = ffl = 0
         
         # determine convergence (set to True if converged)
-        convf = False
-        convb = False
+        convb = convf = False
         
-        lastfl = 0
-        lastfr = 0
-        lastbl = 0
-        lastbr = 0
+        speedbr = speedbl = speedfr = speedfl = s.E_CR # "Engage_CRuising"
 
         # Set directionality
         hd.output(s.DFR, hd.LOW)
@@ -296,75 +278,116 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
         hd.output(s.DBL, hd.LOW)
         
         # Set FORWARD speed
-        s.pwmfl.start(s.E_CR) # "Engage_CRuising"
-        s.pwmfr.start(s.E_CR)
-        s.pwmbl.start(s.E_CR)
-        s.pwmbr.start(s.E_CR)
+        s.pwmfl.start(speedfl)
+        s.pwmfr.start(speedfr)
+        s.pwmbl.start(speedbl)
+        s.pwmbr.start(speedbr)
 
-        while not (deadf and deadb) and not (convf and convb):
-            if not deadf:
-                if (s.current["front"] - s.nominal_f) > 6.4:
-                    # overcurrent, brakes converging. This wouldn't (in normal circumstances) happen unless both brakes are binding.
+        while not ((convf or deadf) and (convb or deadb)):
+            time.sleep(0.005) #------------------------------------------------------------------------------------- Replace "0.005" with approx. time of one sensor reading
+            _rankposition()
+            if not (convf or deadf) and ((s.status[_FF] & CLOSED) or ((s.current[_FF] - s.nominal_f) > 6.4)):
+                # overcurrent, brakes converging. This wouldn't (in normal circumstances) happen unless both brakes are binding.
+                s.pwmfl.stop()
+                s.pwmfr.stop()
+                convf = True
+
+            if not (convb or deadb) and ((s.status[_BB] & CLOSED) or ((s.current[_BB] - s.nominal_b) > 6.4)):
+                s.pwmbl.stop()
+                s.pwmbr.stop()
+                convb = True
+
+            if not (convf or deadf) and (s.status[_FL] & (AHEAD | BEHIND)):
+                # make sure current is nominal
+                if ((s.current[_FF] - s.nominal_f) - 3) < 1: # current reflects one or zero brakes moving
                     s.pwmfl.stop()
                     s.pwmfr.stop()
-                    convf = True
-            
-                if not strikeoutf and ((s.current["front"] - s.nominal_f) < 5.6):
-                    # undercurrent, check for failure
-                    if strikefl or strikefr:
-                        if abs(s.position["front_left"] - lastfl) > 2:
-                            strikefl = False        # false error
-                        elif abs(s.position["front_right"] - lastfr) > 2:
-                            strikefr = False        # false error
-                        if strikefl or strikefr:
-                            s.pwmfl.stop()
-                            s.pwmfr.stop()
-                            deadf = True
-                        strikeoutf = True       # determined error
-                    elif ((s.current["front"] - nominal_f) - 3) < .4: # current reflects one or zero brakes moving
-                        strikefl = True
-                        strikefr = True
-                        lastfl = s.position["front_left"]
-                        lastfr = s.position["front_right"]
-                    # otherwise brakes are just slow
+                    deadf = True
+                else: # current should be nominal
+                    if s.status[_FL] & AHEAD:
+                        # take one from FL, add 2 to FR, flag FR
+                        ffr++
+                        s.pwmfl.start(--speedfl)
+                        s.pwmfr.start((speedfr += 2))
+                    else:
+                        # take one from FR, add 2 to FL, flag FL
+                        ffl++
+                        s.pwmfl.start((speedfl += 2))
+                        s.pwmfr.start(--speedfr)
+            else: # do magic to sync the speeds or whatever
+                if ffl:
+                    s.pwmfl.start((speedfl -= (2 * ffl) -1))
+                    s.pwmfr.start((speedfr += ffl))
+                    ffl = 0
+                if ffr:
+                    s.pwmfl.start((speedfl += ffr))
+                    s.pwmfr.start((speedfr -= (2 * ffr) -1))
+                    ffr = 0
 
-            if not deadb:
-                if (s.current["back"] - s.nominal_b) > 6.4:
-                    # overcurrent, brakes converging.
+            if not (convb or deadb) and (s.status[_BL] & (AHEAD | BEHIND)):
+                if ((s.current[_BB] - nominal_b) - 3) < 1:
                     s.pwmbl.stop()
                     s.pwmbr.stop()
-                    convb = True
+                    deadb = True
+                else:
+                    if s.status[_BL] & AHEAD:
+                        fbr++
+                        s.pwmbl.start(--speedbl)
+                        s.pwmbr.start((speedbr += 2))
+                    else:
+                        fbl++
+                        s.pwmbl.start((speedbl += 2))
+                        s.pwmbr.start(--speedbr)
+            else:
+                if fbl:
+                    s.pwmbl.start((speedbl -= (2 * fbl) -1))
+                    s.pwmbr.start((speedbr += fbl))
+                    fbl = 0
+                if fbr:
+                    s.pwmbl.start((speedbl += fbr))
+                    s.pwmbr.start((speedbr -= (2 * fbr) -1))
+                    fbr = 0
+
+            if (ffl == ffr) and ffl:
+                s.pwmfl.start((speedfl = s.E_CR))
+                s.pwmfr.start((speedfr = s.E_CR))
+                ffr = ffl = 0
+
+            if (fbl == fbr) and fbl:
+                s.pwmbl.start((speedbl = s.E_CR))
+                s.pwmbr.start((speedbr = s.E_CR))
+                fbr = fbl = 0
             
-                if not strikeoutb and ((current["back"] - s.nomainal_b) < 5.6):
-                    # undercurrent, check for failure
-                    if strikebl or strikebr:
-                        if abs(s.position["back_left"] - lastbl) > 2:
-                            strikebl = False        # false error
-                        elif abs(s.position["back_right"] - lastbr) > 2:
-                            strikebr = False        # false error
-                        if strikebl or strikebr:
-                            s.pwmbl.stop()
-                            s.pwmbr.stop()
-                            deadb = True
-                        strikeoutb = True       # determined error
-                    elif ((s.current["back"] - nominal_b) - 3) < .4: # current reflects one or zero brakes moving
-                        strikebl = True
-                        strikefr = True
-                        lastbl = s.position["back_left"]
-                        lastbr = s.position["back_right"]
-                    # otherwise brakes are just slow
-
         # fill in errors, if any.
-        if strikeoutf: # determined an error
-            if deadf: # assume destroyed
-                if ((s.position["front_left"] + s.position["front_right"]) - 42) >= 0:
-                    s.status["front_left"] |= E_DESTROYED_CLOSED # assume fuse fails (that's what this function is designed to do)
-                    s.status["front_right"] |= E_DESTROYED_CLOSED
-                    if (abs(s.position["front_left"] - 21) > 4) and (abs(s.position["front_right"] - 21) > 4): # try to catch offset clamp
-                        s.status["front_left"] |= E_OFFSET_CLAMP
-                        s.status["front_right"] |= E_OFFSET_CLAMP
+        if deadf: # assume destroyed
+            if s.status[_FF] & CLOSED:
+                s.error[_FL] |= E_DESTROYED_CLOSED # assume fuse fails (that's what this function is designed to do)
+                s.error[_FR] |= E_DESTROYED_CLOSED
+                if s.status[_FR] & (AHEAD | BEHIND): # try to catch offset clamp
+                    s.status[_FL] |= E_OFFSET_CLAMP
+                    s.status[_FR] |= E_OFFSET_CLAMP
+            elif s.status[_FF] & OPEN:
+                s.error[_FL] |= E_DESTROYED_OPEN
+                s.error[_FR] |= E_DESTROYED_OPEN
+        
+        if s.status[_FF] & OPEN:
+            s.error[_FL] |= E_EARLY_CONVERGENCE
+            s.error[_FR] |= E_EARLY_CONVERGENCE
 
-        if strikeoutb: # determined an error
+        if deadb: # assume destroyed
+            if s.status[_BB] & CLOSED:
+                s.error[_BL] |= E_DESTROYED_CLOSED # assume fuse fails (that's what this function is designed to do)
+                s.error[_BR] |= E_DESTROYED_CLOSED
+                if s.status[_BR] & (AHEAD | BEHIND): # try to catch offset clamp
+                    s.status[_BL] |= E_OFFSET_CLAMP
+                    s.status[_BR] |= E_OFFSET_CLAMP
+            elif s.status[_BB] & OPEN:
+                s.error[_BL] |= E_DESTROYED_OPEN
+                s.error[_BR] |= E_DESTROYED_OPEN
+        
+        if s.status[_BB] & OPEN:
+            s.error[_BL] |= E_EARLY_CONVERGENCE
+            s.error[_BR] |= E_EARLY_CONVERGENCE
 
         # (directionality already set to engage, skip this step)
 
