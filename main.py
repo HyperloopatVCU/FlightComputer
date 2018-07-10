@@ -40,7 +40,7 @@ def main(root_logger):
         if user_input == "state":
             print(sm.state)
 			
-		elif user_input == "launch":
+        elif user_input == "launch":
 
             if input("Are you sure? [y/N]") in ("Y", "y"):
                 sm.on_event('launch')
@@ -55,10 +55,10 @@ def main(root_logger):
             else:
                 continue
 				
-		elif user_input == "shutdown":
-            if sm.state != sm.states["cold"]:
+        elif user_input == "shutdown":
+            if sm.state != "Pre_Opeartional":
                 root_logger.warn("[*] Program cannot exit safety currently!")
-                root_logger.warn("======> State: %s", sm.state_str[sm.state])
+                root_logger.warn("======> State: %s", sm.state)
                 continue
 
             tcp.close()

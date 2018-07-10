@@ -21,6 +21,7 @@ class Data_Processing(object):
         """
         Do the averaging and deviation checking in this function
         """
+
 		sum_of_diffs = 0
 		mean_of_diffs = 0
 		new_sum = 0
@@ -346,7 +347,3 @@ class Data_Processing(object):
 			
 		nominal_mean_hps_pos = new_sum / sum_count
 		
-		
-		
-		
-        pass
