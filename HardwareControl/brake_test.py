@@ -23,10 +23,11 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
     _SAFETY = 5
 
     # PWM duty cycles
-    _E_JS = 70 # TODO
-    _E_CR = 90
-    _D_JS = 30 # TODO
-    _D_CR = 10 # TODO
+    _DD = 33 # max reverse
+    _D = 45
+    _EE = 66 # max forward
+    _E = 55
+    _F = 50 # deadzone middle ( extends for [+-]1 )
 
     # id definitions
     _FF = "front"
@@ -36,11 +37,14 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
     _BL = "back_left"
     _BR = "back_right"
 
-    # status definitions (individual)
+    # status definitions
     UNKNOWN = 0
     AHEAD = 1
     BEHIND = 2
-    # status definitions (couplet)
+    # individual status definitions (_FL, _FR, _BL, _BR)
+    EXTENDED = 4
+    RETRACTED = 8
+    # system status definitions (_FF, _BB)
     CLOSED = 4
     OPEN = 8
 
@@ -76,10 +80,10 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
         hd.setup(s._DBL, hd.OUT)
         hd.setup(s._SAFETY, hd.OUT)
 
-        s._pwmfr = hd.pwm(s._PFR, 490) # 490 Hz to match Arduino Mega 2560
-        s._pwmfl = hd.pwm(s._PFL, 490)
-        s._pwmbr = hd.pwm(s._PBR, 490)
-        s._pwmbl = hd.pwm(s._PBL, 490)
+        s._pwmfr = hd.pwm(s._PFR, 333) # 333 Hz beacuse I did the math
+        s._pwmfl = hd.pwm(s._PFL, 333)
+        s._pwmbr = hd.pwm(s._PBR, 333)
+        s._pwmbl = hd.pwm(s._PBL, 333)
         
         # Calculate quiescent sensor values
         s.nominal_f = s.current[_FF]
@@ -100,6 +104,16 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
             s.status[_FF] |= CLOSED
         else:
             s.status[_FF] |= OPEN
+
+        if (p[_FL] - 21) > 0:
+            s.status[_FL] |= EXTENDED
+        elif p[_FL] < 3:
+            s.status[_FL] |= STOWED
+        
+        if (p[_FR] - 21) > 0:
+            s.status[_FR] |= EXTENDED
+        elif p[_FR] < 3:
+            s.status[_FR] |= STOWED
         
         if abs(p[_FL] - p[_FR]) > 3:
             if p[_FL] > p[_FR]:
@@ -113,6 +127,16 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
             s.status[_BB] |= CLOSED
         else:
             s.status[_BB] |= OPEN
+
+        if (p[_BL] - 21) > 0:
+            s.status[_BL] |= EXTENDED
+        elif p[_BL] < 3:
+            s.status[_BL] |= STOWED
+        
+        if (p[_BR] - 21) > 0:
+            s.status[_BR] |= EXTENDED
+        elif p[_BR] < 3:
+            s.status[_BR] |= STOWED
 
         if abs(p[_BL] - p[_BR]) > 3:
             if p[_BL] > p[_BR]:
@@ -258,7 +282,7 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
 
 #------------------------------------------------------------------------------#
     
-    def engage(s): #TODO
+    def engage(s):
         if s.status["last_action"] == "engage"
             return
         s.status["last_action"] = "engage"
@@ -272,7 +296,7 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
         # determine convergence (set to True if converged)
         convb = convf = False
         
-        speedbr = speedbl = speedfr = speedfl = s._E_CR # "Engage_CRuising"
+        speedbr = speedbl = speedfr = speedfl = s._E # "Engage"
 
         # Set directionality
         hd.output(s._DFR, hd.LOW)
@@ -333,11 +357,11 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
                     s._pwmbr.stop()
                     deadb = True
                 else:
-                    if s.status[_BL] & AHEAD:
+                    if (s.status[_BL] & AHEAD) and (speedbr <= _EE) and (speedbl > (_F + 1)): # bounds-check
                         fbr++
                         s._pwmbl.start(--speedbl)
                         s._pwmbr.start((speedbr += 2))
-                    else:
+                    elif (speedbl <= _EE) and (speedbr > (_F + 1)): # also bounds-check
                         fbl++
                         s._pwmbl.start((speedbl += 2))
                         s._pwmbr.start(--speedbr)
@@ -397,3 +421,86 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
 #------------------------------------------------------------------------------#
 
     def disengage(s): #TODO
+        if s.status["last_action"] == "disengage"
+            return
+        s.status["last_action"] = "disengage"
+
+        deadb = deadf = False
+        convb = convf = False
+        speedbr = speedbl = speedfr = speedfl = s._D # "Disengage"
+
+        # Set directionality
+        hd.output(s._DFR, hd.HIGH)
+        hd.output(s._DFL, hd.HIGH)
+        hd.output(s._DBR, hd.HIGH)
+        hd.output(s._DBL, hd.HIGH)
+        
+        # Set BACKWARD speed
+        s._pwmfl.start(speedfl)
+        s._pwmfr.start(speedfr)
+        s._pwmbl.start(speedbl)
+        s._pwmbr.start(speedbr)
+
+        while not ((convf or deadf) and (convb or deadb)): # loop until all brake currents reading zero (we don't care about keeping them level)
+            time.sleep(0.005) #------------------------------------------------------------------------------------- Replace "0.005" with approx. time of one sensor reading
+            if not (convf or deadf):
+                if (s.current[_FF] - s.nominal_f) > 5.6:
+                    s._pwmfl.stop()
+                    s._pwmfr.stop()
+                    deadf = True
+                elif (s.current[_FF] - s.nominal_f) < 0.1:
+                    s._pwmfl.stop()
+                    s._pwmfr.stop()
+                    convf = True
+            if not (convb or deadb):
+                if (s.current[_FF] - s.nominal_f) > 5.6:
+                    s._pwmbl.stop()
+                    s._pwmbr.stop()
+                    deadf = True
+                elif (s.current[_BB] - s.nominal_b) < 0.1:
+                    s._pwmbl.stop()
+                    s._pwmbr.stop()
+                    convb = True
+        
+        _rankposition() # update position ranking
+
+        # fill in errors, if any.
+        if deadf: # these will only show in the case of an overcurrent (as a result of binding, perhaps)
+            if s.status[_FL] & EXTENDED:
+                s.status[_FL] |= E_DESTROYED_CLOSED
+            else:
+                s.status[_FL] |= E_DESTROYED_OPEN
+
+            if s.status[_FR] & EXTENDED:
+                s.status[_FR] |= E_DESTROYED_CLOSED
+            else:
+                s.status[_FR] |= E_DESTROYED_OPEN
+
+        if deadb:
+            if s.status[_BL] & EXTENDED:
+                s.status[_BL] |= E_DESTROYED_CLOSED
+            else:
+                s.status[_BL] |= E_DESTROYED_OPEN
+
+            if s.status[_BR] & EXTENDED:
+                s.status[_BR] |= E_DESTROYED_CLOSED
+            else:
+                s.status[_BR] |= E_DESTROYED_OPEN
+
+        # be wary of this error, it may also mean that the brake failed open due to a faulty circuit
+        if not (s.status[_FL] & RETRACTED):
+            s.status[_FL] |= E_EARLY_CONVERGENCE
+        if not (s.status[_FR] & RETRACTED):
+            s.status[_FR] |= E_EARLY_CONVERGENCE
+
+        if not (s.status[_BL] & RETRACTED):
+            s.status[_BL] |= E_EARLY_CONVERGENCE
+        if not (s.status[_BR] & RETRACTED):
+            s.status[_BR] |= E_EARLY_CONVERGENCE
+        
+        # set directionality to engage (for safety)
+
+        hd.output(s._DFR, hd.LOW)
+        hd.output(s._DFL, hd.LOW)
+        hd.output(s._DBR, hd.LOW)
+        hd.output(s._DBL, hd.LOW)
