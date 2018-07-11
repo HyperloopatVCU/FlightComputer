@@ -1,7 +1,21 @@
 import logging
+import fnmatch #### supporting libraries
+import os
+import re
+import sys
+
+try:
+    import RPi.GPIO as gpio
+    import spidev #### This library needs to be installed and the SPI device enabled. (add "dtparam=spi=on" to /boot/config.txt)
+except RuntimeError:
+    print("Did you run this on the RPi as root?")
+    sys.exit(1)
+
 from PCANBasic import *
 
 class Motor(object):
+
+    _SAFETY = 25
 
     # init is a method/function that runs before anything else runs. So we are using it to declare methods
     # that are needed in a chronological order.
@@ -10,13 +24,36 @@ class Motor(object):
         self.InitializeBasicComponents()
         self.InitializeConnection()
 
+        # initialize raw gpio line
+        gpio.setup(self.SAFETY, gpio.OUT)
+
+        # initialize new SPI object
+        self.spi = spidev.SpiDev()
+        self.spi.bits_per_word = 8
+
+        # attempt to find device parameters (if this doesn't work out, replace with manual initialization)
+        self.spidevname = ""
+        for file in os.listdir("/dev/"):
+            if fnmatch.fnmatch(file, "spidev*"):
+                self.spidevname = file
+                break
+        if len(self.spidevname) < 10:
+            raise FileNotFoundError("cannot find spidev device in '/dev/' (bad search query, perhaps?)")
+        else:
+            match = re.search(r"(?P<X>\d+)[.](?P<Y>\d+)", self.spidevname)
+            if not match:
+                raise ValueError("cannot parse spidev device name (bad regex, perhaps?)")
+            else:
+                # open spi device with found parameters
+                self.spi.open(int(match.group('X')), int(match.group('Y')))
+
     def InitializeBasicComponents(self):
         self.m_objPCANBasic = PCANBasic()
 
         self.m_IDTXT = StringVar(value="000")
         self.m_LengthNUD = StringVar(value="8")
         self.slip_frequency = 0
--       self.temperature = 0
+        self.temperature = 0
 
         # This is used to make sure that default channel is undefined before/after use.
         self.m_PcanHandle = PCAN_NONEBUS
@@ -105,6 +142,25 @@ class Motor(object):
     def idle(self):
         self.logger.debug("[*] Motor Idle")
 
+#**************************************************************************************************************#
+    # Supporting Functions
+    
+    """
+    Throttle back-end
+    """
+    def _setThrottle(self, percent):
+        val = int(255 * percent)
+        spi.writebytes([val])
+        return percent * 12 # return expected voltage at wiper position
+
+    """
+    Keyswitch back-end
+    """
+    def _safety(self, safe):
+        if safe:
+            gpio.output(self._SAFETY, gpio.HIGH)
+        else:
+            gpio.output(self._SAFETY, gpio.LOW)
 
 #**************************************************************************************************************#
     # Error Handlers

@@ -10,21 +10,23 @@ except RuntimeError:
 
 class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE HEALTH MONITOR
     # pin definitions
-    DFR = 6
-    DFL = 13
-    DBR = 19
-    DBL = 26
+    _DFR = 6
+    _DFL = 12
+    _DBR = 13
+    _DBL = 19
     
-    PFR = 12
-    PFL = 16
-    PBR = 20
-    PBL = 21
+    _PFR = 16
+    _PFL = 26
+    _PBR = 20
+    _PBL = 21
+
+    _SAFETY = 5
 
     # PWM duty cycles
-    E_JS = 70 # TODO
-    E_CR = 90
-    D_JS = 30 # TODO
-    D_CR = 10 # TODO
+    _E_JS = 70 # TODO
+    _E_CR = 90
+    _D_JS = 30 # TODO
+    _D_CR = 10 # TODO
 
     # id definitions
     _FF = "front"
@@ -68,15 +70,16 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
         s.position = pd.position
 
         # Setup pin positions
-        hd.setup(s.DFR, hd.OUT)
-        hd.setup(s.DFL, hd.OUT)
-        hd.setup(s.DBR, hd.OUT)
-        hd.setup(s.DBL, hd.OUT)
-        
-        s.pwmfr = hd.pwm(s.PFR, 490)
-        s.pwmfl = hd.pwm(s.PFL, 490)
-        s.pwmbr = hd.pwm(s.PBR, 490)
-        s.pwmbl = hd.pwm(s.PBL, 490)
+        hd.setup(s._DFR, hd.OUT)
+        hd.setup(s._DFL, hd.OUT)
+        hd.setup(s._DBR, hd.OUT)
+        hd.setup(s._DBL, hd.OUT)
+        hd.setup(s._SAFETY, hd.OUT)
+
+        s._pwmfr = hd.pwm(s._PFR, 490) # 490 Hz to match Arduino Mega 2560
+        s._pwmfl = hd.pwm(s._PFL, 490)
+        s._pwmbr = hd.pwm(s._PBR, 490)
+        s._pwmbl = hd.pwm(s._PBL, 490)
         
         # Calculate quiescent sensor values
         s.nominal_f = s.current[_FF]
@@ -149,15 +152,15 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
         Also resets directionality and speed
         """
         #reset directionality and speed
-        s.pwmfl.stop()
-        s.pwmfr.stop()
-        s.pwmbl.stop()
-        s.pwmbr.stop()
+        s._pwmfl.stop()
+        s._pwmfr.stop()
+        s._pwmbl.stop()
+        s._pwmbr.stop()
 
-        hd.output(s.DFL, hd.LOW)
-        hd.output(s.DFR, hd.LOW)
-        hd.output(s.DBL, hd.LOW)
-        hd.output(s.DBR, hd.LOW)
+        hd.output(s._DFL, hd.LOW)
+        hd.output(s._DFR, hd.LOW)
+        hd.output(s._DBL, hd.LOW)
+        hd.output(s._DBR, hd.LOW)
 
         s.error[_BR] = s.error[_BL] = s.error[_FR] = s.error[_FL] = 0
 
@@ -167,7 +170,7 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
             # engage safety line
             s.error["last_action"] = "engage_safety"
             move = False
-            hd.output(s.SAFETY, hd.HIGH)
+            hd.output(s._SAFETY, hd.HIGH)
         else:
             # disengage safety line
             # !!!!!! THIS IS DESIGNED TO DESTROY BRAKE FUNCTIONALITY FOR THE REST OF THE RUN !!!!!!
@@ -175,7 +178,7 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
             # !!!!!! THIS IS DESIGNED TO DESTROY BRAKE FUNCTIONALITY FOR THE REST OF THE RUN !!!!!!
             # !!!!!! THIS IS DESIGNED TO DESTROY BRAKE FUNCTIONALITY FOR THE REST OF THE RUN !!!!!!
             s.error["last_action"] = "disengage_safety"
-            hd.output(s.SAFETY, hd.HIGH)
+            hd.output(s._SAFETY, hd.LOW)
 
         lastfl = s.position[_FL]
         lastfr = s.position[_FR]
@@ -269,93 +272,93 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
         # determine convergence (set to True if converged)
         convb = convf = False
         
-        speedbr = speedbl = speedfr = speedfl = s.E_CR # "Engage_CRuising"
+        speedbr = speedbl = speedfr = speedfl = s._E_CR # "Engage_CRuising"
 
         # Set directionality
-        hd.output(s.DFR, hd.LOW)
-        hd.output(s.DFL, hd.LOW)
-        hd.output(s.DBR, hd.LOW)
-        hd.output(s.DBL, hd.LOW)
+        hd.output(s._DFR, hd.LOW)
+        hd.output(s._DFL, hd.LOW)
+        hd.output(s._DBR, hd.LOW)
+        hd.output(s._DBL, hd.LOW)
         
         # Set FORWARD speed
-        s.pwmfl.start(speedfl)
-        s.pwmfr.start(speedfr)
-        s.pwmbl.start(speedbl)
-        s.pwmbr.start(speedbr)
+        s._pwmfl.start(speedfl)
+        s._pwmfr.start(speedfr)
+        s._pwmbl.start(speedbl)
+        s._pwmbr.start(speedbr)
 
         while not ((convf or deadf) and (convb or deadb)):
             time.sleep(0.005) #------------------------------------------------------------------------------------- Replace "0.005" with approx. time of one sensor reading
             _rankposition()
             if not (convf or deadf) and ((s.status[_FF] & CLOSED) or ((s.current[_FF] - s.nominal_f) > 6.4)):
                 # overcurrent, brakes converging. This wouldn't (in normal circumstances) happen unless both brakes are binding.
-                s.pwmfl.stop()
-                s.pwmfr.stop()
+                s._pwmfl.stop()
+                s._pwmfr.stop()
                 convf = True
 
             if not (convb or deadb) and ((s.status[_BB] & CLOSED) or ((s.current[_BB] - s.nominal_b) > 6.4)):
-                s.pwmbl.stop()
-                s.pwmbr.stop()
+                s._pwmbl.stop()
+                s._pwmbr.stop()
                 convb = True
 
             if not (convf or deadf) and (s.status[_FL] & (AHEAD | BEHIND)):
                 # make sure current is nominal
                 if ((s.current[_FF] - s.nominal_f) - 3) < 1: # current reflects one or zero brakes moving
-                    s.pwmfl.stop()
-                    s.pwmfr.stop()
+                    s._pwmfl.stop()
+                    s._pwmfr.stop()
                     deadf = True
                 else: # current should be nominal
                     if s.status[_FL] & AHEAD:
                         # take one from FL, add 2 to FR, flag FR
                         ffr++
-                        s.pwmfl.start(--speedfl)
-                        s.pwmfr.start((speedfr += 2))
+                        s._pwmfl.start(--speedfl)
+                        s._pwmfr.start((speedfr += 2))
                     else:
                         # take one from FR, add 2 to FL, flag FL
                         ffl++
-                        s.pwmfl.start((speedfl += 2))
-                        s.pwmfr.start(--speedfr)
+                        s._pwmfl.start((speedfl += 2))
+                        s._pwmfr.start(--speedfr)
             else: # do magic to sync the speeds or whatever
                 if ffl:
-                    s.pwmfl.start((speedfl -= (2 * ffl) -1))
-                    s.pwmfr.start((speedfr += ffl))
+                    s._pwmfl.start((speedfl -= (2 * ffl) -1))
+                    s._pwmfr.start((speedfr += ffl))
                     ffl = 0
                 if ffr:
-                    s.pwmfl.start((speedfl += ffr))
-                    s.pwmfr.start((speedfr -= (2 * ffr) -1))
+                    s._pwmfl.start((speedfl += ffr))
+                    s._pwmfr.start((speedfr -= (2 * ffr) -1))
                     ffr = 0
 
             if not (convb or deadb) and (s.status[_BL] & (AHEAD | BEHIND)):
                 if ((s.current[_BB] - nominal_b) - 3) < 1:
-                    s.pwmbl.stop()
-                    s.pwmbr.stop()
+                    s._pwmbl.stop()
+                    s._pwmbr.stop()
                     deadb = True
                 else:
                     if s.status[_BL] & AHEAD:
                         fbr++
-                        s.pwmbl.start(--speedbl)
-                        s.pwmbr.start((speedbr += 2))
+                        s._pwmbl.start(--speedbl)
+                        s._pwmbr.start((speedbr += 2))
                     else:
                         fbl++
-                        s.pwmbl.start((speedbl += 2))
-                        s.pwmbr.start(--speedbr)
+                        s._pwmbl.start((speedbl += 2))
+                        s._pwmbr.start(--speedbr)
             else:
                 if fbl:
-                    s.pwmbl.start((speedbl -= (2 * fbl) -1))
-                    s.pwmbr.start((speedbr += fbl))
+                    s._pwmbl.start((speedbl -= (2 * fbl) -1))
+                    s._pwmbr.start((speedbr += fbl))
                     fbl = 0
                 if fbr:
-                    s.pwmbl.start((speedbl += fbr))
-                    s.pwmbr.start((speedbr -= (2 * fbr) -1))
+                    s._pwmbl.start((speedbl += fbr))
+                    s._pwmbr.start((speedbr -= (2 * fbr) -1))
                     fbr = 0
 
             if (ffl == ffr) and ffl:
-                s.pwmfl.start((speedfl = s.E_CR))
-                s.pwmfr.start((speedfr = s.E_CR))
+                s._pwmfl.start((speedfl = s.E_CR))
+                s._pwmfr.start((speedfr = s.E_CR))
                 ffr = ffl = 0
 
             if (fbl == fbr) and fbl:
-                s.pwmbl.start((speedbl = s.E_CR))
-                s.pwmbr.start((speedbr = s.E_CR))
+                s._pwmbl.start((speedbl = s.E_CR))
+                s._pwmbr.start((speedbr = s.E_CR))
                 fbr = fbl = 0
             
         # fill in errors, if any.
@@ -374,11 +377,11 @@ class Brakes(object): # ALWAYS RUN THESE FUNCTIONS ON A SEPARATE THREAD THAN THE
             s.error[_FL] |= E_EARLY_CONVERGENCE
             s.error[_FR] |= E_EARLY_CONVERGENCE
 
-        if deadb: # assume destroyed
+        if deadb:
             if s.status[_BB] & CLOSED:
-                s.error[_BL] |= E_DESTROYED_CLOSED # assume fuse fails (that's what this function is designed to do)
+                s.error[_BL] |= E_DESTROYED_CLOSED
                 s.error[_BR] |= E_DESTROYED_CLOSED
-                if s.status[_BR] & (AHEAD | BEHIND): # try to catch offset clamp
+                if s.status[_BR] & (AHEAD | BEHIND):
                     s.status[_BL] |= E_OFFSET_CLAMP
                     s.status[_BR] |= E_OFFSET_CLAMP
             elif s.status[_BB] & OPEN:
