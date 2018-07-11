@@ -41,43 +41,11 @@ class HealthMonitor(object):
             return
 
         elif sm.state == "Operational":
-            # Add checks for operational
+            # TODO: If the pod is clear to launch
+            # sm.on_event('launch-clear')
             return
 
         elif sm.state == "Accelerating":
-            """
-            1.)
-                Compare sensor values from each queue in the tcpserver.py
-                module. If one sensor is a certain deviation away from all the
-                rest or there is an error marked by the microcontroller on the
-                packet then discard it.
-
-            2.) 
-                If a critical sensor has been discarded then stop the pod
-
-            3.) 
-                Average all the non-discarded sensor values and update the
-                global Pod class in the pod_structure.py module. 
-            """
-
-            try:
-                # Check to make sure none of the sensors have stopped sending data
-                packet1 = self.comm.controller1.get(timeout=self.timeout)
-                packet2 = self.comm.controller2.get(timeout=self.timeout)
-                packet3 = self.comm.controller3.get(timeout=self.timeout)
-                packet4 = self.comm.controller4.get(timeout=self.timeout)
-                packet5 = self.comm.controller5.get(timeout=self.timeout)
-            except: # queue.Empty exception
-                self.logger.critical("[+] Microcontroller timed out!")
-                self.sm.on_event('estop')
-                return
-
-
-            # System checks (Parameters to this are going to be the packets)
-            HPS_check(packet1, packet2, packet3, packet4)
-            VPS_check(packet1, packet2, packet3, packet4)
-            IMU_check(packet1, packet2, packet3, packet4)
-            BMS_check(packet5)
 
             # Temperature Checks (Parameters not correct yet)
             battery_temp_check(battery_temperature)
@@ -97,6 +65,7 @@ class HealthMonitor(object):
             return
 
         elif sm.state == "Decelerating":
+            # Add checks for decelerating
             return
 
         elif sm.state == "Stop":
@@ -104,6 +73,7 @@ class HealthMonitor(object):
             return
 
         elif sm.state == "Estop":
+            # Add checks for estopping (If we need any)
             return
 
         else:

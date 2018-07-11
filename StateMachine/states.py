@@ -50,6 +50,9 @@ class Accelerating(State):
 
         if event == 'motor-disengage':
             return Decelerating(self.controllers)
+        elif event == 'brakes-engage':
+            # TODO: blow the fuse
+            return Estop()
         else:
             return Estop(self.controllers)
 

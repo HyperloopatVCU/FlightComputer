@@ -22,6 +22,25 @@ class Data_Processing(object):
         Do the averaging and deviation checking in this function
         """
 
+		try:
+			# Check to make sure none of the sensors have stopped sending data
+			packet1 = self.comm.controller1.get(timeout=self.timeout)
+			packet2 = self.comm.controller2.get(timeout=self.timeout)
+			packet3 = self.comm.controller3.get(timeout=self.timeout)
+			packet4 = self.comm.controller4.get(timeout=self.timeout)
+			packet5 = self.comm.controller5.get(timeout=self.timeout)
+		except: # queue.Empty exception
+			self.logger.critical("[+] Microcontroller timed out!")
+			self.sm.on_event('estop')
+			return
+
+
+		# System checks (Parameters to this are going to be the packets)
+		HPS_check(packet1, packet2, packet3, packet4)
+		VPS_check(packet1, packet2, packet3, packet4)
+		IMU_check(packet1, packet2, packet3, packet4)
+		BMS_check(packet5)
+
 		sum_of_diffs = 0
 		mean_of_diffs = 0
 		new_sum = 0
