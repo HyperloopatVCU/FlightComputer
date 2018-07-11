@@ -196,7 +196,7 @@ class Data_Processing(object):
 		mean_of_diffs = sum_of_diffs / 4
 		standard_dev_imu_speed = sqrt(mean_of_diffs)
 		
-		if packet1["accelerometer"]["speed"]["x"] < (original_mean_imu_speed - standard_dev_imu_speed) or packet1["accelerometer"]["speed"]["x"] > (original_mean_imu_speed + standard_dev_imu_speed)
+		if packet1["accelerometer"]["speed"]["x"] < (original_mean_imu_speed - standard_dev_imu_speed) or packet1["accelerometer"]["speed"]["x"] > (original_mean_imu_speed + standard_dev_imu_speed):
 			""" calc new mean if nums are out of 1 SD """
 			packet1["accelerometer"]["speed"]["x"] = False
 		else:
