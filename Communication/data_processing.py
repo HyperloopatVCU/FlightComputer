@@ -92,7 +92,6 @@ class Data_Processing(object):
 		
 		
 
-""" ------------------------------------------------------------------------------------------------------ """		
 		original_mean_imu_accel_y = 0
 		standard_dev_imu_accel_y = 0
 		nominal_mean_imu_accel_y = 0
@@ -138,7 +137,6 @@ class Data_Processing(object):
 		
 		
 		
-""" ------------------------------------------------------------------------------------------------------ """
 		original_mean_imu_accel_z = 0
 		standard_dev_imu_accel_z = 0
 		nominal_mean_imu_accel_z = 0
@@ -183,7 +181,6 @@ class Data_Processing(object):
 		nominal_mean_imu_accel_z = new_sum / sum_count
 		
 		
-""" ------------------------------------------------------------------------------------------------------ """
 		original_mean_imu_speed = 0
 		standard_dev_imu_speed = 0
 		nominal_mean_imu_speed = 0
@@ -230,7 +227,6 @@ class Data_Processing(object):
 		
 		
 		
-""" ------------------------------------------------------------------------------------------------------ """	
 		original_mean_imu_pos = 0
 		standard_dev_imu_pos = 0
 		nominal_mean_imu_pos = 0
@@ -275,7 +271,6 @@ class Data_Processing(object):
 		nominal_mean_imu_pos = new_sum / sum_count
 		
 		
-""" ------------------------------------------------------------------------------------------------------ """
 		original_mean_vps = 0
 		standard_dev_vps = 0
 		nominal_mean_vps = 0
@@ -322,7 +317,6 @@ class Data_Processing(object):
 		
 		
 		
-""" ------------------------------------------------------------------------------------------------------ """
 		original_mean_hps = 0
 		standard_dev_hps = 0
 		nominal_mean_hps = 0
