@@ -23,16 +23,16 @@ class Data_Processing(object):
 		"""
 
 		try:
-		    # Check to make sure none of the sensors have stopped sending data
-		    packet1 = self.comm.controller1.get(timeout=self.timeout)
-		    packet2 = self.comm.controller2.get(timeout=self.timeout)
-		    packet3 = self.comm.controller3.get(timeout=self.timeout)
-		    packet4 = self.comm.controller4.get(timeout=self.timeout)
-		    packet5 = self.comm.controller5.get(timeout=self.timeout)
+			# Check to make sure none of the sensors have stopped sending data
+			packet1 = self.comm.controller1.get(timeout=self.timeout)
+			packet2 = self.comm.controller2.get(timeout=self.timeout)
+			packet3 = self.comm.controller3.get(timeout=self.timeout)
+			packet4 = self.comm.controller4.get(timeout=self.timeout)
+			packet5 = self.comm.controller5.get(timeout=self.timeout)
 		except: # queue.Empty exception
-		    self.logger.critical("[+] Microcontroller timed out!")
-		    self.sm.on_event('estop')
-		    return
+			self.logger.critical("[+] Microcontroller timed out!")
+			self.sm.on_event('estop')
+			return
 
 
 		# System checks (Parameters to this are going to be the packets)
@@ -65,25 +65,25 @@ class Data_Processing(object):
 		if packet1["accelerometer"]["acceleration"]["x"] < (original_mean_imu_accel_x - standard_dev_imu_accel_x) or packet1["accelerometer"]["acceleration"]["x"] > (original_mean_imu_accel_x + standard_dev_imu_accel_x):
 			""" calc new mean if nums are out of 1 SD """
 			packet1["accelerometer"]["acceleration"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet1["accelerometer"]["acceleration"]["x"]
 			sum_count = sum_count + 1
 		if packet2["accelerometer"]["acceleration"]["x"] < (original_mean_imu_accel_x - standard_dev_imu_accel_x) or packet2["accelerometer"]["acceleration"]["x"] > (original_mean_imu_accel_x + standard_dev_imu_accel_x)
 			""" calc new mean if nums are out of 1 SD """
 			packet2["accelerometer"]["acceleration"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet2["accelerometer"]["acceleration"]["x"]
 			sum_count = sum_count + 1
 		if packet3["accelerometer"]["acceleration"]["x"] < (original_mean_imu_accel_x - standard_dev_imu_accel_x) or packet3["accelerometer"]["acceleration"]["x"] > (original_mean_imu_accel_x + standard_dev_imu_accel_x)
 			""" calc new mean if nums are out of 1 SD """
 			packet3["accelerometer"]["acceleration"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet3["accelerometer"]["acceleration"]["x"]
 			sum_count = sum_count + 1
 		if packet4["accelerometer"]["acceleration"]["x"] < (original_mean_imu_accel_x - standard_dev_imu_accel_x) or packet4["accelerometer"]["acceleration"]["x"] > (original_mean_imu_accel_x + standard_dev_imu_accel_x)
 			""" calc new mean if nums are out of 1 SD """
 			packet["accelerometer"]["acceleration"]["x"] = False
-		else
+		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["accelerometer"]["acceleration"]["x"]
 			sum_count = sum_count + 1
@@ -111,25 +111,25 @@ class Data_Processing(object):
 		if packet1["accelerometer"]["acceleration"]["y"] < (original_mean_imu_accel_y - standard_dev_imu_accel_y) or packet1["accelerometer"]["acceleration"]["y"] > (original_mean_imu_accel_y + standard_dev_imu_accel_y)
 			""" calc new mean if nums are out of 1 SD """
 			packet1["accelerometer"]["acceleration"]["y"] = False
-		else
+		else:
 			new_sum = new_sum + packet1["accelerometer"]["acceleration"]["y"]
 			sum_count = sum_count + 1
 		if packet2["accelerometer"]["acceleration"]["y"] < (original_mean_imu_accel_y - standard_dev_imu_accel_y) or packet2["accelerometer"]["acceleration"]["y"] > (original_mean_imu_accel_y + standard_dev_imu_accel_y)
 			""" calc new mean if nums are out of 1 SD """
 			packet2["accelerometer"]["acceleration"]["y"] = False
-		else
+		else:
 			new_sum = new_sum + packet2["accelerometer"]["acceleration"]["y"]
 			sum_count = sum_count + 1
 		if packet3["accelerometer"]["acceleration"]["y"] < (original_mean_imu_accel_y - standard_dev_imu_accel_y) or packet3["accelerometer"]["acceleration"]["y"] > (original_mean_imu_accel_y + standard_dev_imu_accel_y)
 			""" calc new mean if nums are out of 1 SD """
 			packet3["accelerometer"]["acceleration"]["y"] = False
-		else
+		else:
 			new_sum = new_sum + packet3["accelerometer"]["acceleration"]["y"]
 			sum_count = sum_count + 1
 		if packet4["accelerometer"]["acceleration"]["y"] < (original_mean_imu_accel_y - standard_dev_imu_accel_y) or packet4["accelerometer"]["acceleration"]["y"] > (original_mean_imu_accel_y + standard_dev_imu_accel_y)
 			""" calc new mean if nums are out of 1 SD """
 			packet["accelerometer"]["acceleration"]["y"] = False
-		else
+		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["accelerometer"]["acceleration"]["y"]
 			sum_count = sum_count + 1
@@ -157,25 +157,25 @@ class Data_Processing(object):
 		if packet1["accelerometer"]["acceleration"]["z"] < (original_mean_imu_accel_z - standard_dev_imu_accel_z) or packet1["accelerometer"]["acceleration"]["z"] > (original_mean_imu_accel_z + standard_dev_imu_accel_z)
 			""" calc new mean if nums are out of 1 SD """
 			packet1["accelerometer"]["acceleration"]["z"] = False
-		else
+		else:
 			new_sum = new_sum + packet1["accelerometer"]["acceleration"]["z"]
 			sum_count = sum_count + 1
 		if packet2["accelerometer"]["acceleration"]["z"] < (original_mean_imu_accel_z - standard_dev_imu_accel_z) or packet2["accelerometer"]["acceleration"]["z"] > (original_mean_imu_accel_z + standard_dev_imu_accel_z)
 			""" calc new mean if nums are out of 1 SD """
 			packet2["accelerometer"]["acceleration"]["z"] = False
-		else
+		else:
 			new_sum = new_sum + packet2["accelerometer"]["acceleration"]["z"]
 			sum_count = sum_count + 1
 		if packet3["accelerometer"]["acceleration"]["z"] < (original_mean_imu_accel_z - standard_dev_imu_accel_z) or packet3["accelerometer"]["acceleration"]["z"] > (original_mean_imu_accel_z + standard_dev_imu_accel_z)
 			""" calc new mean if nums are out of 1 SD """
 			packet3["accelerometer"]["acceleration"]["z"] = False
-		else
+		else:
 			new_sum = new_sum + packet3["accelerometer"]["acceleration"]["z"]
 			sum_count = sum_count + 1
 		if packet4["accelerometer"]["acceleration"]["z"] < (original_mean_imu_accel_z - standard_dev_imu_accel_z) or packet4["accelerometer"]["acceleration"]["z"] > (original_mean_imu_accel_z + standard_dev_imu_accel_z)
 			""" calc new mean if nums are out of 1 SD """
 			packet["accelerometer"]["speed"]["z"] = False
-		else
+		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["accelerometer"]["speed"]["z"]
 			sum_count = sum_count + 1
@@ -202,25 +202,25 @@ class Data_Processing(object):
 		if packet1["accelerometer"]["speed"]["x"] < (original_mean_imu_speed - standard_dev_imu_speed) or packet1["accelerometer"]["speed"]["x"] > (original_mean_imu_speed + standard_dev_imu_speed)
 			""" calc new mean if nums are out of 1 SD """
 			packet1["accelerometer"]["speed"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet1["accelerometer"]["speed"]["x"]
 			sum_count = sum_count + 1
 		if packet2["accelerometer"]["speed"]["x"] < (original_mean_imu_speed - standard_dev_imu_speed) or packet2["accelerometer"]["speed"]["x"] > (original_mean_imu_speed + standard_dev_imu_speed)
 			""" calc new mean if nums are out of 1 SD """
 			packet2["accelerometer"]["speed"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet2["accelerometer"]["speed"]["x"]
 			sum_count = sum_count + 1
 		if packet3["accelerometer"]["speed"]["x"] < (original_mean_imu_speed - standard_dev_imu_speed) or packet3["accelerometer"]["speed"]["x"] > (original_mean_imu_speed + standard_dev_imu_speed)
 			""" calc new mean if nums are out of 1 SD """
 			packet3["accelerometer"]["speed"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet3["accelerometer"]["speed"]["x"]
 			sum_count = sum_count + 1
 		if packet4["accelerometer"]["speed"]["x"] < (original_mean_imu_speed - standard_dev_imu_speed) or packet4["accelerometer"]["speed"]["x"] > (original_mean_imu_speed + standard_dev_imu_speed)
 			""" calc new mean if nums are out of 1 SD """
 			packet["accelerometer"]["speed"]["x"] = False
-		else
+		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["accelerometer"]["speed"]["x"]
 			sum_count = sum_count + 1
@@ -249,25 +249,25 @@ class Data_Processing(object):
 		if packet1["accelerometer"]["position"]["x"] < (original_mean_imu_pos - standard_dev_imu_pos) or packet1["accelerometer"]["position"]["x"] > (original_mean_imu_pos + standard_dev_imu_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet1["accelerometer"]["position"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet1["accelerometer"]["position"]["x"]
 			sum_count = sum_count + 1
 		if packet2["accelerometer"]["position"]["x"] < (original_mean_imu_pos - standard_dev_imu_pos) or packet2["accelerometer"]["position"]["x"] > (original_mean_imu_pos + standard_dev_imu_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet2["accelerometer"]["position"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet2["accelerometer"]["position"]["x"]
 			sum_count = sum_count + 1
 		if packet3["accelerometer"]["position"]["x"] < (original_mean_imu_pos - standard_dev_imu_pos) or packet3["accelerometer"]["position"]["x"] > (original_mean_imu_pos + standard_dev_imu_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet3["accelerometer"]["position"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet3["accelerometer"]["position"]["x"]
 			sum_count = sum_count + 1
 		if packet4["accelerometer"]["position"]["x"] < (original_mean_imu_pos - standard_dev_imu_pos) or packet4["accelerometer"]["position"]["x"] > (original_mean_imu_pos + standard_dev_imu_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet["accelerometer"]["position"]["x"] = False
-		else
+		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["accelerometer"]["position"]["x"]
 			sum_count = sum_count + 1
@@ -294,25 +294,25 @@ class Data_Processing(object):
 		if packet1["vertical"]["position"]["x"] < (original_mean_vps_pos - standard_dev_vps_pos) or packet1["vertical"]["position"]["x"] > (original_mean_vps_pos + standard_dev_vps_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet1["vertical"]["position"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet1["vertical"]["position"]["x"]
 			sum_count = sum_count + 1
 		if packet2["vertical"]["position"]["x"] < (original_mean_vps_pos - standard_dev_vps_pos) or packet2["vertical"]["position"]["x"] > (original_mean_vps_pos + standard_dev_vps_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet2["vertical"]["position"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet2["vertical"]["position"]["x"]
 			sum_count = sum_count + 1
 		if packet3["vertical"]["position"]["x"] < (original_mean_vps_pos - standard_dev_vps_pos) or packet3["vertical"]["position"]["x"] > (original_mean_vps_pos + standard_dev_vps_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet3["vertical"]["position"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet3["vertical"]["position"]["x"]
 			sum_count = sum_count + 1
 		if packet4["vertical"]["position"]["x"] < (original_mean_vps_pos - standard_dev_vps_pos) or packet4["vertical"]["position"]["x"] > (original_mean_vps_pos + standard_dev_vps_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet["vertical"]["position"]["x"] = False
-		else
+		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["vertical"]["position"]["x"]
 			sum_count = sum_count + 1
@@ -341,25 +341,25 @@ class Data_Processing(object):
 		if packet1["horizontal"]["position"]["x"] < (original_mean_hps_pos - standard_dev_hps_pos) or packet1["horizontal"]["position"]["x"] > (original_mean_hps_pos + standard_dev_hps_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet1["horizontal"]["position"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet1["horizontal"]["position"]["x"]
 			sum_count = sum_count + 1
 		if packet2["horizontal"]["position"]["x"] < (original_mean_hps_pos - standard_dev_hps_pos) or packet2["horizontal"]["position"]["x"] > (original_mean_hps_pos + standard_dev_hps_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet2["horizontal"]["position"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet2["horizontal"]["position"]["x"]
 			sum_count = sum_count + 1
 		if packet3["horizontal"]["position"]["x"] < (original_mean_hps_pos - standard_dev_hps_pos) or packet3["horizontal"]["position"]["x"] > (original_mean_hps_pos + standard_dev_hps_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet3["horizontal"]["position"]["x"] = False
-		else
+		else:
 			new_sum = new_sum + packet3["horizontal"]["position"]["x"]
 			sum_count = sum_count + 1
 		if packet4["horizontal"]["position"]["x"] < (original_mean_hps_pos - standard_dev_hps_pos) or packet4["horizontal"]["position"]["x"] > (original_mean_hps_pos + standard_dev_hps_pos)
 			""" calc new mean if nums are out of 1 SD """
 			packet["horizontal"]["position"]["x"] = False
-		else
+		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["horizontal"]["position"]["x"]
 			sum_count = sum_count + 1
