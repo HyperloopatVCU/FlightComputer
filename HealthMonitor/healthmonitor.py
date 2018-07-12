@@ -245,7 +245,6 @@ class HealthMonitor(object):
         """
         BMS error checking (This needs to be changed a bit because the for loop won't work)
         """
-
         if packet5["error"] != 0:
             self.logger.critical("[+] Microcontroller five, error code: %d", packet4["error"])
             self.sm.on_event('estop')
@@ -262,3 +261,11 @@ class HealthMonitor(object):
             self.logger.critical("[+] Microcontroller five error. Too many errors")
             self.sm.on_event('estop')
             return
+
+    def motor_controller(self, speed,RMS_current):
+            self.speed = int("motor speed",0x2010_01)
+            if self.speed <= 6000:
+                print("motor good")
+            else:
+                print("motor too fast")
+            self.RMS_current = int("Current", 0x2010_05)
