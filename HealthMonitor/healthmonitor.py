@@ -107,16 +107,16 @@ class HealthMonitor(object):
     def high_battery_check(self, highPowerVoltage, highPowerCurrent):
         if self.highPowerVoltage >= 101
             self.logger.info("[!!!] voltage too high")
-        elif self.highPowerVoltage < 101 && self.highPowerVoltage >= 60
+        elif self.highPowerVoltage < 101 and self.highPowerVoltage >= 60
             self.logger.info("[!!!] voltage within nominal range")
-        elif self.highPowerVoltage < 60 && self.highPowerVoltage >= 50
+        elif self.highPowerVoltage < 60 and self.highPowerVoltage >= 50
             self.logger.info("[!!!] voltage below recommended range")
         elif self.highPowerVoltage < 50
             self.sm.on_event('estop')
 
-        if self.highPowerCurrent > 400 && self.highPowerCurrent <= 465
+        if self.highPowerCurrent > 400 and self.highPowerCurrent <= 465
             self.logger.info("[!!!] current nearing max limit")
-        elif self.highPowerCurrent > 465 && self.highPowerCurrent <= 480
+        elif self.highPowerCurrent > 465 and self.highPowerCurrent <= 480
             self.logger.info("[!!!] current reached max limit")
         elif self.highPowerCurrent > 480
             self.logger.info("[!!!] motor drawing greater than allowed current")
@@ -127,16 +127,16 @@ class HealthMonitor(object):
     def low_battery_check(self, lowPowerVoltage, lowPowerCurrent):
         if self.lowPowerVoltage >= 51.6
             self.logger.info("[!!!] low battery voltage too high")
-        elif self.lowPowerVoltage < 51.6 && self.lowPowerVoltage >= 49
+        elif self.lowPowerVoltage < 51.6 and self.lowPowerVoltage >= 49
             self.logger.info("[!!!] low battery voltage within nominal range")
-        elif self.lowPowerVoltage < 49 && self.lowPowerVoltage >= 48.5
+        elif self.lowPowerVoltage < 49 and self.lowPowerVoltage >= 48.5
             self.logger.info("[!!!] low battery voltage below recommended range")
         elif self.lowPowerVoltage < 48.5
             self.sm.on_event('estop')
 
-        if self.lowPowerCurrent > 2.50 && self.lowPowerCurrent <= 2.75
+        if self.lowPowerCurrent > 2.50 and self.lowPowerCurrent <= 2.75
             self.logger.info("[!!!] current nearing max limit")
-        elif self.lowPowerCurrent > 2.75 && self.lowPowerCurrent <= 3
+        elif self.lowPowerCurrent > 2.75 and self.lowPowerCurrent <= 3
             self.logger.info("[!!!] current reached max limit")
         elif self.lowPowerCurrent > 3
             self.logger.info("[!!!] low power drawing greater than allowed current")
@@ -145,9 +145,9 @@ class HealthMonitor(object):
     def front_brake_check(self, frontBrakeVoltage, frontBrakeCurrent):
         if self.frontBrakeVoltage >= 13
             self.logger.info("[!!!] front brake voltage too high")
-        elif self.frontBrakeVoltage < 13 && self.frontBrakeVoltage >= 9
+        elif self.frontBrakeVoltage < 13 and self.frontBrakeVoltage >= 9
             self.logger.info("[!!!] front brake voltage within nominal range")
-        elif self.frontBrakeVoltage < 9 && self.frontBrakeVoltage >= 6
+        elif self.frontBrakeVoltage < 9 and self.frontBrakeVoltage >= 6
             self.logger.info("[!!!] front brake voltage very low")
             #flag for inspection
             #monitor for next couple of seconds
