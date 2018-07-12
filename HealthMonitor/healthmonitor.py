@@ -35,6 +35,22 @@ class HealthMonitor(object):
         Any threshold values that may need to be adjusted should be added to
         the config.ini file in the root of the program directory. 
         """
+ 
+        # Temperature Checks (Parameters not correct yet)
+        battery_temp_check(battery_temperature)
+        motor_temp_check(motor_temperature)
+        motor_controller_temp_check(motor_controller_temp)
+
+        # Voltage and current checks (Parameters not correct yet)
+        high_battery_check(voltage, current)
+        low_one_battery_check(voltage, current)
+        low_2A_battery_check(voltage, current)
+        low_2B_battery_check(voltage, current)
+        brake_potentiometer_check(voltage, current)
+
+        # Distance Check (Parameters not correct yet)
+        pod_distance_from_track(time)
+
         
         if sm.state == "Pre_Operational"j:
             # Add checks for pre-operational
@@ -42,26 +58,10 @@ class HealthMonitor(object):
 
         elif sm.state == "Operational":
             # TODO: If the pod is clear to launch
-            # sm.on_event('launch-clear')
+            # sm.on_event('launch-clear') or drift-clear
             return
 
         elif sm.state == "Accelerating":
-
-            # Temperature Checks (Parameters not correct yet)
-            battery_temp_check(battery_temperature)
-            motor_temp_check(motor_temperature)
-            motor_controller_temp_check(motor_controller_temp)
-
-            # Voltage and current checks (Parameters not correct yet)
-            high_battery_check(voltage, current)
-            low_one_battery_check(voltage, current)
-            low_2A_battery_check(voltage, current)
-            low_2B_battery_check(voltage, current)
-            brake_potentiometer_check(voltage, current)
-
-            # Distance Check (Parameters not correct yet)
-            pod_distance_from_track(time)
-
             return
 
         elif sm.state == "Decelerating":
