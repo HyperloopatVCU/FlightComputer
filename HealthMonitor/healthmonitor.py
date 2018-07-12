@@ -19,7 +19,7 @@ class HealthMonitor(object):
 
         self.config = ConfigParser()
         self.config.read('config.ini')
-        
+
         self.frame_rate = self.config['Health'].getint('frame_rate')
         self.timeout = self.config['Health'].getint('controller_timeout')
         self.bms_allowed_errors = self.config['Health'].getint('bms_allowed_erros')
@@ -30,12 +30,12 @@ class HealthMonitor(object):
                 sleep(1/self.frame_rate)
                 self.frames += 1
 
-    def update(self):    
+    def update(self):
         """
         Any threshold values that may need to be adjusted should be added to
-        the config.ini file in the root of the program directory. 
+        the config.ini file in the root of the program directory.
         """
- 
+
         # Temperature Checks (Parameters not correct yet)
         battery_temp_check(battery_temperature)
         motor_temp_check(motor_temperature)
@@ -51,7 +51,7 @@ class HealthMonitor(object):
         # Distance Check (Parameters not correct yet)
         pod_distance_from_track(time)
 
-        
+
         if sm.state == "Pre_Operational"j:
             # Add checks for pre-operational
             return
@@ -82,90 +82,78 @@ class HealthMonitor(object):
             sm.on_event('estop')
 
     def battery_temp_check(self, battery_temperature):
-        if battery_temperature <= self.max_battery_temp:
+        if self.battery_temperature < self.max_battery_temp:
             self.logger.debug("[+] battery temperature good")
-        elif battery_temperature <= self.estop_battery_temp:
+        elif self.battery_temperature >= self.estop_battery_temp:
             self.logger.debug("[*] max battery temperature reached")
-        else:
-            self.logger.critical("[!!!] battery temperature too high")
             self.sm.on_event('estop')
 
     def motor_temp_check(self, motor_temperature):
-        if motor_temperature <= self.max_motor_temp:
+        if self.motor_temperature < self.max_motor_temp:
             self.logger.info("[+] motor temp good")
-        elif motor_temperature <=self.estop_motor_temp:
+        elif self.motor_temperature >= self.estop_motor_temp:
             self.logger.info("[*] max motor temperature reached")
-        else:
-            self.logger.critical("[!!!] motor temp too high")
             self.sm.on_event('estop')
 
 
     def motor_controller_temp_check(self, motor_controller):
-        if motor_controller <= self.max_motor_controller_temp:
+        if self.motor_controller < self.max_motor_controller_temp:
             self.logger.debug("[+] controller temp good")
-        elif motor_controller <= self.estop_motor_controller_temp:
+        elif self.motor_controller >= self.estop_motor_controller_temp:
             self.logger.debug("[*] controller reached max temp")
-        else:
-            self.logger.critical("[!!!] controller temp too high")
             self.sm.on_event('estop')
 
-    def high_battery_check(self, voltage, current):
-        if voltage <= 90.8 and self.current <= 465:
-            self.logger.info("[+] high power battery and voltage are fine")
-        else:
-            self.logger.info("[!!!] high power battery voltage or current too high")
-            if voltage >= 90.8:
-                self.logger.info("[!!!] voltage nearing max")
-            elif voltage == 100.8:
-                self.logger.info("[!!!] voltage at maximum")
-            else:
-                self.logger.info("[!!!] voltage too high")
-                self.sm.on_event('estop')
-            if current >= 465:
-                self.logger.info("[!!!] current nearing max")
-            elif current == 475:
-                self.logger.info("[!!!] current at max")
-            else:
-                self.logger.info ("current too high")
-                self.sm.on_event('estop')
+
+    def high_battery_check(self, highPowerVoltage, highPowerCurrent):
+        if self.highPowerVoltage >= 101
+            self.logger.info("[!!!] voltage too high")
+        elif self.highPowerVoltage < 101 && self.highPowerVoltage >= 60
+            self.logger.info("[!!!] voltage within nominal range")
+        elif self.highPowerVoltage < 60 && self.highPowerVoltage >= 50
+            self.logger.info("[!!!] voltage below recommended range")
+        elif self.highPowerVoltage < 50
+            self.sm.on_event('estop')
+
+        if self.highPowerCurrent > 400 && self.highPowerCurrent <= 465
+            self.logger.info("[!!!] current nearing max limit")
+        elif self.highPowerCurrent > 465 && self.highPowerCurrent <= 480
+            self.logger.info("[!!!] current reached max limit")
+        elif self.highPowerCurrent > 480
+            self.logger.info("[!!!] motor drawing greater than allowed current")
+            self.sm.on_event('estop')
 
 
-    def low_1_battery_check(self, voltage, current):
-        if voltage <= 50.4 and self.current <= 3:
-            self.logger.info("[!!!] low power systems good")
-        else:
-            self.logger.info("[!!!] low power critical")
-            if voltage > 50.4:
-                self.logger.info("[!!!] voltage too high")
-                self.sm.on_event('estop')
-            if current >= 3:
-                self.logger.info("[!!!] current too high")
-                self.sm.on_event('estop')
 
-    def low_2A_battery_check(self, voltage, current):
-        if voltage <= 12.6 and self.current <= 4:
-            self.logger.info("[!!!] brake power good")
-        else:
-            self.logger.info("[!!!] brake systems critical")
-            if voltage > 12.6:
-                self.logger.info("[!!!] voltage too high")
-                self.sm.on_event('estop')
-            if current > 4:
-                self.logger.info("[!!!] current too high")
-                self.sm.on_event('estop')
+    def low_battery_check(self, lowPowerVoltage, lowPowerCurrent):
+        if self.lowPowerVoltage >= 51.6
+            self.logger.info("[!!!] low battery voltage too high")
+        elif self.lowPowerVoltage < 51.6 && self.lowPowerVoltage >= 49
+            self.logger.info("[!!!] low battery voltage within nominal range")
+        elif self.lowPowerVoltage < 49 && self.lowPowerVoltage >= 48.5
+            self.logger.info("[!!!] low battery voltage below recommended range")
+        elif self.lowPowerVoltage < 48.5
+            self.sm.on_event('estop')
 
-    def low_2B_battery_check(self, voltage, current):
-        if voltage <= 12.6 and self.current <= 4:
-            self.logger.info("[!!!] brake power good")
-        else:
-            self.logger.info("[!!!] brake systems critical")
-            if voltage > 12.6:
-                self.logger.info("[!!!] voltage too high")
-                self.sm.on_event('estop')
-            if current > 4:
-                self.logger.info("[!!!] current too high")
-                self.sm.on_event('estop')
+        if self.lowPowerCurrent > 2.50 && self.lowPowerCurrent <= 2.75
+            self.logger.info("[!!!] current nearing max limit")
+        elif self.lowPowerCurrent > 2.75 && self.lowPowerCurrent <= 3
+            self.logger.info("[!!!] current reached max limit")
+        elif self.lowPowerCurrent > 3
+            self.logger.info("[!!!] low power drawing greater than allowed current")
+            self.sm.on_event('estop')
 
+    def front_brake_check(self, frontBrakeVoltage, frontBrakeCurrent):
+        if self.frontBrakeVoltage >= 13
+            self.logger.info("[!!!] front brake voltage too high")
+        elif self.frontBrakeVoltage < 13 && self.frontBrakeVoltage >= 9
+            self.logger.info("[!!!] front brake voltage within nominal range")
+        elif self.frontBrakeVoltage < 9 && self.frontBrakeVoltage >= 6
+            self.logger.info("[!!!] front brake voltage very low")
+            #flag for inspection
+            #monitor for next couple of seconds
+        elif self.frontBrakeVoltage < 6
+            self.sm.on_event('estop')
+"""
     def brake_potentiometer_check(self, voltage, current):
     # Some values need to be changed here
         if voltage <= 1 and self.current <= 3:
@@ -178,18 +166,19 @@ class HealthMonitor(object):
             if current >= 4:
                 self.logger.info("[!!!] current too high")
                 self.sm.on_event('estop')
+"""
 
     def HPS_check(self, packet1, packet2, packet3, packet4):
         """
         HPS error checking
         """
-        hpsfailcount = 0
+        self.hpsfailcount = 0
         if packet1["horizontal"]["error"] != 0:
-            hpsfailcount += 1
+            self.hpsfailcount += 1
             self.logger.info("[!!!] Error with HPS #1")
 
         if packet2["horizontal"]["error"] != 0:
-            hpsfailcount += 1
+            self.hpsfailcount += 1
             self.logger.info("[!!!] Error with HPS #2")
 
         if packet3["horizontal"]["error"] != 0:
@@ -200,29 +189,29 @@ class HealthMonitor(object):
             self.hpsfailcount += 1
             self.logger.info("[!!!] Error with HPS #3")
 
-        if hpsfailcount >= 2:
+        if self.hpsfailcount >= 2:
             self.sm.on_event('estop')
 
     def VPS_check(self, packet1, packet2, packet3, packet4):
         """
         VPS error checking
         """
-        vpsfailcount = 0
+        self.vpsfailcount = 0
 
         if packet1["vertical"]["error"] != 0:
-            vpsfailcount += 1
+            self.vpsfailcount += 1
             self.logger.info("[!!!] Error with VPS #1")
 
         if packet2["vertical"]["error"] != 0:
-            vpsfailcount += 1
+            self.vpsfailcount += 1
             self.logger.info("[!!!] Error with VPS #2")
 
         if packet3["vertical"]["error"] != 0:
-            vpsfailcount += 1
+            self.vpsfailcount += 1
             self.logger.info("[!!!] Error with VPS #3")
 
         if packet4["vertical"]["error"] != 0:
-            vpsfailcount += 1
+            self.vpsfailcount += 1
             self.logger.info("[!!!] Error with VPS #4")
 
         if self.vpsfailcount >= 2:
@@ -232,24 +221,24 @@ class HealthMonitor(object):
         """
         IMU error checking
         """
-        imufailcount = 0
+        self.imufailcount = 0
         if packet1["accelerometer"]["error"] != 0:
             self.imufailcount += 1
             self.logger.info("[!!!] Error with IMU #1")
 
         if packet2["accelerometer"]["error"] != 0:
-            imufailcount += 1
+            self.imufailcount += 1
             self.logger.info("[!!!] Error with IMU #2")
 
         if packet3["accelerometer"]["error"] != 0:
-            imufailcount += 1
+            self.imufailcount += 1
             self.logger.info("[!!!] Error with IMU #3")
 
         if packet4["accelerometer"]["error"] != 0:
-            imufailcount += 1
+            self.imufailcount += 1
             self.logger.info("[!!!] Error with IMU #4")
 
-        if imufailcount >= 2:
+        if self.imufailcount >= 2:
             self.sm.on_event('estop')
 
     def BMS_check(self, BMS_packet):
@@ -261,16 +250,15 @@ class HealthMonitor(object):
             self.logger.critical("[+] Microcontroller five, error code: %d", packet4["error"])
             self.sm.on_event('estop')
             return
-            
-        bms_failcount = 0
+
+        self.bms_failcount = 0
         for k1, v1 in packet5.items():
             for k2, v2 in v1.items():
                 if v2["error"] != 0:
-                    bms_failcount += 1
+                    self.bms_failcount += 1
                     self.logger.critical("[+] Microcontroller five, error: %s", k2)
 
-        if bms_failcount >= self.bms_allowed_errors:
+        if self.bms_failcount >= self.bms_allowed_errors:
             self.logger.critical("[+] Microcontroller five error. Too many errors")
             self.sm.on_event('estop')
             return
-
