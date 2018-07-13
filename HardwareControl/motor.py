@@ -140,6 +140,7 @@ class Motor(object):
         self.logger.debug("[*] Accelerating")
 
     def idle(self):
+		_setThrottle(0)
         self.logger.debug("[*] Motor Idle")
 
 #**************************************************************************************************************#
