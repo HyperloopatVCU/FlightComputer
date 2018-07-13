@@ -147,14 +147,17 @@ class Motor(object):
     
     """
     Throttle back-end
+	Usage: supply percent of throttle to set (for 30% pass 30)
+	Returns nothing
     """
     def _setThrottle(self, percent):
-        val = int(255 * percent)
+        val = int(255 * (percent / 100))
         spi.writebytes([val])
-        return percent * 12 # return expected voltage at wiper position
 
     """
     Keyswitch back-end
+	Usage: to engage keyswitch, pass True
+	Returns nothing
     """
     def _safety(self, safe):
         if safe:
