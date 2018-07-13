@@ -133,7 +133,85 @@ class Motor(object):
         return self.m_objPCANBasic.WriteFD(self.m_PcanHandle, CANMsg)
 
 
+    def ReadMessageFD(self):
+        # We execute the "ReadFD" function of the PCANBasic
+        #
+        result = self.m_objPCANBasic.ReadFD(self.m_PcanHandle)
 
+        if result[0] == PCAN_ERROR_OK:
+            # We show the received message
+            #
+            self.ProcessMessageFD(result[1:])
+
+        return result[0]
+
+    ## Inserts a new entry for a new message in the Message-ListView
+    ##
+    def InsertMsgEntry(self, newMsg, timeStamp):
+        # Format the new time information
+        #
+        with self._lock:
+            # The status values associated with the new message are created
+            #
+            msgStsCurrentMsg = MessageStatus(newMsg,timeStamp,len(self.m_LastMsgsList))
+            msgStsCurrentMsg.MarkedAsInserted = False
+            msgStsCurrentMsg.ShowingPeriod = self.m_ShowPeriod
+            self.m_LastMsgsList.append(msgStsCurrentMsg)
+
+    def ProcessMessageFD(self, *args):
+        with self._lock:
+            # Split the arguments. [0] TPCANMsgFD, [1] TPCANTimestampFD
+            #
+            theMsg = args[0][0]
+            itsTimeStamp = args[0][1]
+
+            for msg in self.m_LastMsgsList:
+                if (msg.CANMsg.ID == theMsg.ID) and (msg.CANMsg.MSGTYPE == theMsg.MSGTYPE):
+                    msg.Update(theMsg, itsTimeStamp)
+                    return
+            self.InsertMsgEntry(theMsg, itsTimeStamp)
+
+    ## Processes a received message, in order to show it in the Message-ListView
+    ##
+    def ProcessMessage(self, *args):
+        with self._lock:
+            # Split the arguments. [0] TPCANMsg, [1] TPCANTimestamp
+            #
+            theMsg = args[0][0]
+            itsTimeStamp = args[0][1]
+
+            newMsg = TPCANMsgFD()
+            newMsg.ID = theMsg.ID
+            newMsg.DLC = theMsg.LEN
+            for i in range(8 if (theMsg.LEN > 8) else theMsg.LEN):
+                newMsg.DATA[i] = theMsg.DATA[i]
+            newMsg.MSGTYPE = theMsg.MSGTYPE
+            newTimestamp = TPCANTimestampFD()
+            newTimestamp.value = (itsTimeStamp.micros + 1000 * itsTimeStamp.millis + 0x100000000 * 1000 * itsTimeStamp.millis_overflow)
+            self.ProcessMessageFD([newMsg, newTimestamp])
+
+    ## Thread-Function used for reading PCAN-Basic messages
+    ##
+    def CANReadThreadFunc(self):
+        try:
+            self.m_Terminated = False
+
+            # Configures the Receive-Event.
+            #
+            stsResult = self.m_objPCANBasic.SetValue(self.m_PcanHandle, PCAN_RECEIVE_EVENT, self.m_ReceiveEvent)
+
+            if stsResult != PCAN_ERROR_OK:
+                print ("Error: " + self.GetFormatedError(stsResult))
+            else:
+                while not self.m_Terminated:
+                    if win32event.WaitForSingleObject(self.m_ReceiveEvent, 50) == win32event.WAIT_OBJECT_0:
+                        self.ReadMessages()
+
+                # Resets the Event-handle configuration
+                #
+                self.m_objPCANBasic.SetValue(self.m_PcanHandle, PCAN_RECEIVE_EVENT, 0)
+        except:
+            print ("Error occurred while processing CAN data")
 
 
     def accelerate(self, rpm):
@@ -145,7 +223,7 @@ class Motor(object):
 
 #**************************************************************************************************************#
     # Supporting Functions
-    
+
     """
     Throttle back-end
 	Usage: supply percent of throttle to set (for 30% pass 30)
@@ -195,4 +273,3 @@ class Motor(object):
                 iValue = uiMaxValue
                 self.m_IDTXT.set("{0:0{1}X}".format(iValue,iTextLength))
                 return True
-
