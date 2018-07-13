@@ -28,6 +28,7 @@ import platform
 #///////////////////////////////////////////////////////////
 
 TPCANHandle                   = c_ushort    # Represents a PCAN hardware channel handle
+# [!!!!!!] This is a major bug!!!
 TPCANStatus                   = int         # Represents a PCAN status/error code
 TPCANParameter                = c_ubyte     # Represents a PCAN parameter to be read or set
 TPCANDevice                   = c_ubyte     # Represents a PCAN device

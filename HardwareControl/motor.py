@@ -191,3 +191,4 @@ class Motor(object):
                 iValue = uiMaxValue
                 self.m_IDTXT.set("{0:0{1}X}".format(iValue,iTextLength))
                 return True
+
