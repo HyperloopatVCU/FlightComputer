@@ -52,7 +52,7 @@ class HealthMonitor(object):
         pod_distance_from_track(time)
 
 
-        if sm.state == "Pre_Operational"j:
+        if sm.state == "Pre_Operational":
             # Add checks for pre-operational
             return
 

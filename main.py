@@ -34,8 +34,11 @@ def main(root_logger):
     health_thread.start()
     dp_thread.start()
 
+    hist = open('.pod_history', 'w')
+
     while True:
         user_input = input(PROMPT)
+        hist.write(user_input + '\n')
 
         if user_input == "state":
             print(sm.state)
@@ -56,9 +59,9 @@ def main(root_logger):
                 continue
 				
         elif user_input == "shutdown":
-            if sm.state != "Pre_Opeartional":
-                root_logger.warn("[*] Program cannot exit safety currently!")
-                root_logger.warn("======> State: %s", sm.state)
+            if sm.state != "Pre_Opeartional" or sm.state != "Estop":
+                print("[*] Program cannot exit safety currently!")
+                print("======> State: %s", sm.state)
                 continue
 
             tcp.close()
@@ -67,10 +70,12 @@ def main(root_logger):
             dp.stop_signal = True
             health_thread.join()
             dp_thread.join()
+
+            hist.close()
             return
 
         else:
-            print("Usage: ")
+            print("Commands: ")
             print("[1]     help     : This menu")
             print("[2]     state    : Current State")
             print("[3]     launch   : Launch pod with max speed")
