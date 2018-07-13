@@ -59,21 +59,33 @@ class TCPComm(object):
             # Decodes message, converts to python dict, puts dict in the buffer
             packet = json.loads(data.decode('utf-8'))
 
-            try:
-                if packet["identity"] == "EMS1":
-                    self.controller1.put(packet)
-                elif packet["identity"] == "EMS2":
-                    self.controller2.put(packet)
-                elif packet["identity"] == "EMS3":
-                    self.contoller3.put(packet)
-                elif packet["identity"] == "EMS4":
-                    self.controller4.put(packet)
-                elif packet["identity"] == "BMS":
-                    self.controller5.put(packet)
-                else:
-                    self.logger.critical("[!!!] Packet isn't IDed right!")
-            except:
-                self.logger.critical("[!!!] Buffer Overflow!")
+            """
+            Check packet ID. The packet gets put in the proper place for the
+            place to be processed. If there is already a packet blocking the
+            space, the most recent packet repalces it.
+            """
+            if packet["identity"] == "EMS1":
+                if self.controller1.full(): # Check if full
+                    self.controller1.get()  # Replace with most current
+                self.controller1.put(packet)
+            elif packet["identity"] == "EMS2":
+                if self.controller2.full():
+                    self.controller2.get()
+                self.controller2.put(packet)
+            elif packet["identity"] == "EMS3":
+                if self.controller3.full():
+                    self.controller3.get()
+                self.contoller3.put(packet)
+            elif packet["identity"] == "EMS4":
+                if self.controller4.full():
+                    self.controller4.get()
+                self.controller4.put(packet)
+            elif packet["identity"] == "BMS":
+                if self.controller5.full():
+                    self.conrtoller5.get()
+                self.controller5.put(packet)
+            else:
+                self.logger.critical("[!!!] Packet isn't IDed right!")
 
         self.logger.debug("[*] Client disconnect %s", addr)
 
