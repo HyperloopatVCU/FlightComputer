@@ -35,6 +35,7 @@ def main(root_logger):
     dp_thread.start()
 
     hist = open('.pod_history', 'w')
+    hist.write("=-=-=-=-=-=-=-=- New Flight -=-=-=-=-=-=-=-=\n")
 
     while True:
         user_input = input(PROMPT)
