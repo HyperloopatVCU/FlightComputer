@@ -257,6 +257,11 @@ void DS18B20TempConv(byte (*IVDataArrayPointer)[NUMBER_OF_PL200], float *tempDat
 
 void DS18B20Error(byte (*DS18B20DataArrayPointer)[NUMBER_OF_DS18B20], uint16_t *ds18b20ErrorArrayPointer){
    //ERROR DETECTION CODE
+   for(uint16_t i = 0; i < NUMBER_OF_DS18B20; ++i){
+     if((&DS18B20DataArrayPointer[0][i], HEX) == '0xHH'){
+      ds18b20ErrorArrayPointer[i] = 1;
+     }
+   }
    return;
 }
 
