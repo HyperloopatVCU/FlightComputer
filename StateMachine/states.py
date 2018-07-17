@@ -1,3 +1,4 @@
+import logging
 
 class State(object):
     """
@@ -35,7 +36,7 @@ class Pre_Operational(State):
 class Operational(State):
 
     def on_event(self, event):
-        
+
         if event == 'launch-clear':
             return Accelerating(self.controllers)
         if event == 'drift-clear':
