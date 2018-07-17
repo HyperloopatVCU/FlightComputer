@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 import logging
-from os import path
-from logging import config
+from os import path 
+from logging import config 
 from time import time
 from threading import Thread
 from pod_structure import Pod
@@ -35,6 +35,7 @@ def main(root_logger):
     dp_thread.start()
 
     hist = open('.pod_history', 'w')
+    hist.write("=-=-=-=-=-=-=-=- New Flight -=-=-=-=-=-=-=-=\n")
 
     while True:
         user_input = input(PROMPT)
@@ -71,6 +72,7 @@ def main(root_logger):
             health_thread.join()
             dp_thread.join()
 
+            hist.write('\n')
             hist.close()
             return
 
