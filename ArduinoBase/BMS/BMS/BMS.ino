@@ -6,6 +6,7 @@
 #define NUMBER_OF_DS18B20 30
 #define ONE_WIRE_BUS 2
 #define TEMP_PRECISION 9
+#define DELAY 500
 
 #define HP_TEMP_IND_START 1
 #define HP_TEMP_IND_END 2
@@ -23,6 +24,9 @@
 //PL200 PROPERTIES
 #define NUMBER_OF_PL200 8
 
+#define VMULTCONST 1
+#define IMULTCONST 1
+
 #define HP_PL200_IND_START 1
 #define HP_PL200_IND_END 2
 
@@ -36,7 +40,6 @@
 #define BB_PL200_IND_END 8
 
 //OTHER PREPROCESSOR DEFS
-#define DELAY 500
 #define ID_TAG 69
 #define VOLTAGE 0
 #define CURRENT 1
@@ -87,6 +90,7 @@ byte DS18B20DataArray[12][NUMBER_OF_DS18B20];
 byte tempDataArray[NUMBER_OF_DS18B20];
 uint16_t ds18b20ErrorArray[NUMBER_OF_DS18B20];
 
+EthernetClient client;
 OneWire oneWire(ONE_WIRE_BUS); // DS18B20 sensors on pin defined by ONE_WIRE_BUS
 
 //BMS JSON STRUCTURE
@@ -278,7 +282,7 @@ void PL200Error(byte (*PL200DataArrayPointer)[NUMBER_OF_PL200], uint16_t *pl200E
 }
 
 void setup() {
-  analogReference(INTERNAL2V56);
+  //analogReference(INTERNAL2V56);
 
   const byte mac[] = {0xde, 0xad, 0xbe, 0xef, 0xfe, ID_TAG};
 	const byte gateway[] = {192,168,1,20};
@@ -315,5 +319,6 @@ void loop() {
   getDS18B20Data(sensorAddress, DS18B20DataArray);
   DS18B20Error(DS18B20DataArray, ds18b20ErrorArray);
   DS18B20TempConv(DS18B20DataArray, tempDataArray);
+  PL200DataConv
   send_json(tempDataArray, IVDataArray, ds18b20ErrorArray, pl200ErrorArray);
 }
