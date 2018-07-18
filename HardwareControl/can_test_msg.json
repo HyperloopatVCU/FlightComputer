@@ -10,7 +10,7 @@
 #Key Switch SDI
 {
   "ID"      : 1,
-  "MSGTYPE" : "0x00",
+  "MSGTYPE" : "0x00,
   "LEN"     : 4,
   "DATA"    : []
 }
@@ -28,7 +28,7 @@
   "ID"      : 3,
   "MSGTYPE" : "0x00",
   "LEN"     : 2,
-  "DATA"    : []
+  "DATA"    : [x4655sub08]
 }
 
 #ThrotCLK
