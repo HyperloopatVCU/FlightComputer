@@ -8,17 +8,17 @@
 #define TEMP_PRECISION 9
 #define DELAY 500
 
-#define HP_TEMP_IND_START 1
-#define HP_TEMP_IND_END 2
+#define HP_TEMP_IND_START 0
+#define HP_TEMP_IND_END 9
 
-#define LP_TEMP_IND_START 3
-#define LP_TEMP_IND_END 4
+#define LP_TEMP_IND_START 10
+#define LP_TEMP_IND_END 10
 
-#define BA_TEMP_IND_START 5
-#define BA_TEMP_IND_END 6
+#define BA_TEMP_IND_START 11
+#define BA_TEMP_IND_END 11
 
-#define BB_TEMP_IND_START 7
-#define BB_TEMP_IND_END 8
+#define BB_TEMP_IND_START 12
+#define BB_TEMP_IND_END 12
 
 
 //PL200 PROPERTIES
@@ -27,17 +27,17 @@
 #define VMULTCONST 1
 #define IMULTCONST 1
 
-#define HP_PL200_IND_START 1
-#define HP_PL200_IND_END 2
+#define HP_PL200_IND_START 0
+#define HP_PL200_IND_END 4
 
-#define LP_PL200_IND_START 3
-#define LP_PL200_IND_END 4
+#define LP_PL200_IND_START 5
+#define LP_PL200_IND_END 5
 
-#define BA_PL200_IND_START 7
-#define BA_PL200_IND_END 7
+#define BA_PL200_IND_START 6
+#define BA_PL200_IND_END 6
 
-#define BB_PL200_IND_START 8
-#define BB_PL200_IND_END 8
+#define BB_PL200_IND_START 7
+#define BB_PL200_IND_END 7
 
 //OTHER PREPROCESSOR DEFS
 #define ID_TAG 69
@@ -87,7 +87,7 @@ byte sensorAddress[NUMBER_OF_DS18B20][8] = {
 /*Sensor 29*/  {0x28,0x2F,0x26,0x8D,0x9,0x0,0x0,0x22}
   };
 byte DS18B20DataArray[12][NUMBER_OF_DS18B20];
-byte tempDataArray[NUMBER_OF_DS18B20];
+float tempDataArray[NUMBER_OF_DS18B20];
 uint16_t ds18b20ErrorArray[NUMBER_OF_DS18B20];
 
 EthernetClient client;
@@ -136,75 +136,74 @@ struct {
 //JSON FILE FUNCTIONS
 void send_temp_data(byte *tempDataArrayPointer, uint16_t sensIndStart, uint16_t sensIndEnd, uint16_t *ds18b20ErrorArrayPointer) {
   for(uint16_t deviceIndex = sensIndStart; deviceIndex <= sensIndEnd; ++deviceIndex){
-    client.print(String(json.DS18B20.prelude).c_str());
-    client.print(deviceIndex, DEC);
-    client.print(String(json.DS18B20.presuff).c_str());
-    client.print(String(json.DS18B20.error_prelude).c_str());
-    client.print(ds18b20ErrorArrayPointer[deviceIndex], DEC);
-    client.print(String(json.DS18B20.info).c_str());
-    client.print(String(json.DS18B20.temp_prelude).c_str());
-    client.print(String(tempDataArrayPointer[deviceIndex], DEC).c_str());
-    client.print(String(json.DS18B20.suff).c_str());
+    Serial.print(String(json.DS18B20.prelude).c_str());
+    Serial.print(deviceIndex, DEC);
+    Serial.print(String(json.DS18B20.presuff).c_str());
+    Serial.print(String(json.DS18B20.error_prelude).c_str());
+    Serial.print(ds18b20ErrorArrayPointer[deviceIndex], DEC);
+    Serial.print(String(json.DS18B20.info).c_str());
+    Serial.print(String(json.DS18B20.temp_prelude).c_str());
+    Serial.print(String(tempDataArrayPointer[deviceIndex], DEC).c_str());
+    Serial.print(String(json.DS18B20.suff).c_str());
     }
 }
 
 void send_pl200_data(byte (*IVDataArrayPointer)[NUMBER_OF_PL200], uint16_t pl200IndStart, uint16_t pl200IndEnd, uint16_t *pl200ErrorArrayPointer){
   for(uint16_t deviceIndex = pl200IndStart; deviceIndex <= pl200IndEnd; ++deviceIndex){
-    client.print(String(json.PL200.prelude + String(deviceIndex, DEC) + String(json.PL200.presuff)).c_str());
-    client.print(String(json.PL200.error_prelude).c_str());
-    client.print(pl200ErrorArrayPointer[deviceIndex], DEC);
-    client.print(String(json.PL200.V.prelude).c_str());
-    client.print(String(json.PL200.V.info).c_str());
-    client.print(String(json.PL200.V.V_prelude).c_str());
-    client.print(String(IVDataArrayPointer[VOLTAGE][deviceIndex], DEC).c_str());
-    client.print(String(json.PL200.V.suff).c_str());
-    client.print(String(json.PL200.I.prelude).c_str());
-    client.print(String(json.PL200.I.info).c_str());
-    client.print(String(json.PL200.I.I_prelude).c_str());
-    client.print(String(IVDataArrayPointer[CURRENT][deviceIndex], DEC).c_str());
-    client.print(String(json.PL200.I.suff).c_str());
-    client.print(String(json.PL200.suff).c_str());
+    Serial.print(String(json.PL200.prelude + String(deviceIndex, DEC) + String(json.PL200.presuff)).c_str());
+    Serial.print(String(json.PL200.error_prelude).c_str());
+    Serial.print(pl200ErrorArrayPointer[deviceIndex], DEC);
+    Serial.print(String(json.PL200.V.prelude).c_str());
+    Serial.print(String(json.PL200.V.info).c_str());
+    Serial.print(String(json.PL200.V.V_prelude).c_str());
+    Serial.print(String(IVDataArrayPointer[VOLTAGE][deviceIndex], DEC).c_str());
+    Serial.print(String(json.PL200.V.suff).c_str());
+    Serial.print(String(json.PL200.I.prelude).c_str());
+    Serial.print(String(json.PL200.I.info).c_str());
+    Serial.print(String(json.PL200.I.I_prelude).c_str());
+    Serial.print(String(IVDataArrayPointer[CURRENT][deviceIndex], DEC).c_str());
+    Serial.print(String(json.PL200.I.suff).c_str());
+    Serial.print(String(json.PL200.suff).c_str());
   }
-  client.print("\b");
+  Serial.print("\b");
 }
 
 void send_highpwr(byte *tempDataArrayPointer, byte (*IVDataArrayPointer)[NUMBER_OF_PL200], uint16_t *ds18b20ErrorArrayPointer, uint16_t *pl200ErrorArrayPointer){
-  client.print(String(json.highpower).c_str());
+  Serial.print(String(json.highpower).c_str());
   send_temp_data(tempDataArrayPointer, HP_TEMP_IND_START, HP_TEMP_IND_END, ds18b20ErrorArrayPointer);
   send_pl200_data(IVDataArrayPointer, HP_PL200_IND_START, HP_PL200_IND_END, pl200ErrorArrayPointer);
-  client.print(String(json.locsuff).c_str());
+  Serial.print(String(json.locsuff).c_str());
 }
 
 void send_lowpwr(byte *tempDataArrayPointer, byte (*IVDataArrayPointer)[NUMBER_OF_PL200], uint16_t *ds18b20ErrorArrayPointer, uint16_t *pl200ErrorArrayPointer){
-  client.print(String(json.lowpower).c_str());
+  Serial.print(String(json.lowpower).c_str());
   send_temp_data(tempDataArrayPointer, LP_TEMP_IND_START, LP_TEMP_IND_END, ds18b20ErrorArrayPointer);
   send_pl200_data(IVDataArrayPointer, LP_PL200_IND_START, LP_PL200_IND_END, pl200ErrorArrayPointer);
-  client.print(String(json.locsuff).c_str());
+  Serial.print(String(json.locsuff).c_str());
 }
 
 void send_brake_a(byte *tempDataArrayPointer, byte (*IVDataArrayPointer)[NUMBER_OF_PL200], uint16_t *ds18b20ErrorArrayPointer, uint16_t *pl200ErrorArrayPointer){
-  client.print(String(json.brakeayy).c_str());
+  Serial.print(String(json.brakeayy).c_str());
   send_temp_data(tempDataArrayPointer, BA_TEMP_IND_START, BA_TEMP_IND_END, ds18b20ErrorArrayPointer);
   send_pl200_data(IVDataArrayPointer, BA_PL200_IND_START, BA_PL200_IND_END, pl200ErrorArrayPointer);
-  client.print(String(json.locsuff).c_str());
+  Serial.print(String(json.locsuff).c_str());
 }
 
 void send_brake_b(byte *tempDataArrayPointer, byte (*IVDataArrayPointer)[NUMBER_OF_PL200], uint16_t *ds18b20ErrorArrayPointer, uint16_t *pl200ErrorArrayPointer){
-  client.print(String(json.brakebee).c_str());
+  Serial.print(String(json.brakebee).c_str());
   send_temp_data(tempDataArrayPointer, BB_TEMP_IND_START, BB_TEMP_IND_END, ds18b20ErrorArrayPointer);
   send_pl200_data(IVDataArrayPointer, BB_PL200_IND_START, BB_PL200_IND_END, pl200ErrorArrayPointer);
-  client.print(String(json.locsuff).c_str());
+  Serial.print(String(json.locsuff).c_str());
 }
 
 void send_json(byte *tempDataArrayPointer, byte (*IVDataArrayPointer)[NUMBER_OF_PL200], uint16_t *ds18b20ErrorArrayPointer, uint16_t *pl200ErrorArrayPointer) {
-  client.print(String(json.prelude).c_str());
-  client.print(String(json.info).c_str());
+  Serial.print(String(json.prelude).c_str());
+  Serial.print(String(json.info).c_str());
   send_highpwr(tempDataArrayPointer, IVDataArrayPointer, ds18b20ErrorArrayPointer, pl200ErrorArrayPointer);
   send_lowpwr(tempDataArrayPointer, IVDataArrayPointer, ds18b20ErrorArrayPointer, pl200ErrorArrayPointer);
   send_brake_a(tempDataArrayPointer, IVDataArrayPointer, ds18b20ErrorArrayPointer, pl200ErrorArrayPointer);
   send_brake_b(tempDataArrayPointer, IVDataArrayPointer, ds18b20ErrorArrayPointer, pl200ErrorArrayPointer);
-  client.print("\b");
-  client.print(String(json.suff).c_str());
+  Serial.print(String(json.suff).c_str());
 }
 
 //FUNCTIONS
@@ -243,7 +242,7 @@ void errorClear(uint16_t *ds18b20ErrorArrayPointer, uint16_t *pl200ErrorArrayPoi
   }
 }
 
-void DS18B20TempConv(byte (*DS18B20DataArrayPointer)[NUMBER_OF_DS18B20], float *tempDataArrayPointer[NUMBER_OF_PL200]){
+void DS18B20TempConv(byte (*DS18B20DataArrayPointer)[NUMBER_OF_DS18B20], float  *tempDataArrayPointer){
   for(uint16_t deviceIndex = 0; deviceIndex < NUMBER_OF_DS18B20; ++deviceIndex){
     int16_t raw = (DS18B20DataArrayPointer[1][deviceIndex] << 8) | DS18B20DataArrayPointer[0][deviceIndex];
 
@@ -258,10 +257,10 @@ void DS18B20TempConv(byte (*DS18B20DataArrayPointer)[NUMBER_OF_DS18B20], float *
   }
 }
 
-void Pl200DataConv(byte (*PL200DataArrayPointer)[NUMBER_OF_PL200], byte (*IVDataArrayPointer)[NUMBER_OF_PL200]){
+void PL200DataConv(byte (*PL200DataArrayPointer)[NUMBER_OF_PL200], byte (*IVDataArrayPointer)[NUMBER_OF_PL200]){
     for(uint16_t i = 0; i < NUMBER_OF_PL200; ++i){
-      &IVDataArrayPointer[VOLTAGE][i] = &PL200DataArrayPointer[r][i] * VMULTCONST;
-      &IVDataArrayPointer[CURRENT][i] = &PL200DataArrayPointer[r][i] * IMULTCONST;
+      IVDataArrayPointer[VOLTAGE][i] = PL200DataArrayPointer[VOLTAGE][i] * VMULTCONST;
+      IVDataArrayPointer[CURRENT][i] = PL200DataArrayPointer[CURRENT][i] * IMULTCONST;
   }
 }
 
@@ -275,15 +274,32 @@ void DS18B20Error(byte (*DS18B20DataArrayPointer)[NUMBER_OF_DS18B20], uint16_t *
    return;
 }
 
-
-void PL200Error(byte (*PL200DataArrayPointer)[NUMBER_OF_PL200], uint16_t *pl200ErrorArrayPointer){
-  //ERROR DETECTION CODE
-  return;
+void testPrint(float *tempDataArrayPointer, byte (*IVDataArrayPointer)[NUMBER_OF_PL200]){
+  Serial.println("temp readings");
+  Serial.println("{");
+  for(uint16_t i = 0; i < NUMBER_OF_DS18B20; ++i){
+    Serial.println(tempDataArrayPointer[i]);
+  }
+  Serial.println("}");
+  Serial.println("voltage");
+  Serial.println("{");
+  for(uint16_t i = 0; i < NUMBER_OF_PL200; ++i){
+    Serial.println(IVDataArrayPointer[VOLTAGE][i]);
+  }
+  Serial.println("}");
+  Serial.println("current");
+  Serial.println("{");
+  for(uint16_t i = 0; i < NUMBER_OF_PL200; ++i){
+    Serial.println(IVDataArrayPointer[CURRENT][i]);
+  }
+  Serial.println("}");
 }
 
 void setup() {
   //analogReference(INTERNAL2V56);
+  Serial.begin(9600);
 
+/*
   const byte mac[] = {0xde, 0xad, 0xbe, 0xef, 0xfe, ID_TAG};
 	const byte gateway[] = {192,168,1,20};
 	const byte netmask[] = {255,255,255,0};
@@ -311,6 +327,7 @@ void setup() {
   for(uint16_t i = 0; i < (2 * NUMBER_OF_PL200); ++i){
     pinMode(analogPinArray[i], INPUT);
  }
+ */
 }
 
 void loop() {
@@ -319,6 +336,10 @@ void loop() {
   getDS18B20Data(sensorAddress, DS18B20DataArray);
   DS18B20Error(DS18B20DataArray, ds18b20ErrorArray);
   DS18B20TempConv(DS18B20DataArray, tempDataArray);
-  PL200DataConv
-  send_json(tempDataArray, IVDataArray, ds18b20ErrorArray, pl200ErrorArray);
+  PL200DataConv(PL200DataArray, IVDataArray);
+  testPrint(tempDataArray, IVDataArray);
+  
+  delay(1000);
 }
+
+//send_json(tempDataArray, IVDataArray, ds18b20ErrorArray, pl200ErrorArray);
