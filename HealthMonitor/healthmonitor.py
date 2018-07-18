@@ -7,8 +7,7 @@ class HealthMonitor(object):
 
     def __init__(self, comm, sm, pod):
         self.comm = comm # Reference to tcp server
-        self.sm = sm     # Reference to state machine
-
+        self.sm = sm     # Reference to state machine 
         self.logger = logging.getLogger('TCP')
 
         self.logger.info("[!!!] [+] Initializing Health Monitoring")

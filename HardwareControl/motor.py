@@ -3,6 +3,7 @@ import fnmatch #### supporting libraries
 import os
 import re
 import sys
+import json
 
 try:
     import RPi.GPIO as gpio
@@ -103,9 +104,18 @@ class Motor(object):
         else:
             return stsReturn[1]
 
-    def WriteDataFD(self):
+    """
+    messageType is a TPCANMessageType
+    dataArray is an array of length 0 - 8 (above 8 will be truncated)
+    """
+    def WriteDataFD(self, messageType, dataArray):
+        messageLength = len(dataArray)
+        m = c_ubyte * 8
+        message = m()
+        for i in range(messageLength):
+            message[i] = dataArray[i]
 
-        CANMsg = TPCANMsg()
+        CANMsg = TPCANMsg(self.m_IDTXT, messageType, messageLength, message)
 
         # We configurate the Message.  The ID,
         # Length of the Data, Message Type and the data
@@ -218,7 +228,7 @@ class Motor(object):
         self.logger.debug("[*] Accelerating")
 
     def idle(self):
-		_setThrottle(0)
+        _setThrottle(0)
         self.logger.debug("[*] Motor Idle")
 
 #**************************************************************************************************************#

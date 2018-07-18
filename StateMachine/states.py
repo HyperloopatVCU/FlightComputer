@@ -18,62 +18,51 @@ class State(object):
         return self.__class__.__name__
 
 
-class Pre_Operational(State):
+class StartUp(State):
 
     def on_event(self, event):
 
-        if event == 'start-up':
-            return Pre_Operational(self.controllers)
-            # TODO: If moving forward, goto estop
-        elif event == 'launch':
-            return Operational(self.controllers)
-        elif event == 'drift':
-            return Operational(self.controllers)
-        else:
-            return Estop(self.controllers)
+        return Estop(self.controllers)
 
 
-class Operational(State):
+class HealthCheck(State):
 
     def on_event(self, event):
 
-        if event == 'launch-clear':
-            return Accelerating(self.controllers)
-        if event == 'drift-clear':
-            return Accelerating(self.controllers)
-        else:
-            return Estop(self.controllers)
+        return Estop(self.controllers)
 
 
-class Accelerating(State):
+class Accelerate(State):
 
     def on_event(self, event):
 
-        if event == 'motor-disengage':
-            return Decelerating(self.controllers)
-        elif event == 'brakes-engage':
-            # TODO: blow the fuse
-            return Estop()
-        else:
-            return Estop(self.controllers)
+        return Estop(self.controllers)
 
 
-class Decelerating(State):
+class MotorShutdown(State):
 
     def on_event(self, event):
-        if event == 'brakes-engage':
-            return Stop(self.controllers)
-        else:
-            return Estop(self.controllers)
+
+        return Estop(self.controllers)
 
 
-class Stop(State):
+class Brake(State):
 
     def on_event(self, event):
-        if event == 'stopped':
-            return Pre_Operational(self.controllers)
-        else:
-            return Estop(self.controllers)
+
+        return Estop(self.controllers)
+
+class Roll(State):
+
+    def on_event(self, event):
+
+        return Estop(self.controllers)
+
+class Finish(State):
+
+    def on_event(self, event):
+
+        return Estop(self.controllers)
 
 
 class Estop(State):
