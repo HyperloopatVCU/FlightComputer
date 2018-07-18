@@ -53,3 +53,6 @@ def writeTest(self, Id, Type, length, data):
         print("No errors found! (write)")
     else:
         print("Error code: " + result + " Check the API for the kind of error occcured")
+
+if __name__ == '__main__':
+    main()
