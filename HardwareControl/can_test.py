@@ -24,7 +24,7 @@ def initializeChannelTest():
     m_CHANNEL = PCAN_USBBUS1
     result = m_objPCANBasic.InitializeFD(m_CHANNEL, m_BitrateTXT.get())
     if result == PCAN_ERROR_OK:
-        print("No errors found!")
+        print("No errors found with initialization!")
         if result == PCAN_ERROR_CAUTION:
             print("irregularities were found while communicating")
     else:
@@ -32,7 +32,7 @@ def initializeChannelTest():
 
 
 # Connection string for baud_rate (can be modified to our requirements)
-def InitializeConnection():
+def InitializeConnection(self):
     self.m_BitrateTXT = StringVar(value="f_clock_mhz=20, nom_brp=5, nom_tseg1=2, nom_tseg2=1, nom_sjw=1, data_brp=2, data_tseg1=3, data_tseg2=1, data_sjw=1")
 
 
@@ -40,7 +40,7 @@ def InitializeConnection():
 def readTest():
     readResults = m_objPCANBasic.ReadFD(m_channel)
     if result == PCAN_ERROR_OK:
-        print("No errors found!")
+        print("No errors found! (read)")
         print(result[1:])  # Prints the message
     else:
         print("Error code: " + result + " Check the API for the kind of error occcured")
@@ -50,6 +50,6 @@ def writeTest(self, Id, Type, length, data):
     CANMsg = TPCANMsg(Id, Type, length, data)
     writeResult = self.m_objPCANBasic.WriteFD(m_PcanHandle, TestCANMsg)
     if writeResult == PCAN_ERROR_OK:
-        print("No errors found!")
+        print("No errors found! (write)")
     else:
         print("Error code: " + result + " Check the API for the kind of error occcured")
