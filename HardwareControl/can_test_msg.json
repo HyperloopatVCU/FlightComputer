@@ -1,0 +1,88 @@
+#Throttle SDI
+
+{
+  "ID"      : 0,
+  "MSGTYPE" : "0x00",
+  "DLC"     : 5,
+  "DATA"    : 320 # 5 * 64
+}
+
+#Key Switch SDI
+{
+  "ID"      : 1,
+  "MSGTYPE" : "0x00",
+  "DLC"     : 4,
+  "DATA"    : 256 # 4* 64
+}
+
+#ThrottleSDO
+{
+  "ID"      : 2,
+  "MSGTYPE" : "0x00",
+  "DLC"     : 3,
+  "DATA"    : 192 # 3* 64
+}
+
+#Key switch
+{
+  "ID"      : 3,
+  "MSGTYPE" : "0x00",
+  "DLC"     : 2,
+  "DATA"    : 128 # 2* 64
+}
+
+#ThrotCLK
+{
+  "ID"      : 4,
+  "MSGTYPE" : "0x00",
+  "DLC"     : 1,
+  "DATA"    : 64 # 1* 64
+}
+
+#ThrotCS
+{
+  "ID"      : 5,
+  "MSGTYPE" : "0x00",
+  "DLC"     : 6,
+  "DATA"    : 384 # 6* 64
+}
+
+#Brake Safety
+{
+  "ID"      : 6,
+  "MSGTYPE" : "0x00",
+  "DLC"     : 7,
+  "DATA"    : 448 # 7* 64
+}
+
+#Brake FL Direction
+{
+  "ID"      : 7,
+  "MSGTYPE" : "0x00",
+  "DLC"     : 8,
+  "DATA"    : 512 # 8* 64
+}
+
+#Brake FR direction
+{
+  "ID"      : 8,
+  "MSGTYPE" : "0x00",
+  "DLC"     : 9,
+  "DATA"    : 576 # 9* 64
+}
+
+#Brake BL direction
+{
+  "ID"      : 9,
+  "MSGTYPE" : "0x00",
+  "DLC"     : 10,
+  "DATA"    : 640 # 10* 64
+}
+
+#Brake BR direction
+{
+  "ID"      : 10,
+  "MSGTYPE" : "0x00",
+  "DLC"     : 11,
+  "DATA"    : 704 # 11* 64
+}
