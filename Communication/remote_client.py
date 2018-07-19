@@ -8,11 +8,13 @@ class TCPClient(object):
 
         self.pod = pod
 
+        self.stop_signal = False
+
         self.host = 'localhost'
         self.port = 8000
 
     def run(self):
-        while True:
+        while not stop_signal:
             self.update()
             sleep(0.1)
 

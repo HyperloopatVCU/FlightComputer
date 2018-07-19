@@ -8,6 +8,7 @@ from threading import Thread
 from pod_structure import Pod
 from StateMachine.statemachine import MainSM
 from Communication.tcpserver import TCPComm
+from Communiction.remote_client import TCPClient
 from Communication.data_processing import Data_Processing
 from HealthMonitor.healthmonitor import HealthMonitor
 from HardwareControl.brakes import Brakes
@@ -25,12 +26,15 @@ def main(root_logger):
 
     pod = Pod()
     tcp = TCPComm()
+    remote = TCPClient(pod)
     sm = MainSM(pod, Brakes(pod), Motor())
     dp = Data_Processing(tcp)
     health = HealthMonitor(pod, tcp, sm)
 
+    remote_thread = Thread(target=remote.run, name='RemoteThread')
     health_thread = Thread(target=health.run, name='HealthThread')
     dp_thread = Thead(target=health.run, name='DPThread')
+    remote_thread.start()
     health_thread.start()
     dp_thread.start()
 
@@ -71,6 +75,8 @@ def main(root_logger):
             dp.stop_signal = True
             health_thread.join()
             dp_thread.join()
+            remote.stop_signal = True
+            remote_thread.join()
 
             hist.write('\n')
             hist.close()
