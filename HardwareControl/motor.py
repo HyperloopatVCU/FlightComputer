@@ -4,6 +4,7 @@ import os
 import re
 import sys
 import json
+from PCANBasic import *
 
 try:
     import RPi.GPIO as gpio
@@ -12,7 +13,14 @@ except RuntimeError:
     print("Did you run this on the RPi as root?")
     sys.exit(1)
 
-from PCANBasic import *
+# TODO: Check object dictionary of the motor controller and get necessary Indexes
+        # Control the functionality of the motor, IE acceleration and deceleration
+        # Try to extract other info : Torque(Motor RPM), Temperature, Voltage, Current
+            #Speed(RPM) ( 706Ch Sub01)
+            #Voltage(4602Sub17, 4700Sub13)
+            #Current&Temperature (4621Sub01) Current (4700Sub12)
+        #Set Peak Torque, Velocity<(R)
+
 
 class Motor(object):
 
