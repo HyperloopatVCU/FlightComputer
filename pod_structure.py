@@ -25,6 +25,12 @@ class Pod(object):
         # Contains errors from Communication
         self.error = []
 
+    def to_dict(self):
+        """
+        Returns a dict of all pod fields
+        """
+        return {}
+
     def __repr__(self):
         return "<POD pos: {:.2f}, vel: {:.2f}, acc:\
             {:.2f} >".format(self.position["x"], self.speed["x"], self.acceleration["x"])
