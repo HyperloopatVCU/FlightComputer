@@ -2,15 +2,15 @@
 
 {
   "ID"      : 0,
-  "MSGTYPE" : "0x00",
-  "LEN"     : 5,
-  "DATA"    : []
+  "MSGTYPE" : 0,
+  "LEN"     : 2,
+  "DATA"    : [128, 0]
 }
 
 #Key Switch SDI
 {
   "ID"      : 1,
-  "MSGTYPE" : "0x00,
+  "MSGTYPE" : 0,
   "LEN"     : 4,
   "DATA"    : []
 }
@@ -18,7 +18,7 @@
 #ThrottleSDO
 {
   "ID"      : 2,
-  "MSGTYPE" : "0x00",
+  "MSGTYPE" : 0,
   "LEN"     : 3,
   "DATA"    : []
 }
@@ -26,7 +26,7 @@
 #Key switch
 {
   "ID"      : 3,
-  "MSGTYPE" : "0x00",
+  "MSGTYPE" : 0x00,
   "LEN"     : 2,
   "DATA"    : [x4655sub08]
 }

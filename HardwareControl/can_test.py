@@ -47,7 +47,7 @@ def readTest():
 
 # Checks if writes are being made properly
 def writeTest(self, Id, Type, length, data):
-    CANMsg = TPCANMsg(Id, Type, length, data)
+    TestCANMsg = TPCANMsg(Id, Type, length, data)
     writeResult = self.m_objPCANBasic.WriteFD(m_PcanHandle, TestCANMsg)
     if writeResult == PCAN_ERROR_OK:
         print("No errors found! (write)")
