@@ -85,7 +85,7 @@ class Data_Processing(object):
 			sum_count = sum_count + 1
 		if packet4["accelerometer"]["acceleration"]["x"] < (original_mean_imu_accel_x - standard_dev_imu_accel_x) or packet4["accelerometer"]["acceleration"]["x"] > (original_mean_imu_accel_x + standard_dev_imu_accel_x):
 			""" calc new mean if nums are out of 1 SD """
-			packet["accelerometer"]["acceleration"]["x"] = False
+			packet4["accelerometer"]["acceleration"]["x"] = False
 		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["accelerometer"]["acceleration"]["x"]
@@ -130,7 +130,7 @@ class Data_Processing(object):
 			sum_count = sum_count + 1
 		if packet4["accelerometer"]["acceleration"]["y"] < (original_mean_imu_accel_y - standard_dev_imu_accel_y) or packet4["accelerometer"]["acceleration"]["y"] > (original_mean_imu_accel_y + standard_dev_imu_accel_y):
 			""" calc new mean if nums are out of 1 SD """
-			packet["accelerometer"]["acceleration"]["y"] = False
+			packet4["accelerometer"]["acceleration"]["y"] = False
 		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["accelerometer"]["acceleration"]["y"]
@@ -175,7 +175,7 @@ class Data_Processing(object):
 			sum_count = sum_count + 1
 		if packet4["accelerometer"]["acceleration"]["z"] < (original_mean_imu_accel_z - standard_dev_imu_accel_z) or packet4["accelerometer"]["acceleration"]["z"] > (original_mean_imu_accel_z + standard_dev_imu_accel_z):
 			""" calc new mean if nums are out of 1 SD """
-			packet["accelerometer"]["speed"]["z"] = False
+			packet4["accelerometer"]["speed"]["z"] = False
 		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["accelerometer"]["speed"]["z"]
@@ -219,7 +219,7 @@ class Data_Processing(object):
 			sum_count = sum_count + 1
 		if packet4["accelerometer"]["speed"]["x"] < (original_mean_imu_speed - standard_dev_imu_speed) or packet4["accelerometer"]["speed"]["x"] > (original_mean_imu_speed + standard_dev_imu_speed):
 			""" calc new mean if nums are out of 1 SD """
-			packet["accelerometer"]["speed"]["x"] = False
+			packet4["accelerometer"]["speed"]["x"] = False
 		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["accelerometer"]["speed"]["x"]
@@ -265,7 +265,7 @@ class Data_Processing(object):
 			sum_count = sum_count + 1
 		if packet4["accelerometer"]["position"]["x"] < (original_mean_imu_pos - standard_dev_imu_pos) or packet4["accelerometer"]["position"]["x"] > (original_mean_imu_pos + standard_dev_imu_pos):
 			""" calc new mean if nums are out of 1 SD """
-			packet["accelerometer"]["position"]["x"] = False
+			packet4["accelerometer"]["position"]["x"] = False
 		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["accelerometer"]["position"]["x"]
@@ -309,7 +309,7 @@ class Data_Processing(object):
 			sum_count = sum_count + 1
 		if packet4["vertical"]["position"]["x"] < (original_mean_vps_pos - standard_dev_vps_pos) or packet4["vertical"]["position"]["x"] > (original_mean_vps_pos + standard_dev_vps_pos):
 			""" calc new mean if nums are out of 1 SD """
-			packet["vertical"]["position"]["x"] = False
+			packet4["vertical"]["position"]["x"] = False
 		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["vertical"]["position"]["x"]
@@ -355,11 +355,106 @@ class Data_Processing(object):
 			sum_count = sum_count + 1
 		if packet4["horizontal"]["position"]["x"] < (original_mean_hps_pos - standard_dev_hps_pos) or packet4["horizontal"]["position"]["x"] > (original_mean_hps_pos + standard_dev_hps_pos):
 			""" calc new mean if nums are out of 1 SD """
-			packet["horizontal"]["position"]["x"] = False
+			packet4["horizontal"]["position"]["x"] = False
 		else:
 			""" calc new mean when no nums are out of 1 SD """
 			new_sum = new_sum + packet4["horizontal"]["position"]["x"]
 			sum_count = sum_count + 1
 			
 		nominal_mean_hps_pos = new_sum / sum_count
-		
+	
+	def HPS_check(self, packet1, packet2, packet3, packet4):
+	"""
+	HPS error checking
+	"""
+
+	self.hpsfailcount = 0
+	if packet1["horizontal"]["error"] != 0:
+		self.hpsfailcount += 1
+		self.logger.info("[!!!] Error with HPS #1")
+
+	if packet2["horizontal"]["error"] != 0:
+		self.hpsfailcount += 1
+		self.logger.info("[!!!] Error with HPS #2")
+
+	if packet3["horizontal"]["error"] != 0:
+		self.hpsfailcount += 1
+		self.logger.info("[!!!] Error with HPS #3")
+
+	if packet4["horizontal"]["error"] != 0:
+		self.hpsfailcount += 1
+		self.logger.info("[!!!] Error with HPS #3")
+
+	if self.hpsfailcount >= 2:
+		self.sm.on_event('estop')
+
+	def VPS_check(self, packet1, packet2, packet3, packet4):
+	"""
+	VPS error checking
+	"""
+	self.vpsfailcount = 0
+
+	if packet1["vertical"]["error"] != 0:
+		self.vpsfailcount += 1
+		self.logger.info("[!!!] Error with VPS #1")
+
+	if packet2["vertical"]["error"] != 0:
+		self.vpsfailcount += 1
+		self.logger.info("[!!!] Error with VPS #2")
+
+	if packet3["vertical"]["error"] != 0:
+		self.vpsfailcount += 1
+		self.logger.info("[!!!] Error with VPS #3")
+
+	if packet4["vertical"]["error"] != 0:
+		self.vpsfailcount += 1
+		self.logger.info("[!!!] Error with VPS #4")
+
+	if self.vpsfailcount >= 2:
+		self.sm.on_event('estop')
+
+	def IMU_check(self, packet1, packet2, packet3, packet4):
+	"""
+	IMU error checking
+	"""
+	self.imufailcount = 0
+	if packet1["accelerometer"]["error"] != 0:
+		self.imufailcount += 1
+		self.logger.info("[!!!] Error with IMU #1")
+
+	if packet2["accelerometer"]["error"] != 0:
+		self.imufailcount += 1
+		self.logger.info("[!!!] Error with IMU #2")
+
+	if packet3["accelerometer"]["error"] != 0:
+		self.imufailcount += 1
+		self.logger.info("[!!!] Error with IMU #3")
+
+	if packet4["accelerometer"]["error"] != 0:
+		self.imufailcount += 1
+		self.logger.info("[!!!] Error with IMU #4")
+
+	if self.imufailcount >= 2:
+		self.sm.on_event('estop')
+
+	def BMS_check(self, BMS_packet):
+	"""
+	BMS error checking (This needs to be changed a bit because the for loop won't work)
+	"""
+	if packet5["error"] != 0:
+		self.logger.critical("[+] Microcontroller five, error code: %d", packet4["error"])
+		self.sm.on_event('estop')
+		return
+
+	self.bms_failcount = 0
+	for k1, v1 in packet5.items():
+		for k2, v2 in v1.items():
+			if v2["error"] != 0:
+				self.bms_failcount += 1
+				self.logger.critical("[+] Microcontroller five, error: %s", k2)
+
+	if self.bms_failcount >= self.bms_allowed_errors:
+		self.logger.critical("[+] Microcontroller five error. Too many errors")
+		self.sm.on_event('estop')
+		return
+

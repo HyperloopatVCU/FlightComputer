@@ -4,7 +4,7 @@ import logging
 import threading
 from configparser import ConfigParser
 from queue import Queue
-from socket import *
+from socket import socket, AF_INET, SOCK_STREAM
 
 class TCPComm(object):
 
