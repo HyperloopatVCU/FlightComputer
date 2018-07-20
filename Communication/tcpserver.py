@@ -75,14 +75,14 @@ class TCPComm(object):
             elif packet["identity"] == "EMS3":
                 if self.controller3.full():
                     self.controller3.get()
-                self.contoller3.put(packet)
+                self.controller3.put(packet)
             elif packet["identity"] == "EMS4":
                 if self.controller4.full():
                     self.controller4.get()
                 self.controller4.put(packet)
             elif packet["identity"] == "BMS":
                 if self.controller5.full():
-                    self.conrtoller5.get()
+                    self.controller5.get()
                 self.controller5.put(packet)
             else:
                 self.logger.critical("[!!!] Packet isn't IDed right!")

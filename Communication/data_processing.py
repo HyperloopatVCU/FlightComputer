@@ -1,10 +1,11 @@
 
 import logging
+from math import sqrt
 from configparser import ConfigParser
 
 class Data_Processing(object):
 
-	def __init__(self, tcp):
+	def __init__(self, comm):
 		self.logger = logging.getLogger('COMM')
 		self.logger.info("[+] Initializing Data Processor")
 
@@ -12,6 +13,8 @@ class Data_Processing(object):
 		self.config.read('config.ini')
 
 		self.frame_rate = self.config['DataProc'].getint('frame_rate')
+
+		self.comm = comm
 
 	def run(self):
 		while True:
