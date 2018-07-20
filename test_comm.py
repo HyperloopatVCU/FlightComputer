@@ -1,7 +1,7 @@
 
 from threading import Thread
 from pod_structure import Pod
-from Communication.tcpserver import TCPServer
+from Communication.tcpserver import TCPComm
 from Communication.data_processing import Data_Processing
 
 def main():
