@@ -52,12 +52,6 @@ class Brake(State):
 
         return Estop(self.controllers)
 
-class Roll(State):
-
-    def on_event(self, event):
-
-        return Estop(self.controllers)
-
 class Finish(State):
 
     def on_event(self, event):
