@@ -2,8 +2,7 @@
 import logging
 from time import sleep, time
 from configparser import ConfigParser
-from StateMachine.states import Pre_Operational, Operational, Accelerating, Decelerating, \
-Stop, Estop
+from StateMachine.states import StartUp
 
 class MainSM(object):
 
@@ -24,7 +23,7 @@ class MainSM(object):
             "motor" : hardware[1]
         }
         
-        self.state = Pre_Operational(hardware)
+        self.state = StateUp(hardware)
         self.on_event('state-up')
 
     def on_event(self, event):
