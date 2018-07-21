@@ -30,6 +30,8 @@ class TCPComm(object):
         self.host = self.config['Comm']['host'] 
         self.port = self.config['Comm'].getint('port')
 
+        self.remote_bandwidth = self.config['Comm'].getint('remote_bandwidth')
+
         self.server = socket(AF_INET, SOCK_STREAM)
         self.server.bind((self.host, self.port))
 
@@ -84,6 +86,10 @@ class TCPComm(object):
                 if self.controller5.full():
                     self.controller5.get()
                 self.controller5.put(packet)
+            elif packet["identity"] == "HUB":
+                while True:
+                    client.send(json.dumps(pod_dict().encode('utf-8')))
+                    sleep(1/self.remote_bandwidth)
             else:
                 self.logger.critical("[!!!] Packet isn't IDed right!")
 
