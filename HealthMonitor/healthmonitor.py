@@ -10,7 +10,7 @@ class HealthMonitor(object):
         self.sm = sm     # Reference to state machine 
         self.logger = logging.getLogger('TCP')
 
-        self.logger.info("[!!!] [+] Initializing Health Monitoring")
+        self.logger.info("[!!!] [+] Initializing Health Monitoring System")
 
         self.stop_signal = False
 
@@ -21,7 +21,7 @@ class HealthMonitor(object):
 
         self.frame_rate = self.config['Health'].getint('frame_rate')
         self.timeout = self.config['Health'].getint('controller_timeout')
-        self.bms_allowed_errors = self.config['Health'].getint('bms_allowed_erros')
+        self.bms_allowed_errors = self.config['Health'].getint('bms_allowed_errors')
 
     def run(self):
             while not self.stop_signal:
@@ -31,54 +31,147 @@ class HealthMonitor(object):
 
     def update(self):
         """
-        Any threshold values that may need to be adjusted should be added to
+        Any constant values that may need to be adjusted should be added to
         the config.ini file in the root of the program directory.
         """
 
-        # Temperature Checks (Parameters not correct yet)
-        battery_temp_check(battery_temperature)
-        motor_temp_check(motor_temperature)
-        motor_controller_temp_check(motor_controller_temp)
+        if sm.state == "StartUp":
 
-        # Voltage and current checks (Parameters not correct yet)
-        high_battery_check(voltage, current)
-        low_one_battery_check(voltage, current)
-        low_2A_battery_check(voltage, current)
-        low_2B_battery_check(voltage, current)
-        brake_potentiometer_check(voltage, current)
+            # Temperature Checks (Parameters not correct yet)
+            battery_temp_check(battery_temperature)
+            motor_temp_check(motor_temperature)
+            motor_controller_temp_check(motor_controller_temp)
 
-        # Distance Check (Parameters not correct yet)
-        pod_distance_from_track(time)
+            # Voltage and current checks (Parameters not correct yet)
+            high_battery_check(voltage, current)
+            low_one_battery_check(voltage, current)
+            low_2A_battery_check(voltage, current)
+            low_2B_battery_check(voltage, current)
+            brake_potentiometer_check(voltage, current)
 
+            # Distance Check (Parameters not correct yet)
+            pod_distance_from_track(time)
 
-        if sm.state == "Pre_Operational":
-            # Add checks for pre-operational
             return
 
-        elif sm.state == "Operational":
-            # TODO: If the pod is clear to launch
-            # sm.on_event('launch-clear') or drift-clear
+        elif sm.state == "HealthCheck":
+
+             # Temperature Checks (Parameters not correct yet)
+            battery_temp_check(battery_temperature)
+            motor_temp_check(motor_temperature)
+            motor_controller_temp_check(motor_controller_temp)
+
+            # Voltage and current checks (Parameters not correct yet)
+            high_battery_check(voltage, current)
+            low_one_battery_check(voltage, current)
+            low_2A_battery_check(voltage, current)
+            low_2B_battery_check(voltage, current)
+            brake_potentiometer_check(voltage, current)
+
+            # Distance Check (Parameters not correct yet)
+            pod_distance_from_track(time)
+
             return
 
-        elif sm.state == "Accelerating":
+        elif sm.state == "Accelerate":
+
+            # Temperature Checks (Parameters not correct yet)
+            battery_temp_check(battery_temperature)
+            motor_temp_check(motor_temperature)
+            motor_controller_temp_check(motor_controller_temp)
+
+            # Voltage and current checks (Parameters not correct yet)
+            high_battery_check(voltage, current)
+            low_one_battery_check(voltage, current)
+            low_2A_battery_check(voltage, current)
+            low_2B_battery_check(voltage, current)
+            brake_potentiometer_check(voltage, current)
+
+            # Distance Check (Parameters not correct yet)
+            pod_distance_from_track(time)
+
             return
 
-        elif sm.state == "Decelerating":
-            # Add checks for decelerating
+        elif sm.state == "MotorShutdown":
+
+            # Temperature Checks (Parameters not correct yet)
+            battery_temp_check(battery_temperature)
+            motor_temp_check(motor_temperature)
+            motor_controller_temp_check(motor_controller_temp)
+
+            # Voltage and current checks (Parameters not correct yet)
+            high_battery_check(voltage, current)
+            low_one_battery_check(voltage, current)
+            low_2A_battery_check(voltage, current)
+            low_2B_battery_check(voltage, current)
+            brake_potentiometer_check(voltage, current)
+
+            # Distance Check (Parameters not correct yet)
+            pod_distance_from_track(time)
+
             return
 
-        elif sm.state == "Stop":
-            # Add checks for stopping
+        elif sm.state == "Brake":
+
+            # Temperature Checks (Parameters not correct yet)
+            battery_temp_check(battery_temperature)
+            motor_temp_check(motor_temperature)
+            motor_controller_temp_check(motor_controller_temp)
+
+            # Voltage and current checks (Parameters not correct yet)
+            high_battery_check(voltage, current)
+            low_one_battery_check(voltage, current)
+            low_2A_battery_check(voltage, current)
+            low_2B_battery_check(voltage, current)
+            brake_potentiometer_check(voltage, current)
+
+            # Distance Check (Parameters not correct yet)
+            pod_distance_from_track(time)
+
+            return
+
+        elif sm.state == "Finish":
+
+            # Temperature Checks (Parameters not correct yet)
+            battery_temp_check(battery_temperature)
+            motor_temp_check(motor_temperature)
+            motor_controller_temp_check(motor_controller_temp)
+
+            # Voltage and current checks (Parameters not correct yet)
+            high_battery_check(voltage, current)
+            low_one_battery_check(voltage, current)
+            low_2A_battery_check(voltage, current)
+            low_2B_battery_check(voltage, current)
+            brake_potentiometer_check(voltage, current)
+
+            # Distance Check (Parameters not correct yet)
+            pod_distance_from_track(time)
+
             return
 
         elif sm.state == "Estop":
-            # Add checks for estopping (If we need any)
+
+            # Temperature Checks (Parameters not correct yet)
+            battery_temp_check(battery_temperature)
+            motor_temp_check(motor_temperature)
+            motor_controller_temp_check(motor_controller_temp)
+
+            # Voltage and current checks (Parameters not correct yet)
+            high_battery_check(voltage, current)
+            low_one_battery_check(voltage, current)
+            low_2A_battery_check(voltage, current)
+            low_2B_battery_check(voltage, current)
+            brake_potentiometer_check(voltage, current)
+
+            # Distance Check (Parameters not correct yet)
+            pod_distance_from_track(time)
+
             return
 
         else:
             self.logger.critical("[!!!] State Machine in unknown state %s", \
                                  sm.state)
-            sm.on_event('estop')
+            self.sm.on_event('estop')
 
     def battery_temp_check(self, battery_temperature):
         if self.battery_temperature < self.max_battery_temp:
